@@ -4,7 +4,7 @@ import flask_sqlalchemy
 import flask_wtf
 from flask import Flask
 
-import luxedo.extensions as ext
+import the_root.extensions as ext
 
 import ConfigParser # by the way, safeconfigparser simply allows formatted strings to refer to other key/values. Not needed here.
 
@@ -15,10 +15,10 @@ def setup():
 	load_local_config(app)
 	register_extensions(app)
 	#Import all path-containing files
-	import luxedo.landing	# The landing and login pages
+	import the_root.landing	# The landing and login pages
 	#Setup debug, if necessary.
 	if(app.config['DEBUG']):
-		import luxedo.debug
+		import the_root.debug
 
 #We register extensions in this way to prevent circular import references. Simply provides a
 #reference to 'app' to each extension.
@@ -27,7 +27,7 @@ def register_extensions(app):
 	ext.login_manager.init_app(app)
 	ext.csrf.init_app(app)
 	
-#Loads the device section of luxedo/local.cfg file into the configuration. This local file can be reloaded without restarting
+#Loads the device section of the_root/local.cfg file into the configuration. This local file can be reloaded without restarting
 #the server, by calling this function.
 def load_local_config(app):
 	cfg = ConfigParser.ConfigParser()

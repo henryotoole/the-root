@@ -4,7 +4,7 @@
 import flask
 
 from flask import render_template, redirect, send_from_directory
-from luxedo import app
+from the_root import app
 '''
 #This is a debug function which redirects :5000 requests to :80. This allows code to run on the dev server (Flask, port 5000)
 #but pull images off the NGinX server (port 80)

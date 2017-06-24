@@ -1,5 +1,4 @@
-from luxedo.extensions import db
-import luxedo.passgen
+from the_root.extensions import db
 import datetime
 from shutil import copyfile
 import PIL.Image

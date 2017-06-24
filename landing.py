@@ -1,9 +1,9 @@
 #This file handles login/landing page 
 
-from luxedo.extensions import login_manager, db
-from luxedo.forms import LoginForm, CreateForm
-from luxedo.models import User
-from luxedo import app
+from the_root.extensions import login_manager, db
+from the_root.forms import LoginForm, CreateForm
+from the_root.models import User
+from the_root import app
 
 import flask
 from flask_login import login_required, login_user, logout_user, current_user
