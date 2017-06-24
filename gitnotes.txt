@@ -1,0 +1,37 @@
+//Literally clones the server onto your local machine. 
+git clone [REPO_URL]
+//Adds files specified. '.' means all files in current directory
+git add .
+//Commit to current branch. -a commits all changed files. -m lets you commit a message.
+git commit -am "COMMIT_MESSAGE"
+//Updates server with changes to <branch>. After calling once, git push does the same thing. 
+git push origin <branch>
+//Commands cheat sheet
+http://cheat.errtheblog.com/s/git
+
+
+//to change branches
+Step 1. Go to highest level
+Step 2. Use the following command:
+	git checkout --track origin/BRANCHNAME
+
+You are now in BRANCHNAME
+
+To push to this branch ONLY:
+	git add .
+	git commit -am "your comment here"
+	git push origin/BRANCHNAME
+
+//============ Branching on Local ============
+Create a branch, then switch to it:
+git branch iss53
+git checkout iss53
+
+Delete a branch
+git branch -d <branch_name>
+git push origin :<branch_name>
+
+//=========== Pulling on Local ============
+This updates your current branch to reflect changes on the server
+git pull origin <branch_name>
+

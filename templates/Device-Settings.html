@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+<style>
+	.selected
+	{
+		background: #9db0c8;
+		box-shadow: 0 0 20px 10px #9db0c8;
+	}
+	.container {
+  width: 100%;
+  height: 1px;
+  background-color: #595959;
+  position: relative;
+}
+.circle {
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border: solid 1px #595959;
+  border-radius: 50%;
+  position: absolute;
+  top: -6px;
+  left: calc(50% - 5px);
+}
+.deleteHover
+{
+	background-color:  #802000;
+}
+</style>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	
+		<div style="height:600px; margin-top:50px; font-family: Arial; color: #595959; margin-left:auto; margin-right:auto; width:570px;">
+			<center style="font-family: Arial; font-size:25px; color: #595959; margin-bottom:5px;">Device Settings</center>
+			<center>
+				<div class="container">
+					<div class="circle">
+				</div>
+				</div>
+			</center>
+			<input id="settings_device_name" type="text" placeholder="Device Name" style="border-radius: 5px; width: 96%; margin-left: 10px; height: 25px; font-size: 23px; margin-top: 10px; "/><br>
+			<br>
+			<a style="margin-left: 10px; padding-top: 35px; ">Projector Info </a>
+			<br>
+			<hr style="width: 97%;"></hr>
+			<a style="margin-left: 15px; height: 25px; font-size: 15px; margin-top: 10px; border: none; "> Device ID</a><br>
+			<a id="settings_device_id" style="margin-left: 15px; height: 25px; font-size: 15px; color: #999999; margin-top: 10px; border: none;"> 00000001</a><br>
+			<a style="margin-left: 15px; height: 25px; font-size: 15px; margin-top: 10px; border: none; "> Password</a><br>
+			<a id="settings_device_password" style="margin-left: 15px; height: 25px; font-size: 15px;color: #999999; margin-top: 10px; border: none;"> smallbadger12</a><br>
+			<br>
+			<a style="margin-left: 10px; padding-top: 35px; ">Projector Display Schedule </a>
+			<br>
+			<hr style="width: 97%;"></hr>
+
+			<div style="margin-left: 15px;">
+				Turn on at
+				<input id="settings_time_on" type="time" name="usr_time" style="border-radius: 5px;">
+				<button id="settings_time_set_sunset" onclick="buttonClickSunset()" type="submit"style=" width:100px; background-color: #232F3E; color: white; border-radius: 5px; height: 23px; padding-left: 10px; padding-right: 10px; margin-left: 5%; border: 1px solid #c5c5c5;">
+					Sunset
+				</button>
+			</div>
+
+			<div style="margin-left: 15px; margin-top: 8px;">
+				Turn off at
+				<input id="settings_time_off" type="time" name="usr_time" style="border-radius: 5px;">
+				<button id="settings_time_set_sunrise" onclick="buttonClickSunrise()" type="submit" style=" width:100px;background-color: #232F3E; color: white; border-radius: 5px; height: 23px; padding-left: 10px; padding-right: 10px; margin-left: 5%; border: 1px solid #c5c5c5; ">
+					Sunrise
+				</button>
+			</div>
+			<br>
+			<a style="margin-left: 10px; padding-top: 35px; ">Projector Orientation </a>
+			<br>
+			<hr style="width: 97%;"></hr>
+		
+			<div style="width: 100%; height: 100px; padding-left: 10px;">
+				<table >
+					<tr ><td ><input id="settings_orientation_rb_0" onclick="dev_settings_orient_rb_sel(0);" type="radio" name="radio-projectorOrientation" checked="true">Top</td></tr>
+					<tr ><td ><input id="settings_orientation_rb_3" onclick="dev_settings_orient_rb_sel(3);" type="radio" name="radio-projectorOrientation">Right</td></tr>
+					<tr ><td ><input id="settings_orientation_rb_2" onclick="dev_settings_orient_rb_sel(2);" type="radio" name="radio-projectorOrientation">Bottom</td></tr>
+					<tr ><td ><input id="settings_orientation_rb_1" onclick="dev_settings_orient_rb_sel(1);" type="radio" name="radio-projectorOrientation">Left</td></tr>
+				</table>
+				<div style="width: 80px; height: 80px; position: relative;  top: -90px; left: 150px;"> 
+				<img id="dev_settings_orient_img" src="./top.png" style="height: 100px;"></img>
+				</div>
+			</div>
+			<a style="margin-left: 10px; padding-top: 35px; ">Display </a>
+			<br>
+			<hr style="width: 97%;"></hr>
+			<div style="padding-left: 15px;">
+			<input id="settings_display_watermark" type="checkbox">Display Watermark</input><br>
+			<input id="settings_display_debug" type="checkbox">Enable Debug Overlay</input>
+			</div>
+			<br><br>
+
+			<button id="settings_delete_device" style="float: right;background-color: #232F3E; color: white; border-radius: 5px; height: 23px; padding-left: 10px; padding-right: 10px; margin-left: 5%; border: 1px solid #c5c5c5;" onclick="buttonClickDeleteDevice()">Delete this device </button>
+
+			<br><br>
+
+			<center><button style="margin-bottom: 10px; background-color: #232F3E; width:100px; color: white; border-radius: 5px; height: 23px; padding-left: 10px; padding-right: 10px; margin-left: 5%; border: 1px solid #c5c5c5;" onclick="settingsMenuSaveAndClose()"> Done </button></center>
+		
+		<div class="container" style="top:0px; ">
+			
+			</div>
+		</div>
+			
+		
+	
+		
+	
+</body>
+
+
+<script type="text/javascript" src="http://52.207.105.99/js/jquery-3.2.1.min.js">
+//All other scripts will be loaded asynchronously, but jquery will be loaded manually because it
+//is used to actually accomplish this.
+</script>
+
+<script>
+
+$("#settings_delete_device").hover(function(){
+		
+		var i = $("#settings_delete_device");
+		i.addClass("deleteHover");
+		
+		console.log("ping");
+	});	
+</script>
+
+
+</html>

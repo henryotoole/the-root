@@ -1,0 +1,5 @@
+<h2> Created {{dev_list|length}} Devices </h2><br>
+<li>Device ID, Device Password</li>
+{% for n in dev_list %}
+	<li>{{n.id}}, {{n.password}}</li> 
+{% endfor %}

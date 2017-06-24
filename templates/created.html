@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="{{sp_local}}/css/login.css">
+<body>
+	<center>
+		<br><br><br><br>
+		<h2> Account Created </h2>
+
+		<a href='/login'><button type='button' class='btnSubmit'> Back To Login </button></a>
+	</center>
+</body>
+
+<script type="text/javascript" src="http://52.207.105.99/js/jquery-3.2.1.min.js">
+//All other scripts will be loaded asynchronously, but jquery will be loaded manually because it
+//is used to actually accomplish this.
+</script>
+<script>
+$(".btnSubmit").mouseover( function() {
+	$(this).attr("style", "background: #232F3E; color: #f1f1f1");
+	})
+	.mouseout( function() {
+		$(this).attr("style", "background: transparent; color: #232F3E");
+	});
+</script>

@@ -1,0 +1,399 @@
+<link rel="stylesheet" href="{{sp_local}}/css/ws.css">
+<body style='overflow:hidden;'>
+	<div style="z-index: 10; position: absolute; font-family: Arial; background: orange; width: 100%; border-bottom: 1px solid #c5c5c5; left: 0px; height: 30px; top:0;">
+		<img src="{{sp_icons}}/luxedo_outlined.png" style="display: inline-block; float: left; margin-top:5px; height: 20px;"></img>
+		<div style="display: inline-block;  color: #f1f1f1; padding-left: 40%; padding-top: 5px">Andy's Projector </div>
+		<div style="display: inline-block; float: right; color: #f1f1f1; padding-right: 15px; padding-top: 5px">Log Out </div>
+	</div>
+	
+	<!-- Controls Toolbar -->
+	<div id="toolbar_controls" style="z-index: 2;left:20px; top: 240px; position: absolute; background: #232F3E; height:70%; width: 23vw; border-radius: 0px 15px 15px 0px; ">
+		
+		
+	
+		<div id='ctr_devices' class="ControlsMenuTabBack">
+			<div class="ControlsMenuTab">
+				Devices
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div  class='ControlsMenuIcon-devices'> </div>
+			</div>
+		</div>
+		<div id='ctr_skins' class="ControlsMenuTabBack">
+			<div class="ControlsMenuTab">
+				Skins
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div  class='ControlsMenuIcon-skins'></div>
+			</div>
+		</div>
+		<div id='ctr_calibrate' class="ControlsMenuTabBack">
+			<div class="ControlsMenuTab">
+				Calibrate
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div class='ControlsMenuIcon-calibrate'></div>
+			</div>
+		</div>
+		<div id='ctr_editor' class="ControlsMenuTabBack">
+			<div class="ControlsMenuTab">
+				Editor
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div  class='ControlsMenuIcon-editor'></div>
+			</div>
+		</div>
+		<div id='ctr_settings' class="ControlsMenuTabBack">
+			<div class="ControlsMenuTab">
+				Settings
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div class='ControlsMenuIcon-settings'></div>
+			</div>
+		</div>
+		<div id='ctr_account' class="ControlsMenuTabBack" style="border-bottom: 1px solid #595959">
+			<div class="ControlsMenuTab">
+				Account
+			</div>
+			<div class="ControlsMenuImageTab">
+				<div class='ControlsMenuIcon-account'></div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Images Toolbar -->
+	<div id="toolbar_images" style="z-index: 2; position: absolute; display: block; width: 540px; height: 80%;  right: -500px; ">
+		<div id="image_Tab_Div" class="imageTabDiv">
+		<div id="arrow" class="arrow"  ></div>
+		</div>
+		<div style="margin-left:40px; position: absolute;  height: 100%; width: 500px; border: 1px solid #595959">
+			<div style="position: absolute; float: left;   height: 100%; width:250px;display: inline-block; overflow: hidden">
+				<div style=" z-index: 5; position: absolute; height: 10%; width:250px; display: block; background: #f1f1f1">
+					<input type="text" id="searchbox" name="search" placeholder="Search.." style="margin-left: 12px; width: 220px; margin-top: 8px; height: 40px; font-size: 16px; font-family: Arial; border-radius: 10px">
+				</div>
+				<div id='img_images' class='scrollable' style="position: absolute;  bottom: 0;  height: 90%; width:250px; display:block; background: #f1f1f1; overflow-y:auto; overflow-x: hidden;">
+				
+				</div>
+			</div>
+			<div style="position: absolute; margin-left: 250px;  height: 100%; width:250px; display: inline-block; overflow: hidden; background: #f1f1f1; border-left: 1px solid #595959;" >
+				<div style=" vertical-align: middle; display: block; color:#595959;  font-size: 28px; font-family: Arial;  width:100%;  height: 10%; background:#f1f1f1; border-bottom: 1px solid #595959; text-align: center; vertical-align: center;">
+					<div style=" line-height: 8vh;">Categories</div>
+				</div>
+				<div id='img_categories' class='scrollable' style="height: 80%; dsiplay: block;  width:100%;  overflow-y:auto; overflow-x: hidden; "> 
+
+				</div>
+				<div id='img_create' style="display: block; color:#595959; font-family: Arial;  width:100%; height: 10%; background:#f1f1f1; border-top: 1px solid #595959;">
+					<a style="position: absolute; margin-left: 5%; margin-top: 6%; font-size: 20px; display: block;">Create New Image</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Devices Interface -->
+	<div id='iface_devices' style="position: absolute;">
+		<center style="font-family: Arial; font-size:25px; color: #595959; margin-bottom:5px;">Select a Device to Work With</center>
+			<center>
+				<div class="container">
+					<div class="circle"></div>
+				</div>
+			</center>
+		<div style=" overflow: hidden; height: 100%">
+			<div class='scrollable' style="overflow-y: auto;min-width:500px; height: 100%; ">
+				<div id="ifd_register" class="devtileTile">
+					<a class="devtileName devtileFont">Register Projector</a>
+						<div class="registerProjector"></div>
+				</div>
+				</div>
+			</div>
+		<div class="container" style="top: 0px"></div>
+	</div>
+	
+	<!-- Skins Interface -->
+	<div id='iface_skins' style="left: -3000px; position:absolute; ">
+		<center style="font-family: Arial; font-size:25px; color: #595959; margin-bottom:5px;">Select a Skin to Edit</center>
+			<center>
+				<div class="container">
+					<div class="circle">
+				</div>
+				</div>
+			</center>
+		<div style="overflow:hidden; height: 100%">
+			<div style="height:100%; width: 100px;  float:left;"> 
+			</div>
+			<div>
+				<div class='scrollable' style="overflow-y: auto; height: 100%; font-family:Arial; color: #595959">
+					<div id="ifs_create" class='skintileTile skintileTileLandscape'>
+						<a class='skintileName skintileFont'>Create Skin</a>
+						<div class="registerProjector" style="margin-top:10%;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container" style="top: 0px"></div>
+	</div>
+	
+	<!-- Editor Interface -->
+	<div id='iface_editor' style="left: -3000px; background:#EEEEEE;position:absolute;">
+		<div id='canvas_container' style='border:1px solid black; position:relative'>
+			<button id='ife_bg_button' style="z-index: 5; position: absolute; overflow: hidden; top: 5%; left: 1%;background-color: transparent; border-color: transparent; outline:0;">
+				<label class="switch">
+					<input id = "ife_bg_input" type="checkbox">
+					<div class="slider round"></div>
+				</label>   
+				<center id='ife_bg_text' style="float: right; padding-top: 2px; padding-left: 2px; font-size: 15px; color:#595959; font-family: arial;">Stream Background</center>
+			</button>
+			<button id='ife_auto_button' style="z-index: 5; position: absolute; overflow: hidden; top: 9%; left: 1%;background-color: transparent; border-color: transparent; outline:0;">
+				<label class="switch">
+					<input id = "ife_auto_input" type="checkbox">
+					<div class="slider round"></div>
+				</label>   
+				<center id='ife_auto_text' style="float: right; padding-top: 2px; padding-left: 2px; font-size: 15px; color:#595959; font-family: arial;">Stream to Device</center>
+			</button>
+			<div style="position: absolute; top: 90%; left: 1%;">
+				<button class="saveBtn" id="ife_save" ></button>
+				<div id="saving" style="display:none; float: right;">
+						<div class="loader"></div>
+				</div>
+				<center style="float:right; margin-top: 5px;"><a id="saveText" style="margin-left: 10px; display:inline;font-family: Arial; color:#595959; text-align: center;"></a></center>
+				</div>
+			<canvas id="canvas_html" width=1920 height=1080></canvas>
+		 </div>
+	</div>
+
+	<!-- Device Register Overlay -->
+	<div tabindex='0' style="background: #232F3E; font-family: Arial; color: #f1f1f1; position:absolute; left:-3000; border-radius: 5px" id="overlay_device_register">
+		<div style="margin-top: 5px; width: 400px; text-align: center; margin-left: 0%; font-size: 20px; height: 30px; text-indent: 14px;">
+			<button id="o_devreg_close" class="closeBtn"></button>
+			Register New Device
+		</div>
+		
+		<div style="height: 220px; width: 400px; background-color: white; color: #595959; border: 1px solid #c5c5c5; ">
+			<div style="margin-top: 10px; margin-left: 10px; margin-right: 5px">Please enter the device ID and default device password found inside your projector box packaging: </div>
+
+			<hr style="width:95%;"></hr>
+			<input id="o_devreg_id" type="text" maxlength="32" placeholder="Enter Device ID" style="margin-left: 10px; height: 30px; font-size: 23px; margin-top: 15px;"/><br>
+			<br>
+			<input id="o_devreg_pass" type="text" maxlength="32" placeholder="Enter Device Password" style="margin-left: 10px; height: 30px; font-size: 23px; "/><br>
+			
+			
+			<h3 id="register_error" style="text-align:center;"></h3>
+
+			<button id='o_devreg_reg'  style="margin-left: 3%; width:94%; height: 30px; color: #f1f1f1; background: orange; cursor: pointer; border-radius: 5px"> 
+				Register Device 
+			</button>
+		</div>
+	</div>
+	
+	<!-- Skin Create Overlay -->
+	<div id="overlay_skin_register" style='font-family: Arial; z-index: 10; left:-3000px; position: absolute; border: 1px solid #595959; border-radius: 5px'>
+        <div class="addContainerHeader" style="height: 30px; width: 230px;background-color: #232F3E;">
+			<a style="float: left; padding-left: 19px; padding-top: 6px; color: #f1f1f1;">Create New Canvas</a>
+			<button class="closeBtn" style="margin-top:5px" id="o_skincreate_close"></button>
+		</div>
+		
+		
+        <div style="height: 270px; width: 229px; background-color: #FFFFFD; color: #595959">
+		
+			<br>
+			<a style="float: left; text-align: left; text-indent: 20px; padding-bottom: 5px;">Canvas Name</a>
+			<input type="text" id="o_skincreate_name" maxlength="30"placeholder="Untitled" style="float: center; text-indent: 4px; margin-left: 20px; font-size: 16px; width: 200px; padding-left: 7px; padding-top: 10px; border-radius: 5px">
+			<br><br>
+			<a style="float: left; text-align: left; text-indent: 20px;">Select Canvas Orientation</a>
+				<table style="margin-left: 20px;" >
+					<tr>
+						<td>
+							<div style="width: 80px; background-color: #767F84; height: 80px; border-radius: 3px;">
+								<img id='o_skincreate_imglandscape' src="{{sp_icons}}/landscape.png" style="height: 40px; width: 80px; margin-top: 20px;"/>
+							</div>
+						</td>
+						<td style="padding-left: 20px;">
+							
+							<div style="width: 80px; background-color: #767F84; height: 80px;  border-radius: 3px;">
+								<img id='o_skincreate_imgportrait' src="{{sp_icons}}/portrait.png" style="height: 80px; width: 40px; margin-left: 20px;" />
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center; ">
+							<input checked="true" id="o_skincreate_rblandscape" type="radio" name="radio-canvasType">
+						</td>
+						<td style="text-align:center; padding-left: 20px;">
+							<input id="o_skincreate_rbportrait" type="radio" name="radio-canvasType">
+						</td>
+					</tr>
+				</table>
+			<button id='o_skincreate_create' style="margin-left: 3%; width:94%; height: 30px; color: #f1f1f1; background: orange; cursor: pointer; border-radius: 5px"> Create New Canvas </button>
+		</div>
+    </div>
+	
+	<!-- Skin Settings Overlay -->
+	<div id="overlay_skin_settings" style='z-index: 11; left:-3000px; position: absolute; font-family: Arial; color: #595959; border: 1px solid #595959; border-radius: 5px'>
+        <div class="addContainerHeader" style="height: 30px; width: 230px;background-color: #767F84;">
+			<a style="float: left; padding-left: 15px; padding-top: 5px; color: white;">Canvas Options</a>
+			<button class="closeBtn" style="margin-top: 5px" id="o_skinset_close"></button>
+		</div>
+		
+        <div style="height: 190px; width: 229px; background-color: #FFFFFD;">
+			<br>
+			<a style="float: left; text-align: left; text-indent: 16px; padding-bottom: 5px;">Canvas Name</a>
+			<hr style="width: 90%;"></hr>
+			<input type="text" id="o_skinset_name" placeholder="Untitled" style="float: center; width: 200px; margin-left: 16px; padding-left: 3px; border-radius: 5px; padding-top: 10px;"></input>
+			<br><br>
+			<button id='o_skinset_delete' class="deleteCanvasBtn">Delete This Canvas</button>
+			<br><br>
+			<button id='o_skinset_save' class="createCatBtn" style="margin-left: 3%; width:94%; height: 30px; color: #f1f1f1; background: #9DB0C8; cursor: pointer; border-radius: 5px"> Save Changes </button>
+		</div>
+    </div>
+	
+	<!-- Image Add Overlay -->
+	<div id="overlay_image_add" style='z-index: 12; left:-3000px; width: 250px; border-radius: 5px; position: absolute; border: 1px solid #595959; height:335px; font-family: Arial; background: #FFFFFD; color: #595959'>
+		<div class="addContainerHeader" style="text-align: center; height: 25px; width: 250px; padding-top: 6px; color: #f1f1f1; background-color: #232F3E;">
+			Upload an Image
+			<button id="o_imageadd_close"  class="closeBtn" style="margin-top:0px;"></button>
+		</div>
+        <br>
+        
+        <div style="margin-left: 30px">
+			<form id='tform' action="" method="post">
+				Select image to upload:
+				<br>
+				<input type="file" name="fileToUpload" id="o_imageadd_file" style="padding-top: 20px; ">
+				<br><br>
+				{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
+				{{ form.hidden_tag() }}
+				Name:<br> <input type="text" style="border-radius: 5px" id="o_imageadd_name"><br>
+				Category:<br>
+				<select type="text" style="border-radius: 5px; width: 160px;"  id="o_imageadd_category"><br>
+					<option value="new" selected> Create New </option>
+					<!-- Options generated here -->
+				</select> <input type="text" style="margin-top: 10px; border-radius: 5px" placeholder="New Category Name"id="o_imageadd_newcat"> <br>
+			</form>
+		</div>
+		<button id='o_imageadd_add' style="position: absolute; bottom: 9px; margin-top: 20px; margin-left: 3%; width:94%; height: 30px; color: #f1f1f1; background: orange; cursor: pointer; border-radius: 5px"> Add Image </button>
+    </div>
+	
+	<!-- Two Choice Overlay -->
+	<div id='overlay_twochoice' style='z-index: 20; left:-3000px; position: absolute; background-color: white; border: 1px black solid'>
+	<div id='o2c_content'></div><br>
+	<button id='o2c_deny'></button>
+	<button id='o2c_confirm'></button>
+	</div>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="{{sp_js}}/jquery-3.2.1.min.js">
+//All other scripts will be loaded asynchronously, but jquery will be loaded manually because it
+//is used to actually accomplish this.
+</script>
+
+<script src='{{sp_js}}/ws.js'>
+//THIS INCLUDE IS ONLY HERE FOR DEBUGGING (errors don't show up on the right line number otherwise). IT SHOULD
+//BE TAKEN OUT FOR PRODUCTION.
+</script>
+
+<script type="text/javascript" src="{{sp_js}}/fabric.min.js">
+//Same, only here for debugging and the free pizza.
+</script>
+
+
+<script type="text/javascript">
+//THE BELOW IS ALL DEDICATED TO SCRIPT LOADING.
+//Called on page init to get scripts.
+function scriptFetch() 
+{
+	//@PRODUCTION $.getScript("ws.js", function(data, status, xhr) {READY[0] = true; scriptLoad();});
+	//@PRODUCTION$.getScript("/static/content/js_lib/fabric.min.js", function(data, status, xhr) {READY[1] = true; scriptLoad();});
+}
+
+READY = [false, false];
+
+//Called every time a script loads on client side. Last script to load calls the ws init function.
+function scriptLoad()
+{
+	//@PRODUCTION if(READY[0] && READY[1])
+		init("{{sp_content}}");
+}
+
+scriptLoad(); //@PRODUCTION
+
+if (window.addEventListener)
+	window.addEventListener("load", scriptFetch, false);
+else if (window.attachEvent)
+	window.attachEvent("onload", scriptFetch);
+else window.onload = scriptFetch;
+</script>
+
+<script>
+    var delta =180;
+	
+	$("#image_Tab_Div").click(function(){
+		   if ($(this).data('name') == 'show') {
+		            $("#toolbar_images").animate({
+		                right: '-500px'
+		            })
+					 $("#arrow").css({'transform' : 'rotate('+ 180 +'deg)'});
+		            $(this).data('name', 'hide')
+		        } else {
+		            $("#toolbar_images").animate({
+		                right: '0px'
+		            })
+					 $("#arrow").css({'transform' : 'rotate('+ 0 +'deg)'});
+		            $(this).data('name', 'show')
+		        }
+		    });
+	
+	
+	
+  
+</script>
+
+<script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+
