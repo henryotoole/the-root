@@ -1,98 +1,13 @@
-<link rel="stylesheet" href="{{sp_local}}/css/login.css">
 <body>
-
-	<div style="border: 1px solid #595959; border-radius: 4px; margin-top:120px; width: 40%; margin-left:30%;  padding-bottom: 1.5%">
-		<div style="border: 1px solid #595959; width: 100%; height: 10%; background-color:#2A2E2B;border-radius: 4px 4px 0px 0px; ">
-			<img src="{{sp_local}}/icons/logo.svg" style="float:left; height: 80%; width: 10%; margin-top:1.25%; margin-left:1.25%"></img>
-			<div style="color: white; margin-top: 5%; margin-left: 13%;  height: 100%"> LUXEDO</div>
-		</div>
-		<div style="text-align:center; padding-top: 4%">
-			<button id="signUp" class="btn">Sign-Up </button>
-			<button id="signIn" class="btn">Sign-In </button>
-		</div>
-
-		<center>
-			<div class="signInDiv" >
-			</br></br>
-			<form action="" method="post">
-				{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
-				{{ loginform.hidden_tag() }}
-				<br>
-				<font face="Verdana" size="3" style="float:left; " >Email:</font><br />
-				{{ loginform.email(class_="form-control") }}<br>
-				<font face="Verdana" size="3" style="float:left;" >Password:</font><br />
-				<br>
-				{{ loginform.password(class_="form-control") }}<br><br>
-				{{ loginform.submit(class_="btnSubmit") }}
-			</form>
-				
-			</div>
-		</center>
-		<center>
-		<div class="signUpDiv" style="color: #595959;">
-			</br></br>
-			<form action="" method="post">
-				{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
-				{{ createform.hidden_tag() }}
-				<br>
-				<font face="Verdana" size="3" style="float:left; " >Email:</font><br />
-				
-				{{ createform.email_create(class_="form-control") }}<br>
-				{% if createform.email_create.errors %}
-					<ul class="errors">{% for error in createform.email_create.errors %}<li>{{ error }}</li>{% endfor %}</ul>
-				{% endif %}
-				
-				
-				<font face="Verdana" size="3" style="float:left; " >Password:</font><br />
-				
-				{{ createform.password(class_="form-control") }}<br>
-				<font face="Verdana" size="3" style="float:left;" >Confirm Password:</font><br />
-				
-				{{ createform.password_conf(class_="form-control") }}<br><br>
-				{% if createform.password.errors %}
-					<ul class="errors">{% for error in createform.password.errors %}<li>{{ error }}</li>{% endfor %}</ul>
-				{% endif %}
-				{{ createform.submit(class_="btnSubmit") }}
-					<!--input  type="submit" value="Create Account" class="btnSubmit" style="font-size:14px;"-->
-			</form>
-				
-		</div> 
-	</center>
-	</div>
+	<form action="" method="post">
+		{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
+		{{ loginform.hidden_tag() }}
+		<br>
+		<font face="Verdana" size="3" style="float:left; " >Email:</font><br />
+		{{ loginform.email(class_="form-control") }}<br>
+		<font face="Verdana" size="3" style="float:left;" >Password:</font><br />
+		<br>
+		{{ loginform.password(class_="form-control") }}<br><br>
+		{{ loginform.submit(class_="btnSubmit") }}
+	</form>
 </body>
-
-
-<script type="text/javascript" src="{{sp_local}}/js/jquery-3.2.1.min.js">
-//All other scripts will be loaded asynchronously, but jquery will be loaded manually because it
-//is used to actually accomplish this.
-</script>
-<script>
-
-$("#signIn").click( function()
-{
-	 $(".signUpDiv").fadeOut(500, function() {
-		 $(".signInDiv").fadeIn(500, function() {});
-     });	
-});
-
-$("#signUp").click( function()
-{
-	 $(".signInDiv").fadeOut(500, function() {
-		 $(".signUpDiv").fadeIn(500, function() {});
-     });	
-});
-
-$(".btn").mouseover( function() {
-	$(this).attr("style", "background: #232F3E; color: #f1f1f1");
-	})
-	.mouseout( function() {
-		$(this).attr("style", "background: transparent; color: #232F3E");
-	});
-$(".btnSubmit").mouseover( function() {
-	$(this).attr("style", "background: #232F3E; color: #f1f1f1");
-	})
-	.mouseout( function() {
-		$(this).attr("style", "background: transparent; color: #232F3E");
-	});
-
-</script>
