@@ -17,7 +17,7 @@ def load_user(user_id):
 	
 @app.route("/")
 def landing():
-	return render_template("/landing.html")
+	return render_template("/landing.html", sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
 	
 @app.route("/robots.txt")
 def robots():
@@ -60,14 +60,6 @@ def login():
 	else:
 		return render_template('login.html', loginform=loginform, createform=createform, sp_local=sp_local)
 
-@app.route("/logged_in")
-@login_required
-def logintest():
-	print current_user
-	return "I'm in."
-	
-@app.route("/logout")
-@login_required
-def logout():
-	logout_user()
-	return "Logged out"
+@app.route("/about")
+def about():
+	return render_template("/about.html", sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
