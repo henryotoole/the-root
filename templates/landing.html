@@ -1,10 +1,60 @@
 <!DOCTYPE html>
 <html>
-<head> </head>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<style>
+body
+{
+	margin: 0;
+}
+a
+{
+  color:inherit;
+  text-decoration: none;
+}
+h1
+{
+	margin: 10px;
+}
+</style>
+</head>
 
 <body>
-	<h1> The Root </h1>
-	This is only the beginning.
+	<div>
+		<div class='topbar-block f-raleway-para' style='vertical-align: top; width: 40%'>
+			<div style='display: inline-block'>
+				<h1 class='f-playfair-para'><a href='/map'> Map <a></h1>
+				<div class='hline-center'></div>
+			</div>
+		</div>
+		<div class='topbar-block f-raleway-para' style='width: 19.4%'>
+			<h1 class='f-playfair-head'> [ The Root ] </h1>
+			<div class='f-raleway-para' style='display: inline-block'>
+				<div class='hline-center'></div>
+				This is only the beginning.
+			</div>
+		</div>
+		<div class='topbar-block f-raleway-para' style='vertical-align: top; width: 40%'>
+			<div style='display: inline-block'>
+				<h1 class='f-playfair-para'><a href='/about'> About <a></h1>
+				<div class='hline-center'></div>
+			</div>
+		</div>
+	</div>
+	<div class='centered'>
+		<img src='{{sp_local}}/icons/root552_1_medium.jpg'>
+	</div>
 </body>
 
 </html>
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+<script type="text/javascript" src="{{sp_local}}/js/map.js">
+
+</script>
+
+<script>
+console.log("init");
+init();
+</script>
