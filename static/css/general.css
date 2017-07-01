@@ -10,6 +10,12 @@
 
     margin: auto;
 }
+/* Width must be set explicitly in the style for this to work.*/
+.center-hz-fixed-w
+{
+	margin-left: auto; 
+	margin-right: auto; 
+}
 .hline-center
 {
 	padding-bottom: 5px;
@@ -34,4 +40,15 @@
 {
 	text-align: center; 
 	display: inline-block;
+}
+/* The standard class for wtforms inputs
+
+*/
+.input-std
+{
+	border-radius: 4px;
+	height:60px;
+	font-size: 250%;
+	width:100%;
+	border: 2px solid black;
 }

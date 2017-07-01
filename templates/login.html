@@ -2,12 +2,11 @@
 	<form action="" method="post">
 		{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
 		{{ loginform.hidden_tag() }}
+		Email: <br>
+		{{ loginform.email() }}<br>
 		<br>
-		<font face="Verdana" size="3" style="float:left; " >Email:</font><br />
-		{{ loginform.email(class_="form-control") }}<br>
-		<font face="Verdana" size="3" style="float:left;" >Password:</font><br />
-		<br>
-		{{ loginform.password(class_="form-control") }}<br><br>
-		{{ loginform.submit(class_="btnSubmit") }}
+		Password:<br>
+		{{ loginform.password() }}<br><br>
+		{{ loginform.submit() }}
 	</form>
 </body>
