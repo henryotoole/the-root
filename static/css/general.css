@@ -10,6 +10,19 @@
 
     margin: auto;
 }
+/* Emulates a page, best on a light grey background */
+.page
+{
+	margin-left: auto; 
+	margin-right: auto;
+	width: 65%;
+	border-radius: 3px;
+	background: white; 
+	margin-top: 5%;
+	margin-bottom: 8%;
+	border: 2px solid #222222;
+	overflow: auto;
+}
 /* Width must be set explicitly in the style for this to work.*/
 .center-hz-fixed-w
 {
@@ -20,7 +33,7 @@
 {
 	padding-bottom: 5px;
 	padding-top: 5px;
-	border-top: 1px solid black;
+	border-top: 1px solid #222222;
 	width=100%;
 }
 .f-raleway-para

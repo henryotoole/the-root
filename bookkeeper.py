@@ -13,7 +13,7 @@ from the_root.models import Transaction, Method, Type
 import flask
 from flask_login import login_required, current_user
 
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, jsonify
 
 import datetime
 
@@ -58,7 +58,7 @@ def reginald_transaction(t_type):
 			dest = form.dest_optional.data
 		desc = form.desc.data
 		
-		trans = Transaction(amt, income, type, srcdest = dest, desc = desc)
+		trans = Transaction(amt, income, type, method, srcdest = dest, desc = desc)
 		db.session.add(trans)
 		db.session.commit()
 		#No user of that name.
@@ -70,13 +70,39 @@ def reginald_transaction(t_type):
 #
 
 #Render a greensheet for the current user across a date range
+#Dates in format DDMMYYYY
 @app.route("/reginald/greensheet", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def greensheet():
-	date_start = request.values.get('date_start', type=str)
-	date_end = request.values.get('date_end', type=str)
-	
+	return render_template("/reginald/greensheet.html", sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
 
+
+#Dates in format YYYY-MM-DD
+@app.route("/reginald/greensheet/<query>", methods=['GET', 'POST'])
+@login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
+def greensheet_query(query):
+	if(query=='records_for_day'):
+		date = request.values.get('date', type=str)
+		if(date is None):
+			return "Bad params", 404
+		try:
+			date = datetime.datetime.strptime(date + ' 23:59', "%Y-%m-%d %H:%M")
+			date_end = date
+			date_start = date - datetime.timedelta(days=1)
+		except ValueError:
+			return "Time format wrong", 415
+
+		records = Transaction.query.filter_by(user=current_user.id).filter(Transaction.time<=date_end).filter(Transaction.time>=date_start).all()
+		
+		list = [record.getDict() for record in records]
+
+		return jsonify(list), 200
+	elif(query=='types'):
+		types = Type.query.all()
+		list = [type.getDict() for type in types]
+		
+		return jsonify(list), 200
+#
 
 
 
