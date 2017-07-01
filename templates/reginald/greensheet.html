@@ -1,0 +1,138 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<style>
+body
+{
+	margin: 0;
+	background: #e5e5e5;
+}
+h1
+{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+[type="date"] {
+	background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+}
+[type="date"]::-webkit-inner-spin-button {
+	display: none;
+}
+[type="date"]::-webkit-calendar-picker-indicator {
+	opacity: 0;
+}
+
+/* custom styles */
+.datepicker {
+	border: 1px solid #c4c4c4;
+	border-radius: 5px;
+	background-color: #fff;
+	padding: 3px 5px;
+	box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+	width: 190px;
+	display: inline-block;
+}
+.greenregion {
+	border-top: 2px solid #494529;
+	border-bottom: 1px solid #494529;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	background: #d8e4bc;
+}
+
+.orangeregion {
+	border-top: 1px solid #dc9f64;
+	border-bottom: 1px solid #dc9f64;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	background: #ffcc99;
+}
+
+.iblock{
+	display: inline-block;
+}
+
+/* Here box sizing makes the border on the inside */
+.topbalance{
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	width: 50%;
+	border: 1px dashed black;
+}
+
+.block-day{
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	width: 50%;
+}
+
+.entry{
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	width: 100%;
+	border-top: 1px solid black;
+}
+
+.value{
+	border-left: 1px solid black;
+	display: inline-block;
+}
+
+.value-left{
+	display: inline-block;
+}
+
+.container-day{
+	clear: both;
+}
+
+.date-line{
+	border-top: 2px solid black;
+	border-bottom: 1px solid black;
+}
+</style>
+</head>
+<body>
+	
+	<div class='page' style='border: 2px solid #777777;'>
+		<center><h1 class='f-raleway-head' style='color: #c00000; font-size: 225%' > - Rolling Greensheet - </h1></center>
+		<center class='greenregion'>
+			<input type="date" class="datepicker" name="date_start" id="date_start">
+			<div id='date_end_block' style='display: inline-block'>
+				to
+				<input type="date" class="datepicker" name="date_end" id="date_end">
+			</div>
+		</center>
+		<div id='graphics' style='height: 300px;'>
+		</div>
+		<center class='greenregion' style='height: 25px; border-bottom: 2px solid #494529; border-top: 1px solid #494529;'>
+		</center>
+		<center class='orangeregion f-playfair-para' style='font-size: 150%;'>
+			<div class='iblock'> Balance: $</div>
+			<div class='iblock' id = 'balance'> 0.00 </div>
+		</center>
+		<div>
+			<div class='topbalance' style='float: left;height: 200px;'>
+				
+			</div>
+			<div class='topbalance' style='float: right;height: 200px;'>
+				
+			</div>
+		</div>
+		<div id='day_list'>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+<script type="text/javascript" src="{{sp_local}}/js/greensheet.js"></script>
+
+<script>
+init('{{sp_local}}', '{{sp_content}}');
+</script>

@@ -67,12 +67,14 @@ class Transaction(db.Model):
 	srcdest = db.Column(db.String(127), nullable=True)								# The optional source or destination (i.e. Kroger's)
 	desc = db.Column(db.String(255), nullable=True)									# An optional description
 	user = db.Column(db.Integer, nullable=False)									# The user who made this record
+	method = db.Column(db.Integer, nullable=False)									# ID of Method (see Method)
 
 	#Create a new record. Amount, income, and type are required. Does not add to database.
-	def __init__(self, amt, income, type, srcdest = None, desc = None):
+	def __init__(self, amt, income, type, method, srcdest = None, desc = None):
 		self.amt = amt
 		self.income = income
 		self.type = type
+		self.method = method
 		
 		self.time = datetime.datetime.now()
 		self.user = current_user.id
@@ -125,6 +127,16 @@ class Type(db.Model):
 		self.name = name
 		self.desc = desc
 		self.income = income
+		
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
 	
 class Method(db.Model):
 	
@@ -136,6 +148,16 @@ class Method(db.Model):
 	
 	def __init__(self, name):
 		self.name = name
+		
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
 
 class Device(db.Model):
 	
