@@ -1,0 +1,96 @@
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<style>
+body
+{
+	margin: 0;
+}
+h1
+{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.exp-inline
+{
+	display: inline-block;
+	width: 33%;
+}
+</style>
+</head>
+<body>
+	<div class='center-hz-fixed-w' style='margin-top: 5%; width: 70%'>
+		<form action="" method="post">
+			{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
+			{{ form.hidden_tag() }}
+			<br>
+			<center>
+				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.amt.label}} </h1>
+				<div style='width: 33%'>
+				{{ form.amt(class='input-std f-raleway-para', style='text-align: center') }}
+				</div>
+				<div class='exp-inline'>
+					<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.method.label}} </h1>
+					{{ form.method(class='input-std f-raleway-para')}}
+				</div>
+				<div class='exp-inline'>
+					<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.type.label}} </h1>
+					{{ form.type(class='input-std f-raleway-para')}}
+				</div>
+				<div class='exp-inline'>
+					<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.dest.label}} </h1>
+					{{ form.dest(id='dest', class='input-std f-raleway-para')}}
+				</div>
+			</center>
+			<div id='dest_optional' style='margin-top: 50px'>
+				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.dest_optional.label}} </h1>
+				{{ form.dest_optional(class='input-std f-raleway-para', placeholder='Optional') }}
+			</div>
+			<div>
+				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.desc.label}} </h1>
+				{{ form.desc(class='input-std f-raleway-para', placeholder='Optional') }}
+			</div>
+			<div style='margin-right: 0; margin-left: auto; width: 30%; margin-top: 25px'>
+				{{ form.submit(class='input-std f-raleway-para') }}
+			</div>
+			{% if form.errors %}
+			Reginald says:
+			<ul class="errors">
+				{% for field_name, field_errors in form.errors|dictsort if field_errors %}
+					{% for error in field_errors %}
+						<li>{{ form[field_name].label }}: {{ error }}</li>
+					{% endfor %}
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</form>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+<script>
+
+$dest = $('#dest');
+$dest_opt = $('#dest_optional');
+
+if($dest.val() != '__OTHER__') //If the new option selected is the 'new category'
+{
+	$dest_opt.show();
+}
+$dest.change(function()
+{
+	console.log('chang');
+	if($dest.val() == '__OTHER__') //If the new option selected is the 'new category'
+	{
+		$dest_opt.show();
+	}
+	else
+	{
+		$dest_opt.hide();
+	}
+});
+
+</script>

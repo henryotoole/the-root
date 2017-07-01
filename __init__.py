@@ -16,6 +16,7 @@ def setup():
 	register_extensions(app)
 	#Import all path-containing files
 	import the_root.landing	# The landing and login pages
+	import the_root.bookkeeper # An app for handling transaction records.
 	#Setup debug, if necessary.
 	if(app.config['DEBUG']):
 		import the_root.debug
