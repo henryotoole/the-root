@@ -1,7 +1,8 @@
 <html>
 <head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Inconsolata" rel="stylesheet">
 <link href="{{sp_local}}/css/general.css" rel="stylesheet">
+
 <style>
 body
 {
@@ -54,12 +55,20 @@ h1
 }
 
 /* Here box sizing makes the border on the inside */
-.topbalance{
+.chart-region{
 	box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 	width: 50%;
-	border: 1px dashed black;
+	padding: 2vh;
+	padding-top: 0px;
+}
+
+/* Applied to the canvas that holds the chart */
+.chart{
+	margin-left: auto;
+	margin-right: auto;
+	eight: 100%;
 }
 
 .block-day{
@@ -70,11 +79,17 @@ h1
 }
 
 .entry{
-	box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
 	width: 100%;
-	border-top: 1px solid black;
+	border-top: 1px dashed black;
+}
+
+/* Light grey shading for entry rows */
+.shading-grey{
+	background: #CCCCCC;
+}
+
+.entry:first-child{
+	border-top: none;
 }
 
 .value{
@@ -93,13 +108,59 @@ h1
 .date-line{
 	border-top: 2px solid black;
 	border-bottom: 1px solid black;
+	background: #d8e4bc;
+}
+
+.entry-list-header-block{
+	width: 50%;
+}
+
+.entry-list-header{
+	border-top: 1px solid #dc9f64;
+	border-bottom: 1px solid #dc9f64;
+	background: #ffcc99;
+	text-align: center;
+	clear: both;
+}
+
+.entry-list-footer{
+	border-top: 1px solid #dc9f64;
+	border-bottom: 1px solid #dc9f64;
+	background: #ffcc99;
+	clear: both;
+	display: flex;
+	justify-content: flex-end;
+	padding-right: 5px;
+}
+
+/* Each subtotal in the entry-list-header block, one for each expense/income category */
+.subtotal-entry{
+	display: flex;
+	justify-content: space-between;
+	border-top: 1px solid #DDDDDD;
+	padding-right: 3px;
+}
+
+/* Each entry has a color identifer*/
+.subtotal-color{
+	margin: 2px;
+	border-radius: 2px;
+	width: 50px;
+}
+
+.subtotal-box{
+	display: flex;
+}
+
+.subtotal-entry:first-child{
+	border-top: none;
 }
 </style>
 </head>
-<body>
+<body class='f-raleway-para'>
 	
 	<div class='page' style='border: 2px solid #777777;'>
-		<center><h1 class='f-raleway-head' style='color: #c00000; font-size: 225%' > - Rolling Greensheet - </h1></center>
+		<center><h1 class='f-playfair-para' style='color: #c00000; font-size: 225%' > - Rolling Greensheet - </h1></center>
 		<center class='greenregion'>
 			<input type="date" class="datepicker" name="date_start" id="date_start">
 			<div id='date_end_block' style='display: inline-block'>
@@ -107,7 +168,8 @@ h1
 				<input type="date" class="datepicker" name="date_end" id="date_end">
 			</div>
 		</center>
-		<div id='graphics' style='height: 300px;'>
+		<div style='padding: 2vh;'>
+			<canvas id='chart_global' style='height: 100%'></canvas>
 		</div>
 		<center class='greenregion' style='height: 25px; border-bottom: 2px solid #494529; border-top: 1px solid #494529;'>
 		</center>
@@ -116,20 +178,42 @@ h1
 			<div class='iblock' id = 'balance'> 0.00 </div>
 		</center>
 		<div>
-			<div class='topbalance' style='float: left;height: 200px;'>
-				
+			<div class='chart-region' style='float: left; border-right: 1px solid #999999'>
+				<canvas style='margin-left: auto; margin-right: auto; height: 100%' id='chart_expenses'></canvas>
 			</div>
-			<div class='topbalance' style='float: right;height: 200px;'>
-				
+			<div class='chart-region' style='float: right;'>
+				<canvas style='margin-left: auto; margin-right: auto; height: 100%' id='chart_income'></canvas>
 			</div>
 		</div>
-		<div id='day_list'>
+		<div style="display: flex; clear: both">
+			<div class='entry-list-header-block'>
+				<div class='f-playfair-head entry-list-header'>
+					<div> Expenses </div>
+				</div>
+				<div id='expenses_sub'></div>
+				<div class='entry-list-footer'>
+					<div class='iblock'> Total: $ </div><div class='iblock' id='expenses'> 0.00 </div>
+				</div>
+			</div>
+			<div class='entry-list-header-block' style='border-left: 1px solid black'>
+				<div class='f-playfair-head entry-list-header'>
+					<div> Income </div>
+				</div>
+				<div id='income_sub'></div>
+				<div class='entry-list-footer'>
+					<div class='iblock'> Total: $ </div><div class='iblock' id='income'> 0.00 </div>
+				</div>
+			</div>
+		</div>
+		<div id='day_list' class='f-raleway-low'>
 		</div>
 	</div>
 </body>
 </html>
 
-<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+<script src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+<script src="{{sp_content}}/lib/moment2.18.1.min.js"></script>
+<script src="{{sp_content}}/lib/chart2.4.0.min.js"></script>
 
 <script type="text/javascript" src="{{sp_local}}/js/greensheet.js"></script>
 

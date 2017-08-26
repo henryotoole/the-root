@@ -87,14 +87,10 @@ def greensheet_query(query):
 			return "Bad params", 404
 		try:
 			date = datetime.datetime.strptime(date + ' 23:59', "%Y-%m-%d %H:%M")
-			date_end = date
-			date_start = date - datetime.timedelta(days=1)
 		except ValueError:
 			return "Time format wrong", 415
 
-		records = Transaction.query.filter_by(user=current_user.id).filter(Transaction.time<=date_end).filter(Transaction.time>=date_start).all()
-		
-		list = [record.getDict() for record in records]
+		list = Transaction.getDate(date)
 
 		return jsonify(list), 200
 	elif(query=='types'):
@@ -102,6 +98,43 @@ def greensheet_query(query):
 		list = [type.getDict() for type in types]
 		
 		return jsonify(list), 200
+	#Note: It's best to get multiple in one request for A) performance reasons and B) to make it easier to order them server-side.
+	#This will return a list of lists of records for EVERY DAY IN THE RANGE, meaning empty arrays are returned for days with no records.
+	elif(query=='records_for_range'):
+		#Note: Dates can be in either order, but must be in YYYY-MM-DD format.
+		date1 = request.values.get('date1', type=str)
+		date2 = request.values.get('date2', type=str)
+		date_start = None
+		date_end = None
+		if(date1 is None or date2 is None):
+			return "Bad params", 404
+		try:
+			date1 = datetime.datetime.strptime(date1 + ' 23:59', "%Y-%m-%d %H:%M")
+			date2 = datetime.datetime.strptime(date2 + ' 23:59', "%Y-%m-%d %H:%M")
+			#Ensure date_start is chronologically before date_end
+			if(date1 < date2):
+				date_start = date1
+				date_end = date2
+			else:
+				date_start = date2
+				date_end = date1
+		except ValueError:
+			return "Time format wrong", 415\
+		#Empty list of days to populate (in order)
+		days = []
+		
+		#Loop through every day in the range.
+		delta = datetime.timedelta(days=1)
+		d = date_start
+		while d <= date_end:
+			days.append(Transaction.getDate(d))
+			d += delta
+		
+		data = {'days': days, 'balance_at_start': str(Transaction.getBalanceUpTo(date_start))}
+		return jsonify(data), 200
+	#Sum every transaction for a user and return the balance
+	elif(query=='total_balance'):
+		return jsonify(str(Transaction.getBalance())), 200
 #
 
 
