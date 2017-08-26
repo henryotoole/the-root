@@ -36,9 +36,21 @@
 	border-top: 1px solid #222222;
 	width=100%;
 }
+/* A general monospace font for numbers */
+.f-number
+{
+	font-family: 'Inconsolata', monospace;
+}
 .f-raleway-para
 {
 	font-family: 'Raleway', sans-serif;
+	font-weight: normal;
+}
+.f-raleway-low
+{
+	font-family: 'Raleway', sans-serif;
+	font-weight: normal;
+	font-size: 90%;
 }
 .f-playfair-head
 {

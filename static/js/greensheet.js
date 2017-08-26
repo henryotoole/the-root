@@ -8,6 +8,14 @@ function init(sp_local, sp_content)
 	PAGE = new Page()
 }
 
+//A huge list of colors to populate graphs with.
+COLOR_LIST_WARM = [
+	"#D67646","#943D2C","#474344","#E5BD77","#DFD0BB","#D94330","#EB712F","#FADDAF","#94353C","#DBA72E","#B0703C"
+];
+
+COLOR_LIST_COLD = [
+	"#5f7c45","#5c7f99","#bedcf5","#121d40","#89a65d","#3b4859","#a3a19f"
+];
 
 class Page
 {
@@ -18,10 +26,23 @@ class Page
 		this.$date_end = $('#date_end');
 		this.$day_list = $('#day_list');
 		this.$balance = $('#balance');
+		this.$income = $('#income');
+		this.$expenses = $('#expenses');
+		this.$income_sub = $('#income_sub');
+		this.$expenses_sub = $('#expenses_sub');
+		this.colorflip = 0; // Flipped between 0 and 1 as days are added, allowing rows the be alternately colored
+		this.chart_expenses = null;
+		this.chart_income = null;
 		
 		this.days = [];
 		//Dict of types of transaction {id1: {id: id, name: name, etc: etc}}
 		this.types = {};
+		
+		//Uncomment this to autoload entries for debugging.
+		setTimeout(function() 
+		{
+			_this.get_dates(getDateYYYYMMDD('2017-06-25'), getDateYYYYMMDD('2017-08-23'));
+		}, 250);
 		
 		this.$date_start.change(function()
 		{
@@ -52,16 +73,197 @@ class Page
 			}
 		});
 		
-		//Get the types of transaction.
+		//Get the types of transaction. Adds them to their respective subtotal columns.
 		$.getJSON("/reginald/greensheet/types")
 			.done(function(list) 
 			{
+				//Count of income and expense transaction types added - used to balance both sides at the end.
+				var ic = 0;
+				var ec = 0;
 				for(var i = 0; i < list.length; i++)
 				{
 					var t = list[i];
-					_this.types[t.id] = {id: t.id, name: t.name, desc: t.desc, income: (t.income == 'True')};
+					var $name = $('<div>' + t.name + '</div>');
+					var $total = $('<div>$0.00</div>').addClass('f-number');
+					var $box = $('<div></div>').addClass('subtotal-box');
+					var $color = $('<div></div>').addClass('subtotal-color');
+					var $entry = $('<div></div>').addClass('subtotal-entry');
+					_this.types[t.id] = {id: t.id, name: t.name, desc: t.desc, income: (t.income == 'True'), $entry: $entry, $name: $name, $total: $total};
+					if(t.income == 'True')
+					{
+						$color.css('background', COLOR_LIST_COLD[ic]);
+						$box.append($color).append($name);
+						$entry.append($box).append($total);
+						_this.$income_sub.append($entry);
+						ic++;
+					}
+					else
+					{
+						$color.css('background', COLOR_LIST_WARM[ec]);
+						$box.append($color).append($name);
+						$entry.append($box).append($total);
+						_this.$expenses_sub.append($entry);
+						ec++;
+					}
 				}
+				//Adds some gag rows to one side or the other to take up space.
+				var op = null;
+				if(ic < ec)	{op = _this.$income_sub}
+				else {op = _this.$expenses_sub}
+				for(var i = 0; i < Math.abs(ic - ec); i++)
+				{
+					op.append($('<div>.</div>').addClass('subtotal-entry'));
+				}
+				
 			});
+		this.charts_setup();
+	}
+	
+	//Initializes the charts.
+	charts_setup()
+	{
+		
+		var ctexp = $('#chart_expenses')[0].getContext('2d');
+		var ctinc = $('#chart_income')[0].getContext('2d');
+		var ctglo = $('#chart_global')[0].getContext('2d');
+		
+		this.chart_expenses = new Chart(ctexp, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [1]
+				}],
+				
+				labels: ['No data']
+			},
+			options: {
+				legend: {
+					display: false
+				},
+				title: {
+					display: true,
+					text: 'Expense Summary'
+				}
+			}
+		});
+		this.chart_income = new Chart(ctinc, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [1]
+				}],
+				
+				labels: ['No data']
+			},
+			options: {
+				legend: {
+					display: false
+				},
+				title: {
+					display: true,
+					text: 'Income Summary'
+				}
+			}
+		});
+		this.chart_global = new Chart(ctglo, {
+			type: 'line',
+			data: {
+				datasets: [{
+					data: [{x: 0, y: '0000-00-00'}],
+					yAxisID: 'reservoir',
+					backgroundColor: 'rgba(0, 0, 0, 0.0)',
+					borderColor: '#555555',
+					pointBackgroundColor: '#555555',
+					label: "Daily Balance"
+				}, {
+					data: [{x: 0, y: '0000-00-00'}],
+					yAxisID: 'flow',
+					backgroundColor: 'rgba(95 ,124 ,69 , 0.65)',
+					label: "Total Funds"
+				}],
+			},
+			options: {
+				legend: {
+					position: 'bottom'
+				},
+				title: {
+					display: true,
+					text: 'Expense Summary'
+				},
+				scales: {
+					xAxes: [{
+						type: 'time',
+						time: {
+							displayFormats: {
+								'day': 'YYYY-MM-DD' //Always use ISO, cause it's great.
+							}
+						}
+					}],
+					yAxes: [{
+						id: 'reservoir'
+					}, {
+						id: 'flow'
+					}]
+				},
+				elements: {
+					line: {
+						tension: 0, // disables bezier curves
+					}
+				}
+			}
+		});
+	}
+	
+	//Updates the information displayed by a chart. 
+	//+chart is the chart to be updated,
+	//+data is a list of numbers which will be displayed in proportion to the sum of the list,
+	//+labels is a list of labels for each number in data, respectively.
+	//+color_list is a list of colors to draw from. This list is assumed to be longer than the data.
+	chart_doughnut_update(chart, data, labels, color_list)
+	{
+		//A note about the complexity here. The config.data object is complicated, and its subgroups contain alot of references
+		//that are defined when the chart is instantiated. These references cannot be lost, so we must manually push and pop
+		//all new data. NOTE: this method will break down if the graph has multiple datasets.
+		
+		//Clear all old data
+		while(chart.config.data.datasets[0].data.length > 0)
+		{
+			chart.config.data.datasets[0].data.pop();
+		}
+		for(var x = 0; x < data.length; x++)
+		{
+			chart.config.data.datasets[0].data.push(data[x]);
+		}
+		chart.config.data.datasets[0].backgroundColor = color_list.slice(0, data.length);
+		
+		chart.config.data.labels = labels
+		chart.update();
+	}
+	
+	//Updates info on a number-time chart.
+	//+chart is the chart to update,
+	//+data_flow is a list of dicts of format {x: YYYY-MM-DD, y: some_number} which represents the local balance of each day.
+	//+data_reservoir is a similar list of dicts depicting the total amount of money on each day
+	chart_linedate_update(chart, data_flow, data_reservoir)
+	{
+		while(chart.config.data.datasets[0].data.length > 0)
+		{
+			chart.config.data.datasets[0].data.pop();
+		}
+		while(chart.config.data.datasets[1].data.length > 0)
+		{
+			chart.config.data.datasets[1].data.pop();
+		}
+		for(var x = 0; x < data_flow.length; x++)
+		{
+			chart.config.data.datasets[0].data.push(data_flow[x]);
+		}
+		for(var x = 0; x < data_reservoir.length; x++)
+		{
+			chart.config.data.datasets[1].data.push(data_reservoir[x]);
+		}
+
+		chart.update();
 	}
 	
 	//Clears graphical, numerical, and data.
@@ -73,35 +275,55 @@ class Page
 	}
 	
 	//Dates should be Date objects. Don't provide date_end for a single day.
+	//Gets all dates at once from the server and returns them in an ordered list. This ordered list is then added
+	//to the page's stack of entries.
 	get_dates(date_start, date_end)
 	{
 		this.clear();
 		var _this = this;
+		
+		//If only the first date is specified, just get that one day.
 		if(!date_end)
 		{
-			date_end = new Date(date_start.getTime() + 1); //Increment by 1 milli
-		}
-		this.dates_req = 0;
-		this.dates_rec = 0;
-		while(date_start.getTime() < date_end.getTime())
-		{
-			this.dates_req += 1;
 			$.getJSON("/reginald/greensheet/records_for_day", {'date': date_start.toISOString().substring(0, 10)})
 				.done(function(list) 
 				{
 					_this.add_day(list);
 				});
-			date_start.setDate(date_start.getDate() + 1); //Increment by 1 day.
+		}
+		else if(!date_start)
+		{
+			//Do nothing, as this makes no sense
+		}
+		else //Both dates are defined by the user
+		{
+			var data = {
+				'date1': date_start.toISOString().substring(0, 10),
+				'date2': date_end.toISOString().substring(0, 10)
+			}
+			$.getJSON("/reginald/greensheet/records_for_range", data)
+				.done(function(data) 
+				{
+					var list = data.days;
+					_this.entering_balance = data.balance_at_start;
+					console.log("At start: " + _this.entering_balance);
+					for(var i = 0; i < list.length; i++)
+					{
+						var d = i == list.length - 1; //Ensure we only call calculate for the last entry.
+						_this.add_day(list[i], d);
+					}
+				});
 		}
 	}
 	
 	//Add's a day's worth of records to the sheet, from the provided list
 	//date is a Date object.
-	add_day(list)
+	add_day(list, update=false)
 	{
-		if(list.length > 0) //If there are records
+		if(list.length > 0) //If there are records (important cause server returns empty arrays)
 		{
-			var day = new DayEntry(getDateYYYYMMDDhhmmss(list[0].time));
+			var day = new DayEntry(getDateYYYYMMDDhhmmss(list[0].time), this.colorflip);
+			this.colorflip = !this.colorflip; //Flip it so the next row is alternate shade.
 			for(var i = 0; i < list.length; i++)
 			{
 				var t = list[i];
@@ -110,8 +332,7 @@ class Page
 			this.days.push(day);
 			this.$day_list.append(day.$entry);
 		}
-		this.dates_rec += 1;
-		if(this.dates_rec >= this.dates_req)
+		if(update)
 		{
 			this.update_numbers();
 		}
@@ -120,7 +341,10 @@ class Page
 	//updates the current numbers based off the days list
 	update_numbers()
 	{
+		console.log("Calculating... (TREBUCHET FLINGING NOISE)");
 		var sums_type = {}; //Init a sums dict for the different types of money
+		var global_data_flow = []; //used to populate the global graph.
+		var global_data_reservoir = []; 
 		for(var key in this.types)
 		{
 			if(this.types.hasOwnProperty(key))
@@ -132,23 +356,58 @@ class Page
 		var sums = {}
 		sums['income'] = 0.0;
 		sums['expense'] = 0.0;
-		console.log(sums);
+		var reservoir_total = parseFloat(this.entering_balance); //TODO add an initial value to this running sum.
 		for(var i = 0; i < this.days.length; i++)
 		{
 			var day = this.days[i];
+			var local_total = 0;
 			
 			for(var ii = 0; ii < day.transactions.length; ii++)
 			{
 				var trans = day.transactions[ii];
 				var amt = trans.amt;
 				sums_type[trans.type] += parseFloat(amt);
+				local_total += trans.income ? parseFloat(amt): -1 * parseFloat(amt);
 				sums[trans.income ? 'income': 'expense'] += parseFloat(amt);
 			}
+			reservoir_total += local_total;
+			global_data_flow.push({x: day.isostring, y: local_total});
+			global_data_reservoir.push({x: day.isostring, y: reservoir_total});
 		}
-		console.log(sums);
-		console.log(sums_type);
+		
+		var sub_data_exp = {data: [], labels: []};
+		var sub_data_inc = {data: [], labels: []};
+		
+		//Update the subtotals
+		for(var key in sums_type)
+		{
+			if(sums_type.hasOwnProperty(key))
+			{
+				var type = this.types[key];
+				if(type.income)
+				{
+					sub_data_inc.labels.push(type.name);
+					sub_data_inc.data.push(sums_type[key]);
+				}
+				else
+				{
+					sub_data_exp.labels.push(type.name);
+					sub_data_exp.data.push(sums_type[key]);
+				}
+				
+				this.types[key].$total.html('$' + sums_type[key]);
+			}
+		}
+		
 		var balance = sums['income'] - sums['expense'];
 		this.$balance.html(balance.toFixed(2));
+		this.$income.html(sums['income'].toFixed(2));
+		this.$expenses.html(sums['expense'].toFixed(2));
+		
+		//Lastly, update the charts.
+		this.chart_doughnut_update(this.chart_expenses, sub_data_exp.data, sub_data_exp.labels, COLOR_LIST_WARM);
+		this.chart_doughnut_update(this.chart_income, sub_data_inc.data, sub_data_inc.labels, COLOR_LIST_COLD);
+		this.chart_linedate_update(this.chart_global, global_data_flow, global_data_reservoir);
 	}
 }
 
@@ -162,15 +421,34 @@ class Page
 
 class DayEntry
 {
-	//Date should be a Date object
-	constructor(date)
+	//'date' should be a Date object.
+	//'shaded' is 1 or 0, where 1 indicates this row is shaded and 0 indicates this row will be left white.
+	constructor(date, shaded)
 	{
 		var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
-		var timestr = date.getDay() + ' ' + months[date.getMonth()] + ', ' + date.getFullYear();
+		var timestr = date.getDate() + ' ' + months[date.getMonth()] + ', ' + date.getFullYear();
+		var mstr = date.getMonth().toString();
+		if(mstr.length < 2)
+		{
+			mstr = "0" + mstr;
+		}
+		var dstr = date.getDate().toString();
+		if(dstr.length < 2)
+		{
+			dstr = "0" + dstr;
+		}
+		this.isostring = date.getFullYear() + '-' + mstr + '-' + dstr;
+		this.shaded = shaded;
 		this.$date = $('<div></div>').addClass('date-line').html(timestr);
 		this.$expense = $('<div></div>').addClass('block-day').css('float', 'left').css('border-right', '1px solid black');
 		this.$income = $('<div></div>').addClass('block-day').css('float', 'right').css('border-left', '1px solid black');
 		this.$entry = $('<div></div>').addClass('container-day').append(this.$date).append(this.$expense).append(this.$income);
+		if(this.shaded)
+		{
+			//To do this right, we'll have to change some things. uncomment the below and you'll see what I mean.
+			//this.$expense.addClass('shading-grey');
+			//this.$income.addClass('shading-grey');
+		}
 		this.transactions = [];
 	}
 	
@@ -204,7 +482,18 @@ class Transaction
 		this.description = description;
 		
 		var time_date = getDateYYYYMMDDhhmmss(date);
-		var time_str = time_date.getHours() + ":" + time_date.getMinutes();
+		//Make sure minutes has a leading zero.
+		var mstr = time_date.getMinutes().toString();
+		if(mstr.length < 2)
+		{
+			mstr = "0" + mstr
+		}
+		var hstr = time_date.getHours().toString();
+		if(mstr.length < 2)
+		{
+			hstr = "0" + hstr
+		}
+		var time_str = hstr + ":" + mstr;
 		
 		this.$time = $('<div></div>').addClass('value-left').css('width', '9%').html(time_str);
 		this.$amt = $('<div></div>').addClass('value').css('width', '13%').html('$' + this.amt);

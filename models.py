@@ -82,6 +82,40 @@ class Transaction(db.Model):
 		self.srcdest = srcdest
 		self.desc = desc
 	
+	#Gets all entries for a single date, in the form of a list. Date should be a datetime object.
+	@staticmethod
+	def getDate(date):
+		date_end = date
+		date_start = date - datetime.timedelta(days=1)
+		records = Transaction.query.filter_by(user=current_user.id).filter(Transaction.time<=date_end).filter(Transaction.time>=date_start).all()
+		list = [record.getDict() for record in records]
+		return list
+		
+	#Gets the balance for the current logged in user
+	@staticmethod
+	def getBalance():
+		sum = 0
+		records = Transaction.query.filter_by(user=current_user.id)
+		for record in records:
+			if(record.income):
+				sum += record.amt
+			else:
+				sum -= record.amt
+		return sum
+		
+	#Gets the balance for the current logged in user
+	@staticmethod
+	def getBalanceUpTo(date):
+		sum = 0
+		date_crit = date - datetime.timedelta(days=1)
+		records = Transaction.query.filter_by(user=current_user.id).filter(Transaction.time<=date_crit)
+		for record in records:
+			if(record.income):
+				sum += record.amt
+			else:
+				sum -= record.amt
+		return sum
+	
 	#Gets a list (strings) of up to the n most commonly used (source or destination, depending on src t/f) for the current user. 
 	#If none repeat, returns the most recent.
 	@staticmethod
