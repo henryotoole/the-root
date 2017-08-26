@@ -39,10 +39,10 @@ class Page
 		this.types = {};
 		
 		//Uncomment this to autoload entries for debugging.
-		setTimeout(function() 
+		/*setTimeout(function() 
 		{
 			_this.get_dates(getDateYYYYMMDD('2017-06-25'), getDateYYYYMMDD('2017-08-23'));
-		}, 250);
+		}, 250);*/
 		
 		this.$date_start.change(function()
 		{
