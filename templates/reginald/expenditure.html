@@ -15,7 +15,13 @@ h1
 .exp-inline
 {
 	display: inline-block;
-	width: 33%;
+	width: 32%;
+}
+.input-long
+{
+	width: 97%;
+	margin-left: auto;
+	margin-right: auto;
 }
 </style>
 </head>
@@ -27,7 +33,7 @@ h1
 			<br>
 			<center>
 				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.amt.label}} </h1>
-				<div style='width: 33%'>
+				<div style='width: 32%; margin-bottom: 50px'>
 				{{ form.amt(class='input-std f-raleway-para', style='text-align: center') }}
 				</div>
 				<div class='exp-inline'>
@@ -38,21 +44,23 @@ h1
 					<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.type.label}} </h1>
 					{{ form.type(class='input-std f-raleway-para')}}
 				</div>
-				<div class='exp-inline'>
+				<div class='exp-inline' style='margin-bottom: 50px'>
 					<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.dest.label}} </h1>
 					{{ form.dest(id='dest', class='input-std f-raleway-para')}}
 				</div>
 			</center>
-			<div id='dest_optional' style='margin-top: 50px'>
+			<div class='input-long' id='dest_optional' style='display: none'>
 				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.dest_optional.label}} </h1>
 				{{ form.dest_optional(class='input-std f-raleway-para', placeholder='Optional') }}
 			</div>
-			<div>
+			<div class='input-long'>
 				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.desc.label}} </h1>
 				{{ form.desc(class='input-std f-raleway-para', placeholder='Optional') }}
 			</div>
-			<div style='margin-right: 0; margin-left: auto; width: 30%; margin-top: 25px'>
-				{{ form.submit(class='input-std f-raleway-para') }}
+			<div class='input-long'>
+				<div style='margin-right: 0; margin-left: auto; width: 30%; margin-top: 25px'>
+					{{ form.submit(class='input-std f-raleway-para') }}
+				</div>
 			</div>
 			{% if form.errors %}
 			Reginald says:
@@ -76,7 +84,7 @@ h1
 $dest = $('#dest');
 $dest_opt = $('#dest_optional');
 
-if($dest.val() != '__OTHER__') //If the new option selected is the 'new category'
+if($dest.val() == '__OTHER__') //If the new option selected is the 'new category'
 {
 	$dest_opt.show();
 }
