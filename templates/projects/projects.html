@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<style>
+body
+{
+	margin: 0;
+	overflow: hidden;
+}
+a
+{
+	color:inherit;
+	text-decoration: none;
+}
+h1
+{
+	margin: 10px;
+}
+.proj-list-reg
+{
+	margin-left: 0.5vw;
+}
+</style>
+</head>
+
+<body>
+	<div style="margin-left: 3vw; width: 20vw;">
+		<div class='f-raleway-para' style='vertical-align: top;'>
+			<div style='display: inline-block'>
+				<h1 class='f-playfair-para'>Projects</h1>
+				<div class='hline-center'></div>
+			</div>
+		</div>
+		<div id='nav_list_region' class='proj-list-reg'>
+		</div>
+	</div>
+	<div id='proj_active' class='proj-interface'> </div>
+	<div id='proj_other' class='proj-interface'> </div>
+	<div id='proj_initial'>
+</body>
+
+</html>
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+<script type="text/javascript" src="{{sp_local}}/js/projects.js">
+
+</script>
+
+<script>
+console.log("init");
+init("{{sp_local}}", "{{sp_content}}");
+</script>

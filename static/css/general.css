@@ -41,38 +41,46 @@
 {
 	font-family: 'Inconsolata', monospace;
 }
-.f-raleway-para
-{
-	font-family: 'Raleway', sans-serif;
-	font-weight: normal;
-}
-.f-raleway-low
-{
-	font-family: 'Raleway', sans-serif;
-	font-weight: normal;
-	font-size: 90%;
-}
-.f-playfair-head
-{
-	font-family: 'Playfair Display', serif;
-}
-.f-playfair-para
-{
-	font-family: 'Playfair Display', serif;
-	font-weight: normal;
-}
+
+.f-raleway-head {font-family: 'Raleway', serif;font-weight: 500;font-size: 200%;}
+.f-raleway-medium {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 150%;}
+.f-raleway-para {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 120%;}
+.f-raleway-low {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 90%;}
+.f-playfair-head {font-family: 'Playfair Display', serif;}
+.f-playfair-head2 {font-family: 'Playfair Display', serif;font-weight: 500;font-size: 200%;}
+.f-playfair-para {font-family: 'Playfair Display', serif;font-weight: normal;}
+.f-playfair-subhead {font-family: 'Playfair Display', serif;font-weight: normal;font-size: 150%;}
+
 .topbar-block
 {
 	text-align: center; 
 	display: inline-block;
 }
-/* Displays a group of things in a single row, vertically centered and evenly spaced. */
+/* Displays a group of things in a single row, vertically centered and evenly spaced.
+   Can also be used to center stuff.*/
 .org-row-spaced
 {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 }
+
+/* Displays a group of things in a single row, vertically centered and stacked left.*/
+.org-row-left
+{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+/* Used to display two objects at opposite ends of a box.*/
+.org-row-flung
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 
 /* The standard class for wtforms inputs
 
@@ -93,4 +101,178 @@
 	border: 2px solid black;
 	align-items: center;
 	justify-content: center;
+}
+
+/* A text box/label whick looks much like the standard input */
+.label-std-thin
+{
+	border-radius: 4px;
+	display: flex;
+	border: 1px solid black;
+	align-items: center;
+	justify-content: center;
+}
+
+/*Special css for buttons, all this does is add the highlight behavior*/
+.button-std
+{
+	
+}
+
+.button-std-grey
+{
+	border: 1px solid #999999;
+	color: #999999;
+}
+
+.button-std:hover
+{
+	background-color: #48636C;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+/*An actual full version of a button that does not require other classes. Font, width, and/or height are still required.*/
+.button-full
+{
+	width: max-content;
+	border-radius: 4px;
+	display: flex;
+	border: 1px solid black;
+	align-items: center;
+	justify-content: center;
+	padding-right: 5%;
+	padding-left: 5%;
+	margin-top: 3%;
+	margin-bottom: 3%;
+}
+
+.button-full:hover
+{
+	background-color: #48636C;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+
+.circle-small
+{
+	width: 10px;
+	height: 10px;
+	border: 1px black solid;
+	border-radius: 10px;
+	margin-left: 0.75vw;
+	margin-right: 0.75vw;
+}
+
+/* A pleasant etched border, with a margin to make the border INSIDE the boundaries of the div by a bit. */
+.region-etch
+{
+	border: 1px solid #555555;
+	border-radius: 7px;
+	margin: 1vw;
+}
+
+.region-etch-header
+{
+	padding: 0.25vw;
+	border-bottom: 1px black solid;
+}
+
+/* A region inside the etch region ideal for listing one-line statements. No text wrap */
+.region-etch-lineblock
+{
+	padding: 0.5vw;
+	overflow: scroll;
+	white-space: nowrap;
+}
+
+/* ===================== Projects Viewer Classes =================== */
+.proj-interface
+{
+	position: absolute;
+	overflow-y: scroll;
+}
+
+/*Category entry block in nav left*/
+.cat-entry
+{
+	
+}
+/*The name part of a category entry*/
+.cat-entry-topgroup
+{
+	margin-top: 0.5vh;
+	margin-bottom: 0.5vh;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+/*The subregion of a category populated by projects and other categories*/
+.cat-entry-subregion
+{
+	display: none;
+	padding-left: 4vw;
+}
+
+.proj-entry
+{
+	cursor: pointer;
+}
+
+.proj-entry-name
+{
+	
+}
+
+/* Project title header */
+.proj-header-title
+{
+	margin-bottom: 2vw;
+	display: inline-block;
+}
+
+/*The line for line-and-circle that goes under the header. */
+.proj-header-title-line
+{
+	margin-top: 1vw;
+	width: 100%;
+	height: 1px;
+	background-color: black;
+	position: relative;
+}
+
+.proj-header-title-circle
+{
+	display: inline-block;
+	vertical-align: middle;
+	width: 10px;
+	height: 10px;
+	background-color: white;
+	border: solid 1px black;
+	border-radius: 50%;
+	position: absolute;
+	top: -6px;
+	left: calc(50% - 5px);
+}
+
+/* Project sub category header. Simply underlines it.*/
+.proj-header-sub1
+{
+	border-bottom: 1px black solid;
+	display: inline-block;
+}
+
+/* Project sub category header. Second largest of the sub headers. Bolds it*/
+.proj-header-sub2
+{
+	font-weight: bold;
+	display: inline-block;
+}
+
+/* The main body of the project. This will usually be the outer container div of the project html file */
+.proj-body-container
+{
+	padding: 2vw;
 }
