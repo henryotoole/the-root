@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
+<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<style>
+body
+{
+	margin: 0;
+	padding: 2vw;
+}
+</style>
+</head>
+
+<body class='f-raleway-para'>
+
+<div class='org-row-spaced'>
+	<div class='region-etch org-row-left' style='width: 55vw; height: 100px;'>
+		<div class='org-row-spaced' style='width: 100px; height: 100px'>
+			<img id='statlight' height='50px' width='50px' src='{{sp_local}}/icons/status_circle_dead.svg'>
+		</div>
+		<div>
+			<div class='f-raleway-head'> Server Operator</div>
+			<div class='org-row-flung'>
+				<div id='statword'> Offline </div>
+				<div id='numplayer'></div>
+			</div>
+		</div>
+		<div id='onswitch' class='button-std label-std-thin' style='margin-left: auto; margin-right: 25px; height: 50px; padding-left: 5px; padding-right: 5px'> 
+			Turn On
+		</div>
+	</div>
+	<div class='region-etch' style='width: 25vw;'>
+		<img width='100px' height='100px' src='{{sp_local}}/icons/server.svg'>
+	</div>
+</div>
+<div style='display: flex; justify-content: space-around;'>
+	<div class='region-etch' style='width: 55vw; height: 76vh;'>
+		<div class='region-etch-header'>
+			Console output
+		</div>
+		<div id='console' class='region-etch-lineblock' style='height: 67.5vh'>
+		</div>
+		<div class='hline-center'></div>
+	</div>
+	<div class='region-etch' style='width: 25vw;'>
+		<div class='region-etch-header'>
+				Controls
+			</div>
+		<div style='padding-left: 1vw; padding-right: 1vw;'>
+			<div id='ctrstop' class='button-full' style=''>
+				Graceful Stop
+			</div>
+			Try to stop the server gracefully and save all data.
+			<div id='ctrkill' class='button-full' style=''>
+				Force Kill
+			</div>
+			Kill the process with python's process.kill()
+			<div id='ctrbackup' class='button-full' style=''>
+				Make Backup
+			</div>
+			Make a backup of the server map.
+			<div id='plist' class='button-full' style=''>
+				Update Player List
+			</div>
+			Update and display the player count.
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
+
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+<script type="text/javascript" src="{{sp_local}}/js/serverop_mc.js">
+
+</script>
+
+<script>
+console.log("init");
+init("{{sp_content}}", "{{sp_local}}");
+</script>

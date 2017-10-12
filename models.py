@@ -24,6 +24,7 @@ class User(db.Model):
 	id = db.Column(db.Integer, nullable=False, unique=True, primary_key=True, autoincrement=True)
 	passhash = db.Column(db.String(255))
 	email = db.Column(db.String(255), unique=True, nullable=False)
+	is_anonymous = False
 	
 	#Notes about insert/delete/etc commands
 	#http://flask-sqlalchemy.pocoo.org/2.1/queries/
@@ -48,12 +49,44 @@ class User(db.Model):
 		
 	def is_authenticated(self):
 		return True
-		
-	def is_anonymous(self):
-		return False
 	
 	def get_id(self):
 		return self.id
+		
+		
+	#Tells us if this user is an admin
+	def is_admin(self):
+		if not Privilege.query.filter_by(userid=self.id).filter_by(tag='admin').first(): # If no admin tag for this user.
+			return False
+		return True
+		
+	#Return true if the user has the privilege tag provided.
+	def has_privilege(self, priv):
+		if not Privilege.query.filter_by(userid=self.id).filter_by(tag=priv).first(): # If no admin tag for this user.
+			return False
+		return True
+
+class Privilege(db.Model):
+	
+	__tablename__ = "priv"
+	
+	userid = db.Column(db.Integer, nullable=False, primary_key=True) # The stock image id
+	tag = db.Column(db.String(32), nullable=False, primary_key=True) # The text-based tag associated with it, for search purposes.
+	
+	
+	#A tag must be provided.
+	def __init__(self, id, tag):
+		self.id = id
+		self.tag = tag
+		
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
 		
 class Transaction(db.Model):
 	
