@@ -55,6 +55,7 @@ def minecraft_query(query):
 			new_index = len(log)
 		except KeyError: # It does not exist
 			return jsonify({'status': 'offline'})
+		print "Block status: " + str(g[PID_MC]["BLOCK"])
 		status = 'online' if p_status(PID_MC) else 'offline'
 		
 		return jsonify({'status': status, 'new_index': new_index ,'log': line_list}), 200
@@ -135,10 +136,12 @@ def p_status(pid):
 #Return false if process is not running. Return None if the process is busy
 def p_command(pid, command):
 	if(p_status(pid)):
+		print "Block status at command: " + str(g[PID_MC]["BLOCK"])
 		if(g[pid]["BLOCK"]):
 			return None
 		else:
 			g[pid]["P"].sendline(command)
+			return True
 	else:
 		return False
 
