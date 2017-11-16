@@ -2,6 +2,7 @@
 <head>
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Inconsolata" rel="stylesheet">
 <link href="{{sp_local}}/css/general.css" rel="stylesheet">
+<link href="{{sp_local}}/css/greensheet.css" rel="stylesheet">
 
 <style>
 body
@@ -14,160 +15,29 @@ h1
 	margin-bottom: 10px;
 	margin-top: 10px;
 }
-[type="date"] {
-	background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
-}
-[type="date"]::-webkit-inner-spin-button {
-	display: none;
-}
-[type="date"]::-webkit-calendar-picker-indicator {
-	opacity: 0;
-}
 
-/* custom styles */
-.datepicker {
-	border: 1px solid #c4c4c4;
-	border-radius: 5px;
-	background-color: #fff;
-	padding: 3px 5px;
-	box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
-	width: 190px;
-	display: inline-block;
-}
-.greenregion {
-	border-top: 2px solid #494529;
-	border-bottom: 1px solid #494529;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	background: #d8e4bc;
-}
-
-.orangeregion {
-	border-top: 1px solid #dc9f64;
-	border-bottom: 1px solid #dc9f64;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	background: #ffcc99;
-}
-
-.iblock{
-	display: inline-block;
-}
-
-/* Here box sizing makes the border on the inside */
-.chart-region{
-	box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-	width: 50%;
-	padding: 2vh;
-	padding-top: 0px;
-}
-
-/* Applied to the canvas that holds the chart */
-.chart{
-	margin-left: auto;
-	margin-right: auto;
-	eight: 100%;
-}
-
-.block-day{
-	box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-	width: 50%;
-}
-
-.entry{
-	width: 100%;
-	border-top: 1px dashed black;
-}
-
-/* Light grey shading for entry rows */
-.shading-grey{
-	background: #CCCCCC;
-}
-
-.entry:first-child{
-	border-top: none;
-}
-
-.value{
-	border-left: 1px solid black;
-	display: inline-block;
-}
-
-.value-left{
-	display: inline-block;
-}
-
-.container-day{
-	clear: both;
-}
-
-.date-line{
-	border-top: 2px solid black;
-	border-bottom: 1px solid black;
-	background: #d8e4bc;
-}
-
-.entry-list-header-block{
-	width: 50%;
-}
-
-.entry-list-header{
-	border-top: 1px solid #dc9f64;
-	border-bottom: 1px solid #dc9f64;
-	background: #ffcc99;
-	text-align: center;
-	clear: both;
-}
-
-.entry-list-footer{
-	border-top: 1px solid #dc9f64;
-	border-bottom: 1px solid #dc9f64;
-	background: #ffcc99;
-	clear: both;
-	display: flex;
-	justify-content: flex-end;
-	padding-right: 5px;
-}
-
-/* Each subtotal in the entry-list-header block, one for each expense/income category */
-.subtotal-entry{
-	display: flex;
-	justify-content: space-between;
-	border-top: 1px solid #DDDDDD;
-	padding-right: 3px;
-}
-
-/* Each entry has a color identifer*/
-.subtotal-color{
-	margin: 2px;
-	border-radius: 2px;
-	width: 50px;
-}
-
-.subtotal-box{
-	display: flex;
-}
-
-.subtotal-entry:first-child{
-	border-top: none;
-}
 </style>
 </head>
 <body class='f-raleway-para'>
 	
 	<div class='page' style='border: 2px solid #777777;'>
 		<center><h1 class='f-playfair-para' style='color: #c00000; font-size: 225%' > - Rolling Greensheet - </h1></center>
-		<center class='greenregion'>
-			<input type="date" class="datepicker" name="date_start" id="date_start">
-			<div id='date_end_block' style='display: inline-block'>
-				to
-				<input type="date" class="datepicker" name="date_end" id="date_end">
+		<div class='greenregion' style='display: flex; justify-content: space-between'>
+			<div style='width: 20%'>
 			</div>
-		</center>
+			<div style='width: 60%; display: flex; justify-content: center'>
+				<input type="date" class="datepicker" name="date_start" id="date_start">
+				<div id='date_end_block' style='display: inline-block'>
+					to
+					<input type="date" class="datepicker" name="date_end" id="date_end">
+				</div>
+			</div>
+			<div style='width: 20%; display: flex; justify-content: flex-end; padding-right: 4px;'>
+				<div id='btn_time_week' class='button-light'>W</div>
+				<div id='btn_time_month' class='button-light'>M</div>
+				<div id='btn_time_all' class='button-light'>A</div>
+			</div>
+		</div>
 		<div style='padding: 2vh;'>
 			<canvas id='chart_global' style='height: 100%'></canvas>
 		</div>

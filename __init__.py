@@ -18,6 +18,7 @@ def setup():
 	import the_root.landing	# The landing and login pages
 	import the_root.bookkeeper # An app for handling transaction records.
 	import the_root.projects # The project viewer app
+	import the_root.archive # The archive portion of the site.
 	import the_root.serverop # A set of functions for running servers via flask as an interface and controller
 	import the_root.admin # Admin stuff and admin decorator
 	#Setup debug, if necessary.

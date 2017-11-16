@@ -30,6 +30,9 @@ class Page
 		this.$expenses = $('#expenses');
 		this.$income_sub = $('#income_sub');
 		this.$expenses_sub = $('#expenses_sub');
+		this.$tbtn_week = $('#btn_time_week');
+		this.$tbtn_month = $('#btn_time_month');
+		this.$tbtn_all = $('#btn_time_all');
 		this.colorflip = 0; // Flipped between 0 and 1 as days are added, allowing rows the be alternately colored
 		this.chart_expenses = null;
 		this.chart_income = null;
@@ -71,6 +74,31 @@ class Page
 			{
 				_this.get_dates(date_end, null);
 			}
+		});
+		this.$tbtn_week.hover(function() {$(this).html('Week');}, function() {$(this).html('W');}).click(function()
+		{
+			var now = new Date();
+			var prev = new Date(now.getTime() - (7*24*60*60*1000));
+			_this.$date_start.val(prev.toISOString().substring(0, 10));
+			_this.$date_end.val(now.toISOString().substring(0, 10));
+			_this.get_dates(prev, now);
+		});
+		this.$tbtn_month.hover(function() {$(this).html('Month');}, function() {$(this).html('M');}).click(function()
+		{
+			var now = new Date();
+			var prev = new Date(now.getTime() - (31*24*60*60*1000));
+			_this.$date_start.val(prev.toISOString().substring(0, 10));
+			_this.$date_end.val(now.toISOString().substring(0, 10));
+			_this.get_dates(prev, now);
+		});
+		this.$tbtn_all.hover(function() {$(this).html('All');}, function() {$(this).html('A');}).click(function()
+		{
+			$.getJSON("/reginald/greensheet/daterange_all")
+				.done(function(data) 
+				{
+					console.log(data);
+					_this.get_dates(getDateYYYYMMDD(data.start), getDateYYYYMMDD(data.end));
+				});
 		});
 		
 		//Get the types of transaction. Adds them to their respective subtotal columns.
@@ -427,7 +455,7 @@ class DayEntry
 	{
 		var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'];
 		var timestr = date.getDate() + ' ' + months[date.getMonth()] + ', ' + date.getFullYear();
-		var mstr = date.getMonth().toString();
+		var mstr = (date.getMonth() + 1).toString();
 		if(mstr.length < 2)
 		{
 			mstr = "0" + mstr;

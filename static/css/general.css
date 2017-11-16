@@ -29,12 +29,22 @@
 	margin-left: auto; 
 	margin-right: auto; 
 }
+/* A vertically centered (with padding) horizontal line */
 .hline-center
 {
 	padding-bottom: 5px;
 	padding-top: 5px;
 	border-top: 1px solid #222222;
-	width=100%;
+	width: 100%;
+}
+/* A horizontal line, vert centered and horiz. centered. Width MUST be specified in style! */
+.hline-center-cust
+{
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-top: 1px solid #666666;
+	margin-left: auto;
+	margin-right: auto;
 }
 /* A general monospace font for numbers */
 .f-number
@@ -51,11 +61,13 @@
 .f-playfair-para {font-family: 'Playfair Display', serif;font-weight: normal;}
 .f-playfair-subhead {font-family: 'Playfair Display', serif;font-weight: normal;font-size: 150%;}
 
-.topbar-block
+.topbar
 {
-	text-align: center; 
-	display: inline-block;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 }
+
 /* Displays a group of things in a single row, vertically centered and evenly spaced.
    Can also be used to center stuff.*/
 .org-row-spaced
@@ -78,6 +90,14 @@
 {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+}
+
+/* Displays children in a horizontally centered, vertical column */
+.org-col
+{
+	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 
@@ -123,6 +143,21 @@
 {
 	border: 1px solid #999999;
 	color: #999999;
+}
+
+.button-light
+{
+	border: 1px solid #c4c4c4;
+	border-radius: 5px;
+	background-color: #fff;
+	padding-left: 4px;
+	padding-right: 4px;
+	margin-left: 1px;
+	margin-right: 1px;
+}
+.button-light:hover
+{
+	background-color: #eee;
 }
 
 .button-std:hover
