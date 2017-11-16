@@ -132,6 +132,14 @@ def greensheet_query(query):
 		
 		data = {'days': days, 'balance_at_start': str(Transaction.getBalanceUpTo(date_start))}
 		return jsonify(data), 200
+	elif(query=='daterange_all'): # Get start and end dates of entire body of records.
+		start = Transaction.query.filter_by(user=current_user.id).order_by(Transaction.time.desc()).first().time
+		end = Transaction.query.filter_by(user=current_user.id).order_by(Transaction.time.asc()).first().time
+		data = {
+			'start': datetime.datetime.strftime(start, '%Y-%m-%d'),
+			'end': datetime.datetime.strftime(end, '%Y-%m-%d')
+		}
+		return jsonify(data), 200
 	#Sum every transaction for a user and return the balance
 	elif(query=='total_balance'):
 		return jsonify(str(Transaction.getBalance())), 200
