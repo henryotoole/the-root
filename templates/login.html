@@ -1,3 +1,9 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+{% block body %}
 <body>
 	<form action="" method="post">
 		{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
@@ -9,4 +15,6 @@
 		{{ loginform.password() }}<br><br>
 		{{ loginform.submit() }}
 	</form>
-</body>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

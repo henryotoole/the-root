@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
-<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
 <style>
 body
 {
@@ -13,9 +11,9 @@ h1
 	margin: 10px;
 }
 </style>
-</head>
+{% endblock %}
 
-<body>
+{% block body %}
 	<div style="width: 20vw;">
 		<div class='org-row-spaced'>
 			<div style='display: inline-block'>
@@ -25,9 +23,8 @@ h1
 		</div>
 		<img src='{{sp_local}}/icons/web_archive_fin1.png' style='width: 20vw'>
 	</div>
-</body>
-
-</html>
+{% endblock %}
+{% block scripts %}
 <script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 
 <script type="text/javascript" src="{{sp_local}}/js/util.js">
@@ -38,3 +35,4 @@ h1
 console.log("init");
 init();
 </script>
+{% endblock %}

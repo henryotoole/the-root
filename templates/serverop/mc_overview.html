@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
-<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
 <style>
 body
 {
@@ -13,11 +11,10 @@ body
 	padding-bottom: 2vh;
 }
 </style>
-</head>
+{% endblock %}
 
-<body class='f-raleway-para'>
-
-<div class='org-row-spaced'>
+{% block body %}
+<div class='org-row-spaced f-raleway-para'>
 	<div class='region-etch org-row-left' style='width: 55vw; height: 100px;'>
 		<div class='org-row-spaced' style='width: 100px; height: 100px'>
 			<img id='statlight' height='50px' width='50px' src='{{sp_local}}/icons/status_circle_dead.svg'>
@@ -71,8 +68,8 @@ body
 	</div>
 </div>
 
-</body>
-</html>
+{% endblock %}
+{% block scripts %}
 
 <script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 
@@ -84,3 +81,4 @@ body
 console.log("init");
 init("{{sp_content}}", "{{sp_local}}");
 </script>
+{% endblock %}
