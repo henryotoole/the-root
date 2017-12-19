@@ -1,15 +1,4 @@
-.centered
-{
-	width:300px;
-	height:400px;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
 
-    margin: auto;
-}
 /* Emulates a page, best on a light grey background */
 .page
 {
@@ -68,6 +57,20 @@
 	align-items: center;
 }
 
+/* Use this in conjunction with org-col-full-item to make a column which takes up the entire height of the page */
+.org-col-full
+{
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+/* Items with this class inside an 'org-col-full' will take up the maximum amount of space (and equal each other) */
+.org-col-full-item
+{
+	flex: 1;
+}
+
 /* Displays a group of things in a single row, vertically centered and evenly spaced.
    Can also be used to center stuff.*/
 .org-row-spaced
@@ -101,10 +104,25 @@
 	align-items: center;
 }
 
+/* Designed to center a single object */
+.org-center
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-/* The standard class for wtforms inputs
+/* 	A square home button. An image with the main icon should be nested below and nothing else.
+	Width and height should be specified in an aux tag (to make it square...)*/
+.home-square
+{
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-*/
+/* The standard class for wtforms inputs */
 .input-std
 {
 	border-radius: 4px;

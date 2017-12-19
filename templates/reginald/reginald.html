@@ -1,7 +1,6 @@
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
-<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
 <style>
 body
 {
@@ -22,8 +21,9 @@ h1
 	background-color: #BBBBBB;
 }
 </style>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
 	<div style='margin-top: 5%; margin-left: 5%'>
 		<h1 class='f-playfair-para' style='font-size: 200%;'> {{message}} </h1>
 	</div>
@@ -38,4 +38,6 @@ h1
 			<h1 class='f-playfair-para' style='font-size: 300%;'> Greensheet </h1>
 		</div>
 	</div>
-</body>
+{% endblock %}
+{% block scripts %}
+{% endblock %}

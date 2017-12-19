@@ -1,7 +1,6 @@
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Inconsolata" rel="stylesheet">
-<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
 <link href="{{sp_local}}/css/greensheet.css" rel="stylesheet">
 
 <style>
@@ -17,9 +16,9 @@ h1
 }
 
 </style>
-</head>
-<body class='f-raleway-para'>
-	
+{% endblock %}
+
+{% block body %}
 	<div class='page' style='border: 2px solid #777777;'>
 		<center><h1 class='f-playfair-para' style='color: #c00000; font-size: 225%' > - Rolling Greensheet - </h1></center>
 		<div class='greenregion' style='display: flex; justify-content: space-between'>
@@ -78,8 +77,8 @@ h1
 		<div id='day_list' class='f-raleway-low'>
 		</div>
 	</div>
-</body>
-</html>
+{% endblock %}
+{% block scripts %}
 
 <script src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 <script src="{{sp_content}}/lib/moment2.18.1.min.js"></script>
@@ -90,3 +89,4 @@ h1
 <script>
 init('{{sp_local}}', '{{sp_content}}');
 </script>
+{% endblock %}

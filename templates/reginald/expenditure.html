@@ -1,7 +1,6 @@
-<html>
-<head>
-<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
-<link href="{{sp_local}}/css/general.css" rel="stylesheet">
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
 <style>
 body
 {
@@ -24,8 +23,9 @@ h1
 	margin-right: auto;
 }
 </style>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
 	<div class='center-hz-fixed-w' style='margin-top: 5%; width: 70%'>
 		<form action="" method="post">
 			{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
@@ -74,8 +74,8 @@ h1
 			{% endif %}
 		</form>
 	</div>
-</body>
-</html>
+{% endblock %}
+{% block scripts %}
 
 <script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 
@@ -102,3 +102,4 @@ $dest.change(function()
 });
 
 </script>
+{% endblock %}
