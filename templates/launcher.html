@@ -1,0 +1,58 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+<style>
+	html
+	{
+		overflow-y: scroll;
+	}
+</style>
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class='f-raleway-para'>
+	<div class='org-row-spaced'>
+		<div class='org-col'>
+			<div class='f-playfair-subhead' style='margin-bottom: 1.5vh'>
+				Working Applications
+				<div class='proj-header-title-line'>
+					<div class='proj-header-title-circle'> </div>
+				</div>
+			</div>
+			<div style='margin-bottom: 25px'>
+			A collection of useful apps I've written, published here for anyone to use.
+			</div>
+		</div>
+	</div>
+	<div class='org-col'>
+		<div class='tilebox-outer' style='width: 50vw'>
+			<div class='tilebox-inner' >
+				<div id='reginald' class='tilebox-tile-app' onclick="location.href = '/reginald';">
+					<div class='org-center' style='height: 100%'>
+						Reginald
+					</div>
+				</div>
+				<div id='untether' class='tilebox-tile-app' onclick="location.href = '/note';">
+					<div class='org-center' style='height: 100%'>
+						Untether
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+{% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+
+	<script type="text/javascript" src="{{sp_local}}/js/launcher.js">
+
+	</script>
+
+	<script>
+	console.log("init");
+	init("{{sp_local}}", "{{sp_content}}");
+	</script>
+{% endblock %}

@@ -31,7 +31,7 @@
 {
 	padding-bottom: 5px;
 	padding-top: 5px;
-	border-top: 1px solid #666666;
+	border-top: 1px solid black;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -120,6 +120,14 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+/* Applies a top left 'float' to a div' */
+.over-tl
+{
+	position: absolute;
+	top: 0px;
+	left: 0px; 
 }
 
 /* The standard class for wtforms inputs */
@@ -238,6 +246,46 @@
 	padding: 0.5vw;
 	overflow: scroll;
 	white-space: nowrap;
+}
+
+/* The tilebox outer container. This is a fixed-width object which contains a jquery-scaled inner container.*/
+.tilebox-outer
+{
+}
+
+/* A special inner container which is autoscaled by jquery. Note: the first element under the inner MUST be
+a tilebox-tile or the jquery autocentering feature will have issues*/
+.tilebox-inner
+{
+	margin: 0 auto;
+	max-width: 1000px;
+	overflow: hidden;
+}
+
+/* A tilebox tile for the launcher apps page*/
+.tilebox-tile-app
+{
+	background: #f9f9f9;
+	border: 1px solid #98999b;
+	border-radius: 10px;
+	
+	height: 300px;
+	width: 300px;
+	margin: 25px;
+	position: relative;
+	display:inline-block;
+	cursor: pointer;
+	vertical-align: top;
+}
+
+/* A message which pops up in the tilebox to describe a tile */
+.tilebox-tile-app-desc
+{
+	display: inline-block;
+	width: 95%;
+	border-top: 1px solid #98999b;
+	border-bottom: 1px solid #98999b;
+	padding: 25px;
 }
 
 /* ===================== Projects Viewer Classes =================== */
