@@ -20,6 +20,7 @@ def setup():
 	import the_root.projects # The project viewer app
 	import the_root.archive # The archive portion of the site.
 	import the_root.serverop # A set of functions for running servers via flask as an interface and controller
+	import the_root.launcher # Handles launching apps and outward-facing user account stuff.
 	import the_root.admin # Admin stuff and admin decorator
 	#Setup debug, if necessary.
 	if(app.config['DEBUG']):
