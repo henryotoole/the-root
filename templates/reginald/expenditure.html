@@ -75,9 +75,9 @@ h1
 		</form>
 	</div>
 {% endblock %}
-{% block scripts %}
 
-<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
 
 <script>
 
@@ -102,4 +102,6 @@ $dest.change(function()
 });
 
 </script>
+{% endblock %}
+{% block script_login %}
 {% endblock %}

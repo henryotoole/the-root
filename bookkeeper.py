@@ -143,6 +143,8 @@ def greensheet_query(query):
 	#Sum every transaction for a user and return the balance
 	elif(query=='total_balance'):
 		return jsonify(str(Transaction.getBalance())), 200
+		
+	return "Bad params", 404
 #
 
 

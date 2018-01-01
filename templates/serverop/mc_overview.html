@@ -69,9 +69,8 @@ body
 </div>
 
 {% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
-
-<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 
 <script type="text/javascript" src="{{sp_local}}/js/serverop_mc.js">
 
@@ -81,4 +80,6 @@ body
 console.log("init");
 init("{{sp_content}}", "{{sp_local}}");
 </script>
+{% endblock %}
+{% block script_login %}
 {% endblock %}

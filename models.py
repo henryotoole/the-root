@@ -226,68 +226,39 @@ class Method(db.Model):
 	def getDict(self, columns=None):
 		return getDict(self, columns)
 
-class Device(db.Model):
+class UntetherNote(db.Model):
 	
-	__tablename__ = "dev"
+	__tablename__ = "untether_note"
 	
-	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)
-	password = db.Column(db.String(32), nullable=False)
-	version_crnt = db.Column(db.String(32))
-	version_tgt = db.Column(db.String(32), nullable=False)
-	fb = db.Column(db.Boolean)
-	capture = db.Column(db.Boolean)
-	ltrans_proj = db.Column(db.DateTime, nullable=False)
-	ltrans_edit = db.Column(db.DateTime, nullable=False)
-	cfg_update = db.Column(db.Boolean)
-	actcanvasid = db.Column(db.Integer)
-	name = db.Column(db.String(32))
-	timeOn = db.Column(db.Time)
-	timeOff = db.Column(db.Time)
-	orientation = db.Column(db.String(1))
-	cap_offx = db.Column(db.SmallInteger)
-	cap_offy = db.Column(db.SmallInteger)
-	cap_scalex = db.Column(db.Numeric(precision=4, scale=3))
-	cap_scaley = db.Column(db.Numeric(precision=4, scale=3))
-	watermark = db.Column(db.Boolean)
-	debug = db.Column(db.Boolean)
-	status = db.Column(db.String(32))
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	name = db.Column(db.String(256), nullable=False)								# Name of this note (unique to user)
+	user = db.Column(db.Integer, nullable=False)									# The user who this note belongs to
+	cat = db.Column(db.Integer, nullable=True)										# The category this note belongs in (if null, no cat)
 	
-	#Adds a new device to the database. Required information for self action is:
-	#password - a string based password generated on physical device inception. If not provided, one will be generated.
-	#version_tgt - The target version the device will attempt to update to (unless it's already there). If not provided, will
-	#			   get the default from app.config['PROJECTOR_TARGET_VERSION']
-	#Additionaly, some fields are optional, such as
-	#version_crnt - The current version of the device.
-	#watermark - Disabled by default
-	#debug - Disabled by default
-	def __init__(self, password=None, version_tgt=None, version_crnt=None, watermark=False, debug=False):
-		if(password):
-			self.password = password
-		else: # If no password provided.
-			self.password = luxedo.passgen.getTrueRandomPassword()
-		if(version_tgt):
-			self.version_tgt = version_tgt
-		else:
-			self.version_tgt = current_app.config['PROJECTOR_TARGET_VERSION']
-		self.version_crnt = version_crnt
-		self.watermark = watermark
-		self.debug = debug
-		self.fb = False
-		self.capture = False
-		self.cfg_update = False
-		self.actcanvasid = None
-		self.name = 'New Device'
-		self.timeOn = None
-		self.timeOff = None
-		self.orientation = '0'
-		self.cap_offx = 0
-		self.cap_offy = 0
-		self.cap_scalex = 1.0
-		self.cap_scaley = 1.0
-		self.status = 'NEW' # The default status for all new devices. This will change once the device connects and updates it's status.
-		self.ltrans_edit = datetime.datetime.now() # Make sure to set these.
-		self.ltrans_proj = datetime.datetime.now()
+	
+	def __init__(self, name, user, cat=None):
+		self.name = name
+		self.user = user
+		self.cat = cat
 		
+	def getNoteSysFilepath(self):
+		return current_app.config['USER_FILE_ROOT'] + '/untether/notes/note' + str(self.id) + '.txt'
+		
+	#Gets the full text (as a string) of this note. If the file doesn't exist, create it and return an empty string
+	def getText(self):
+		try:
+			with open(self.getNoteSysFilepath(), 'r') as file:
+				return file.read()
+		except IOError:
+			with open(self.getNoteSysFilepath(), 'w') as file:
+				return ''
+		
+	#Sets the full text of this note, given a string argument. Size restriction is assumed to happen BEFORE this step.
+	def setText(self, text):
+		with open(self.getNoteSysFilepath(), 'w') as file:
+			file.write(text)
+		
+	#Get a string representation of this entry.
 	def __repr__(self):
 		return getStr(self)
 		
@@ -296,118 +267,32 @@ class Device(db.Model):
 	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
 	def getDict(self, columns=None):
 		return getDict(self, columns)
-	
-	#Sets the capture status of the device. Status should be boolean
-	def setCapture(self, status, commit=True):
-		self.capture = status
-		if(commit): db.session.commit()
 		
-	def setCaptureImage(self, file):
-		file.save(self.getCapturePath())
+class UntetherCat(db.Model):
+	
+	__tablename__ = "untether_cat"
+	
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	name = db.Column(db.String(256), nullable=False)								# Name of this category, unique to user
+	user = db.Column(db.Integer, nullable=False)									# The user who this category belongs to
+	cat = db.Column(db.Integer, nullable=True)										# The ID of another cat, if this cat is nested.
+	
+	
+	def __init__(self, name, user, cat):
+		self.name = name
+		self.user = user
+		self.cat = cat # Note: Cat can be None.
 		
-	#Called whenever the device queries the server for anything, except a flipbit for performance reasons
-	def handshakeProjector(self, commit=True):
-		self.ltrans_proj = datetime.datetime.now() # Simply set the last date the thing connected.
-		ts = (self.ltrans_proj - self.ltrans_edit).total_seconds() # Time since last ping from an editor
-		if(ts > 2.0): # If it's been two seconds since an editor pinged us.
-			self.fb = False # Disable the flipbit because no editor is currently connected.
-		if(commit): db.session.commit()
-	
-	#Called on the update interval of any interface which allows the device to be edited, currently (June 2017) just the workspace
-	def handshakeEditor(self, commit=True):
-		self.ltrans_edit = datetime.datetime.now() # Simply set the last date the thing connected.
-		self.fb = True
-		if(commit): db.session.commit()
-	
-	#Gets the 'status' of the device based off the last transmissions from device.
-	# * active determines if we get the 'active' status or not. 'active' status checks if the device is actually connected
-	#	or not; 'passive' simply gets the last status the device happened to send.
-	# * wait_time is the optional amount of time (in seconds) we've been waiting for the device to respond after engaging fb.
-	#	It should be provided if this is the first get status request 
-	#	See ds4 - status in notebook for more info.
-	def getStatus(self, active=True, wait_time=None):
-		if(not active):
-			return self.status
-		#First check some special status types which would prevent the device from sending fb requests
-		#NEW - The device has never been connected, so show this until the device pings us at least once.
-		#UPDATING - The device is updating, so display this until it comes back online.
-		#OFF - The device has shutdown gracefully and has to be manually turned back on.
-		if(self.status == 'NEW' or self.status == 'UPDATING' or self.status == 'OFF'):
-			return self.status
-		ts = (datetime.datetime.now() - self.ltrans_proj).total_seconds() #Time elapsed since we last got a handshake from projector.
-		if(ts < (int(current_app.config['FB_LOOP_MINTIME']) * 5)): # If the device has recently performed a handshake
-			return self.status
-		# It's been some time since the handshake, but we are waiting for an initial fb req	
-		elif(wait_time and wait_time < (int(current_app.config['FB_LOOP_MAXTIME']) * 1.1)):
-			# TODO replace 11.0 with reference for the max time between fb pings.
-			return 'GETTING' # We are currently waiting for the next fb ping.
-		else: # It's been long enough that the device is almost certainly having connection problems.
-			return 'LOST' # The device has been lost.
-	
-	#Gets a list of commands for the pi to execute, depending on it's current state in the database.
-	#A command is a dict with the structure: {id: X, arg1: val, arg2, val2, ...}
-	#Command ID's are string
-	#id: CANVAS			path: path to canvas, from root			time: a current timestamp
-	#id: CAPTURE
-	#id: UPDATE_VSN		path: path to update buildtar
-	#id: UPDATE_CFG		cfg: a dict of config key/values
-	#This function commits.
-	def getCommands(self, dev_version, last_timestamp, commit=True):
-		list = []
-		canvas = Canvas.query.filter_by(id=self.actcanvasid).first()
-		if(canvas): #If the canvas exists 
-			current_timestamp = os.path.getmtime(canvas.getFilename('I'))
-			if(not(str(last_timestamp) == str(current_timestamp))): # If the canvas has changed since we last sent it off.
-				list.append({'id': 'CANVAS', 'path': canvas.getPath('I'), 'time': current_timestamp})
-		if(self.capture):
-			list.append({'id': 'CAPTURE'})
-		if(self.version_crnt != dev_version):
-			self.version_crnt = dev_version
-			if(commit): db.session.commit()
-		if(self.version_tgt != self.version_crnt):
-			list.append({'id': 'UPDATE_VSN', 'path': self.getTargetFirmwarePath()})
-			print '---------------------------------------------------------' + self.getTargetFirmwarePath()
-		if(self.cfg_update):
-			list.append({'id': 'UPDATE_CFG', 'cfg': self.getConfig()})
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
 		
-		return list
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
 		
-	#Get a list of configuration key/value pairs, in the form of a single dict {key1: val1, key2: val2, ...}
-	#Defaults are handled here.
-	def getConfig(self):
-		dict = {}
-		dict['screen_rotation'] = self.orientation
-		dict['time_on'] = self.timeOn or 'UNSET'
-		dict['time_off'] = self.timeOff or 'UNSET'
-		dict['capture_offset_x'] = self.cap_offx
-		dict['capture_offset_y'] = self.cap_offy
-		dict['capture_scale_x'] = self.cap_scalex
-		dict['capture_scale_y'] = self.cap_scaley
-		dict['debug_overlay_enabled'] = self.debug
-		dict['watermark_enabled'] = self.watermark
-		dict['fb_loop_mintime'] = current_app.config['FB_LOOP_MINTIME']
-		dict['fb_loop_maxtime'] = current_app.config['FB_LOOP_MAXTIME']
-		return dict
-		
-	#Gets the *absolute* filesystem path to the capture file. This method is deceprecated, and will soon be replaced by streaming.
-	def getCapturePath(self):
-		return current_app.config['STATIC_CONTENT_ROOT'] + '/projector/device/' + str(self.id) + 'C.jpg'
-	
-	#Gets the RELATIVE device's target version path. Checks if the buildtar exists, and if it doesn't returns
-	#the path to the luxedo config global target version instead.
-	def getTargetFirmwarePath(self):
-		path = self.getFirmwarePath(self.version_tgt)
-		if(not os.path.isfile(current_app.config['STATIC_CONTENT_ROOT'] + path)):
-			path = self.getFirmwarePath(current_app.config['PROJECTOR_TARGET_VERSION'])
-		print current_app.config['STATIC_CONTENT_ROOT'] + path
-		return current_app.config['STATIC_CONTENT_ROOT'] + path
-	
-	#Get's the RELATIVE path to the firmware bundle for the provided version. Relative to static content root.
-	#Version such as 1.0.2, or 1.22.0 (strings)
-	def getFirmwarePath(self, version):
-		return '/projector/firmware/pi_buildtar_v' + version + '.tar.gz'
-
-
 #========================== FUNCTIONS FOR MANIPULATING MODELS ==========================
 #You can't do proper inheritance with models under SQL Alchemy, so I've resorted to self
 

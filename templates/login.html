@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block body %}
+	{{ super() }}
 	<form action="" method="post">
 		{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
 		{{ loginform.hidden_tag() }}
@@ -15,5 +16,8 @@
 		{{ loginform.submit() }}
 	</form>
 {% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
+{% endblock %}
+{% block script_login %}
 {% endblock %}

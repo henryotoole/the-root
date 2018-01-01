@@ -78,9 +78,8 @@ h1
 		</div>
 	</div>
 {% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
-
-<script src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 <script src="{{sp_content}}/lib/moment2.18.1.min.js"></script>
 <script src="{{sp_content}}/lib/chart2.4.0.min.js"></script>
 
@@ -89,4 +88,6 @@ h1
 <script>
 init('{{sp_local}}', '{{sp_content}}');
 </script>
+{% endblock %}
+{% block script_login %}
 {% endblock %}
