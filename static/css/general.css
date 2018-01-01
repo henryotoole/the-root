@@ -122,12 +122,32 @@
 	justify-content: center;
 }
 
+/* A nice rusty circle which displays the user ID #943D2C #D67646*/
+.acct-circle
+{
+	width: 30px;
+	height: 30px;
+	border-radius: 17px;
+	background-color: #FFFFFF;
+	color: #333333;
+	border: 1px solid #333333;
+}
+
 /* Applies a top left 'float' to a div' */
 .over-tl
 {
 	position: absolute;
 	top: 0px;
 	left: 0px; 
+}
+
+/* TOP DEAD CENTER! Applies a top-anchored 'floating' behavior to a div. Full page width, height dynamic. */
+.over-tdc
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100vw;
 }
 
 /* The standard class for wtforms inputs */
@@ -139,6 +159,16 @@
 	width:100%;
 	border: 2px solid black;
 }
+
+/* An input, stripped of all borders, margins, etc to look like a div */
+.input-div
+{
+	margin: 0;
+	padding: 0;
+	outline: none;
+	border: none;
+}
+
 /* A text box/label whick looks much like the standard input */
 .label-std
 {
@@ -157,6 +187,27 @@
 	border: 1px solid black;
 	align-items: center;
 	justify-content: center;
+}
+
+/* A max sized tweaked text area class */
+.textarea-full
+{
+	width: 100%; height: 100%;
+	overflow: auto;
+	resize: none;
+	outline: none;
+	border: 1px solid #AAAAAA;
+	border-radius: 5px;
+}
+
+/* A text area which approximates the behavior of a div. NOT EDITABLE! */
+.textarea-div
+{
+	width: 100%; height: 100%;
+	overflow: hidden;
+	resize: none;
+	outline: none;
+	border: none;
 }
 
 /*Special css for buttons, all this does is add the highlight behavior*/
@@ -222,8 +273,18 @@
 	height: 10px;
 	border: 1px black solid;
 	border-radius: 10px;
-	margin-left: 0.75vw;
-	margin-right: 0.75vw;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+/* A dynamic circle. Should be inside a square div (this is used with a jquery animation in the untether app)*/
+.circle-dyn
+{
+	border-radius: 45%;
+	border: 1px solid black;
+	height: 90%; width: 90%;
+	background-color: black;
+	padding: 5%;
 }
 
 /* A pleasant etched border, with a margin to make the border INSIDE the boundaries of the div by a bit. */
@@ -375,5 +436,21 @@ a tilebox-tile or the jquery autocentering feature will have issues*/
 /* The main body of the project. This will usually be the outer container div of the project html file */
 .proj-body-container
 {
-	padding: 2vw;
+	padding: 3vh;
+}
+
+/*============================== Untether ================================*/
+.note-entry
+{
+	cursor: pointer;
+}
+
+.note-entry-name
+{
+	font-family: 'Playfair Display', serif;
+	font-weight: normal;
+	font-size: 30px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }

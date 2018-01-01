@@ -1,0 +1,106 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+	body
+	{
+		margin: 0;
+		overflow: hidden;
+	}
+	a
+	{
+		color:inherit;
+		text-decoration: none;
+	}
+	h1
+	{
+		margin: 10px;
+	}
+	.unt-icon
+	{
+		width: 3vw; height: 3vw;
+		cursor: pointer;
+		margin-bottom: 2vh;
+	}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class='org-row-left'>
+		<div class='home-square' style='width: 50px; height: 50px' onclick="location.href = '/';">
+			<img src='{{sp_local}}/icons/main_icon_simple_dark.svg' width='100%' height='100%'>
+		</div>
+		<div class='f-raleway-para' style='vertical-align: top;'>
+				<div style='display: inline-block'>
+					<h1 class='f-playfair-para'>Untether</h1>
+					<div class='hline-center'></div>
+					<div class='org-row-spaced f-playfair-para' style='font-size: 120%; letter-spacing: 3.5px'>Your Notes</div>
+				</div>
+		</div>
+	</div>
+	<div style="height: 80vh; width: 23vw; margin-top: 3vh">
+		<div style='height: 80vh; overflow-y: scroll; direction: rtl;'>
+			<div id='nav_list_region' style='margin-left: 0.5vw; direction: ltr'>
+				<div id='add_container' class='org-left' style='cursor: pointer'>
+					<div id='add_box' class='org-center f-raleway-head' style='height: 40px; width: 40px; border: 1px solid black; border-radius: 22px'>
+						<div id='add_words' style='display: none'> New Note </div>
+						<img id='add_cross' src='{{sp_local}}/icons/cross_maltese_thin.svg' height='30px'>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id='proj_active' class='proj-interface'>
+		<div class='f-raleway-para proj-body-container'>
+			<div class='org-row-flung'> 
+				<div id='edit' class='unt-icon'>
+					<img src='{{sp_local}}/icons/feather.svg' width='100%' height='100%'>
+				</div>
+				<div class='f-playfair-subhead proj-header-title'>
+					<div id='title'> </div>
+					<div class='proj-header-title-line'>
+						<div class='proj-header-title-circle'> </div>
+					</div>
+				</div>
+				<div id='delete' class='unt-icon'>
+					<img src='{{sp_local}}/icons/fire.svg' width='100%' height='100%'>
+				</div>
+			</div>
+			<div id='text'> </div>
+		</div>
+	</div>
+	<div id='proj_other' class='proj-interface'>
+		<div class='f-raleway-para proj-body-container'>
+			<div class='org-row-flung'>
+				<div id='edit' class='unt-icon'>
+					<img src='{{sp_local}}/icons/feather.svg' width='100%' height='100%'>
+				</div>
+				<div class='f-playfair-subhead proj-header-title'>
+					<div id='title'> </div>
+					<div class='proj-header-title-line'>
+						<div class='proj-header-title-circle'> </div>
+					</div>
+				</div>
+				<div id='delete' class='unt-icon'>
+					<img src='{{sp_local}}/icons/fire.svg' width='100%' height='100%'>
+				</div>
+			</div>
+			<div id='text'> </div>
+		</div>
+	</div>
+	<div id='proj_initial'>
+{% endblock %}
+
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="{{sp_local}}/js/untether_list.js">
+
+	</script>
+
+	<script>
+	console.log("init");
+	init("{{sp_local}}", "{{sp_content}}");
+	</script>
+{% endblock %}
+{% block script_login %}
+{% endblock %}

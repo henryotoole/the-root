@@ -43,9 +43,9 @@
 	<div id='proj_other' class='proj-interface'> </div>
 	<div id='proj_initial'>
 {% endblock %}
-{% block scripts %}
-	<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
 
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
 	<script type="text/javascript" src="{{sp_local}}/js/projects.js">
 
 	</script>
@@ -54,4 +54,6 @@
 	console.log("init");
 	init("{{sp_local}}", "{{sp_content}}");
 	</script>
+{% endblock %}
+{% block script_login %}
 {% endblock %}

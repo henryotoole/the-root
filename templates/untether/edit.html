@@ -1,0 +1,52 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+{% endblock %}
+
+{% block title %} Untether {% endblock %}
+
+{% block body %}
+	{{ super() }}
+	<div class='f-raleway-para proj-body-container' style='height: 94vh;'>
+		<div class='org-row-spaced'>
+			<div class='org-col'>
+				<div class='f-playfair-subhead proj-header-title'>
+					{% if type=='new' %}
+					<input type="text" style='text-align: center' class='f-playfair-subhead input-div' id='e_title' placeholder='Enter a Title'></input>
+					{% else %}
+					<input type="text" style='text-align: center' class='f-playfair-subhead input-div' id='e_title' value='{{name}}'></input>
+					{% endif %}
+					<div class='proj-header-title-line'>
+						<div class='proj-header-title-circle'></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='org-row-spaced'>
+			<div style='width: 90vw; height: 80vh; margin-left: 0; margin-right: 0;'>
+				{% if type=='edit' %}
+					<textarea id='e_text' class='textarea-full f-raleway-para'> Start writing here!</textarea>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="{{sp_local}}/js/untether_edit.js">
+
+	</script>
+
+	<script>
+	console.log("init");
+	init("{{sp_local}}", "{{sp_content}}", "{{name}}", "{{type}}");
+	</script>
+{% endblock %}
+{% block script_login %} {{ super() }} {% endblock %}

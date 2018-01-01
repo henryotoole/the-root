@@ -1,4 +1,8 @@
 <!doctype html>
+<!--
+Copyright (C) 2017  Joshua Reed
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
 <html>
 	<head>
 	{% block head %}
@@ -10,12 +14,72 @@
 	</head>
 	<body>
 	{% block body %}
-		<!-- Home Button-->
-		<div class='over-tl home-square' style='margin-top: 15px; width: 50px; height: 50px' onclick="location.href = '/';">
-			<img src='{{sp_local}}/icons/main_icon_simple_dark.svg' width='100%' height='100%'>
+		<div class='over-tdc org-row-flung' style='pointer-events: none;'>
+			<!-- Home Button-->
+			<div class='home-square' style='margin-top: 15px; width: 50px; height: 50px; pointer-events: auto;' onclick="location.href = '/';">
+				<img src='{{sp_local}}/icons/main_icon_simple_dark.svg' width='100%' height='100%'>
+			</div>
+			<!-- Login Status-->
+			<div id='loginstat-block' class='org-row-flung f-raleway-para' style='display: none; padding-right: 30px; cursor: pointer; pointer-events: auto;'>	
+				<div id='loginstat-stat' style='margin-right: 10px'>User</div>
+				<div id='loginstat-id' class='acct-circle org-center'></div>
+			</div>
 		</div>
 	{% endblock %}
 	</body>
 </html>
+{% block script_jquery %}
+<script type="text/javascript" src="{{sp_content}}/lib/jquery-3.2.1.min.js"></script>
+{% endblock %}
 {% block scripts %}
+{% endblock %}
+{% block script_login %}
+<script>
+	console.log("loginscript");
+	var login_id = null;
+	$.getJSON("/login/q/user")
+		.done(function(json)
+		{
+			login_id = json.id;
+			$('#loginstat-block').show();
+			$('#loginstat-stat').html('User');
+			$('#loginstat-id').html(json.id);
+		})
+		.fail(function()
+		{
+			$('#loginstat-block').show();
+			$('#loginstat-stat').html('');
+			$('#loginstat-id').css('width', '100px');
+			$('#loginstat-id').html('Login');
+		});
+	$('#loginstat-block').hover(function()
+	{
+		if(login_id)
+		{
+			$('#loginstat-stat').finish().hide(200);
+			$('#loginstat-id').html("Logout");
+			$('#loginstat-id').finish().animate({width: '100px'}, 200);
+		}
+	},
+	function()
+	{
+		if(login_id)
+		{
+			$('#loginstat-stat').finish().show(200);
+			$('#loginstat-id').html(login_id);
+			$('#loginstat-id').finish().animate({width: '30px'}, 200);
+		}
+	});
+	$('#loginstat-block').click(function()
+	{
+		if(login_id) //Goto account. TODO. for now this logs the user out.
+		{
+			location.href = '/logout'
+		}
+		else //Login
+		{
+			location.href = '/login';
+		}
+	});
+</script>
 {% endblock %}
