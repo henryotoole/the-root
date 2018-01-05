@@ -16,6 +16,7 @@ from flask_login import login_required, current_user
 from flask import render_template, redirect, request, jsonify
 
 import datetime
+import urllib
 
 @app.route("/note", methods=['GET', 'POST'])
 @app.route("/untether", methods=['GET', 'POST'])
@@ -56,7 +57,7 @@ def untether_query(query):
 	elif(query=='note_make'): # Create a new note. Need a name. If the name provided is not unique to the user (x) is appended
 		name = request.values.get('name', type=str)
 		cat = request.values.get('cat', type=int) # Allowed to be None
-		text = request.values.get('text', type=str) # Allowed to be None
+		text = request.values.get('text', type=str) # Allowed to be None. This will be an escaped string.
 		if(name == None or (name == '')):
 			return "No name provided", 404
 		while UntetherNote.query.filter_by(user=current_user.id).filter_by(name=name).first(): # If the name matches another.
@@ -93,7 +94,7 @@ def untether_query(query):
 	if(query=='note_get'):
 		return jsonify({'text': note.getText(), 'id': id}), 200
 	elif(query=='note_set'):
-		text = request.values.get('text', type=str)
+		text = request.values.get('text', type=str) # The text, escaped before sending.
 		if(text == None):
 			return "No valid text provided", 404
 		note.setText(text)
