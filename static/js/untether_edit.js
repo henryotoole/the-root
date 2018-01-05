@@ -98,7 +98,7 @@ class Page
 			_this.id = data.id;
 			$.post("/untether/query/note_get", {'id': data.id}).done(function(data)
 			{
-				_this.$text.html(data.text);
+				_this.set_text(data.text);
 			});
 		}).fail(function() //Note doesn't exist, so create a new empty one
 		{
@@ -204,9 +204,15 @@ class Page
 		this.update_savestar(0);
 	}
 	
-	//Gets the TEXT as a string.
+	//Gets the TEXT as an escaped string.
 	get_text()
 	{
-		return this.$text.val();
+		return escape(this.$text.val());
+	}
+	
+	//Sets the text. The input is assumed to be an escaped string from the server.
+	set_text(text)
+	{
+		this.$text.val(unescape(text));
 	}
 }

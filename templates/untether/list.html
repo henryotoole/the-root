@@ -20,17 +20,19 @@
 	{
 		width: 3vw; height: 3vw;
 		cursor: pointer;
-		margin-bottom: 2vh;
+		padding-bottom: .5vh;
+		margin-bottom: 2vw;
+		border-bottom: 1px solid black;
 	}
 	</style>
 {% endblock %}
 
+
+
 {% block body %}
+	{{ super() }}
 	<div class='org-row-left'>
-		<div class='home-square' style='width: 50px; height: 50px' onclick="location.href = '/';">
-			<img src='{{sp_local}}/icons/main_icon_simple_dark.svg' width='100%' height='100%'>
-		</div>
-		<div class='f-raleway-para' style='vertical-align: top;'>
+		<div class='f-raleway-para' style='vertical-align: top; margin-left: 50px;'>
 				<div style='display: inline-block'>
 					<h1 class='f-playfair-para'>Untether</h1>
 					<div class='hline-center'></div>
@@ -42,7 +44,7 @@
 		<div style='height: 80vh; overflow-y: scroll; direction: rtl;'>
 			<div id='nav_list_region' style='margin-left: 0.5vw; direction: ltr'>
 				<div id='add_container' class='org-left' style='cursor: pointer'>
-					<div id='add_box' class='org-center f-raleway-head' style='height: 40px; width: 40px; border: 1px solid black; border-radius: 22px'>
+					<div id='add_box' class='org-center note-entry-name' style='height: 40px; width: 40px; border: 1px solid black; border-radius: 22px'>
 						<div id='add_words' style='display: none'> New Note </div>
 						<img id='add_cross' src='{{sp_local}}/icons/cross_maltese_thin.svg' height='30px'>
 					</div>
@@ -54,7 +56,7 @@
 		<div class='f-raleway-para proj-body-container'>
 			<div class='org-row-flung'> 
 				<div id='edit' class='unt-icon'>
-					<img src='{{sp_local}}/icons/feather.svg' width='100%' height='100%'>
+					<img src='{{sp_local}}/icons/feather_thin.svg' width='100%' height='100%'>
 				</div>
 				<div class='f-playfair-subhead proj-header-title'>
 					<div id='title'> </div>
@@ -63,7 +65,7 @@
 					</div>
 				</div>
 				<div id='delete' class='unt-icon'>
-					<img src='{{sp_local}}/icons/fire.svg' width='100%' height='100%'>
+					<img src='{{sp_local}}/icons/fire_thin.svg' width='100%' height='100%'>
 				</div>
 			</div>
 			<div id='text'> </div>
@@ -73,7 +75,7 @@
 		<div class='f-raleway-para proj-body-container'>
 			<div class='org-row-flung'>
 				<div id='edit' class='unt-icon'>
-					<img src='{{sp_local}}/icons/feather.svg' width='100%' height='100%'>
+					<img src='{{sp_local}}/icons/feather_thin.svg' width='100%' height='100%'>
 				</div>
 				<div class='f-playfair-subhead proj-header-title'>
 					<div id='title'> </div>
@@ -82,7 +84,7 @@
 					</div>
 				</div>
 				<div id='delete' class='unt-icon'>
-					<img src='{{sp_local}}/icons/fire.svg' width='100%' height='100%'>
+					<img src='{{sp_local}}/icons/fire_thin.svg' width='100%' height='100%'>
 				</div>
 			</div>
 			<div id='text'> </div>

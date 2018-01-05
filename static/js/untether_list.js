@@ -98,6 +98,12 @@ class Page
 		//Set this controls toolbar entry as selected, and remove the previous selection
 		//TODO this part
 	}
+	
+	//Simply shifts the active iface off screen.
+	ifaceDeactivateCurrent()
+	{
+		this.iface_active.position(Interface.STATUS.below);
+	}
 
 	//Called when page resizes
 	onResize()
@@ -218,6 +224,47 @@ class Navigation
 		});
 		$category.prepend($entry);
 		this.notes[id] = {id: id, $dom: $entry, name: name}
+	}
+	
+	//Removes the note of the desired id from the server, client data, and visual.
+	//Also loads the next note in the list, if the current note is loaded.
+	del_note(id)
+	{
+		var _this = this;
+		$.post(Page.query_url + "/note_del", {'id': id}).done(function(data)
+		{
+			console.log("Deleted on server. Removing from client data and visual...");
+			var keys = Object.keys(_this.notes);
+			var next_id = -1;
+			for (var x = 0; x < keys.length; x++)
+			{
+				if(parseInt(keys[x]) == parseInt(id)) //If we find the right key, get the next one if there is one.
+				{
+					if((x+1) < keys.length)
+					{
+						next_id = keys[x+1];
+					}
+					else if(x-1 >= 0)
+					{
+						next_id = keys[x-1];
+					}
+				}
+			}
+			_this.notes[id].$dom.remove(); //Remove from list.
+			if(PAGE.iface_active.note_id == id)
+			{
+				PAGE.load
+			}
+			delete _this.notes[id];
+			if(next_id > -1)
+			{
+				PAGE.load_note(next_id);
+			}
+			else
+			{
+				PAGE.ifaceDeactivateCurrent();
+			}
+		});
 	}
 }
 
@@ -373,18 +420,12 @@ class InterfaceProject extends Interface
 		this.$title.html(name);
 		$.post(Page.query_url + "/note_get", {'id': note_id}).done(function(data)
 		{
-			console.log("GETTING TEXT");
-			console.log(data.text);
-			_this.$text.html(data.text.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+			_this.$text.html(unescape(data.text).replace(/(?:\r\n|\r|\n)/g, '<br />'));
 			_callback();
 		});
 		this.$del.click(function()
 		{
-			$.post(Page.query_url + "/note_del", {'id': _this.note_id}).done(function(data)
-			{
-				console.log("Deleted");
-				//TODO Clear page
-			});
+			PAGE.nav.del_note(_this.note_id);
 		});
 		this.$edit.click(function()
 		{
