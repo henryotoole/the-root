@@ -30,6 +30,7 @@
 			<img src='{{sp_local}}/icons/main_icon_light.svg?web_vsn={{ web_vsn }}' width=140 height=253>
 		</div>
 		<div class='org-col' style='margin-top: 2vh'>
+			<div class='f-raleway-para'> {{ message }} </div>
 			<form action="" method="post">
 				{#The hidden_tag is for CSRF prevention and needs to be in every form.#}
 				{{ form.hidden_tag() }}
