@@ -4,11 +4,15 @@
 #
 #Reginald takes GET/POST requests describing a purchase/transaction and adds them to a database. He can then provide some
 #metrics about your spending habits, etc.
+#Copyright (C) 2017  Joshua Reed
+#This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from the_root.extensions import db
 from the_root import app
 from the_root.forms import TransactionForm
 from the_root.models import Transaction, Method, Type
+from the_root.decorators import render_template_standard
 
 import flask
 from flask_login import login_required, current_user
@@ -25,7 +29,7 @@ def reginald_main():
 	message = request.values.get('message', type=str, default=message)
 	
 	
-	return render_template("/reginald/reginald.html", message=message, sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+	return render_template_standard("/reginald/reginald.html", message=message)
 
 @app.route("/reginald/transaction/<t_type>", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
@@ -65,7 +69,7 @@ def reginald_transaction(t_type):
 		return redirect('/reginald?message=REGINALD SAYS HI!!!!')
 	else:
 		
-		return render_template("/reginald/expenditure.html", form=form, sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+		return render_template_standard("/reginald/expenditure.html", form=form)
 		
 #
 
@@ -74,7 +78,7 @@ def reginald_transaction(t_type):
 @app.route("/reginald/greensheet", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def greensheet():
-	return render_template("/reginald/greensheet.html", sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+	return render_template_standard("/reginald/greensheet.html")
 
 
 #Dates in format YYYY-MM-DD

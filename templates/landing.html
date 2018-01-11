@@ -54,14 +54,14 @@
 			</div>
 		</div>
 		<div class='org-col-full-item org-center'>
-				<img src='{{sp_local}}/icons/main_icon_light.svg' width=210 height=380>
+				<img src='{{sp_local}}/icons/main_icon_light.svg?web_vsn={{ web_vsn }}' width=210 height=380>
 			</div>
 		</div>
 	</div>
 {% endblock %}
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
-	<script type="text/javascript" src="{{sp_local}}/js/map.js">
+	<script type="text/javascript" src="{{sp_local}}/js/map.js?web_vsn={{ web_vsn }}">
 
 	</script>
 

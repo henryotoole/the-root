@@ -1,7 +1,7 @@
 {% extends "l_standard.html" %}
 {% block head %}
 	{{ super() }}
-<link href="{{sp_local}}/css/greensheet.css" rel="stylesheet">
+<link href="{{sp_local}}/css/greensheet.css?web_vsn={{ web_vsn }}" rel="stylesheet">
 
 <style>
 body
@@ -83,7 +83,7 @@ h1
 <script src="{{sp_content}}/lib/moment2.18.1.min.js"></script>
 <script src="{{sp_content}}/lib/chart2.4.0.min.js"></script>
 
-<script type="text/javascript" src="{{sp_local}}/js/greensheet.js"></script>
+<script type="text/javascript" src="{{sp_local}}/js/greensheet.js?web_vsn={{ web_vsn }}"></script>
 
 <script>
 init('{{sp_local}}', '{{sp_content}}');

@@ -21,19 +21,16 @@ h1
 				<div class='hline-center'></div>
 			</div>
 		</div>
-		<img src='{{sp_local}}/icons/web_archive_fin1.png' style='width: 20vw'>
+		<img src='{{sp_local}}/icons/web_archive_fin1.png?web_vsn={{ web_vsn }}' style='width: 20vw'>
 	</div>
 {% endblock %}
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
-<script type="text/javascript" src="{{sp_local}}/js/util.js">
+<script type="text/javascript" src="{{sp_local}}/js/util.js?web_vsn={{ web_vsn }}">
 
 </script>
 
 <script>
-console.log("init");
-init();
 </script>
 {% endblock %}
-{% block script_login %}
-{% endblock %}
+{% block script_login %} {% endblock %}

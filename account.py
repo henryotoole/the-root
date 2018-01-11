@@ -1,9 +1,14 @@
-#This file handles login/landing page 
+#account.py
+#This file handles any pages dealing with accounts (login, create, etc)
+#Copyright (C) 2017  Joshua Reed
+#This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from the_root.extensions import login_manager, db
 from the_root.forms import LoginForm, CreateForm
 from the_root.models import User
 from the_root import app
+from the_root.decorators import render_template_standard
 
 import flask
 from flask_login import login_required, login_user, logout_user, current_user
@@ -68,11 +73,11 @@ def login():
 		
 		#No user of that name.
 		message = "This combination of email and password is invalid."	
-	return render_template('login.html', loginform=loginform, sp_local=sp_local, message=message)
+	return render_template_standard('login.html', loginform=loginform, message=message)
 
 @app.route("/created", methods=['GET', 'POST'])
 def created():
-	return render_template('created.html')
+	return render_template_standard('created.html')
 	
 @app.route("/create", methods=['GET', 'POST'])
 def create():
@@ -106,7 +111,7 @@ def create():
 			#No user of that name.
 			message = "This combination of email and password is invalid."
 			
-	return render_template('create.html', form=form, sp_local=sp_local, message=message)
+	return render_template_standard('create.html', form=form, message=message)
 
 @app.route("/login/q/<query>", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in

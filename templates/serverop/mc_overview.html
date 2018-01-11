@@ -17,7 +17,7 @@ body
 <div class='org-row-spaced f-raleway-para'>
 	<div class='region-etch org-row-left' style='width: 55vw; height: 100px;'>
 		<div class='org-row-spaced' style='width: 100px; height: 100px'>
-			<img id='statlight' height='50px' width='50px' src='{{sp_local}}/icons/status_circle_dead.svg'>
+			<img id='statlight' height='50px' width='50px' src='{{sp_local}}/icons/status_circle_dead.svg?web_vsn={{ web_vsn }}'>
 		</div>
 		<div>
 			<div class='f-raleway-head'> Server Operator</div>
@@ -31,7 +31,7 @@ body
 		</div>
 	</div>
 	<div class='region-etch' style='width: 25vw;'>
-		<img width='100px' height='100px' src='{{sp_local}}/icons/server.svg'>
+		<img width='100px' height='100px' src='{{sp_local}}/icons/server.svg?web_vsn={{ web_vsn }}'>
 	</div>
 </div>
 <div style='display: flex; justify-content: space-around;'>
@@ -72,7 +72,7 @@ body
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
 
-<script type="text/javascript" src="{{sp_local}}/js/serverop_mc.js">
+<script type="text/javascript" src="{{sp_local}}/js/serverop_mc.js?web_vsn={{ web_vsn }}">
 
 </script>
 
