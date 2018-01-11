@@ -92,24 +92,9 @@ def create():
 			
 			password = form.password.data
 			user = User(password, email)
-			db.session.add(note)
+			db.session.add(user)
 			db.session.commit()
-			#Encryption and stuff goes here
-			
-			#Get an instance
-			user = User.query.filter_by(email=email).first()
-			if user:
-				if user.validate_password(password):
-					#Check password, eventually
-					login_user(user)
-					
-					tgt = get_redirect_target()
-					return flask.redirect(tgt if tgt else "/")
-				else:
-					message = "This combination of email and password is invalid."
-			
-			#No user of that name.
-			message = "This combination of email and password is invalid."
+			return flask.redirect("/created")
 			
 	return render_template_standard('create.html', form=form, message=message)
 
