@@ -9,6 +9,7 @@ from the_root.extensions import db, csrf
 from the_root import app
 from the_root.forms import TransactionForm
 from the_root.models import UntetherNote, UntetherCat
+from the_root.decorators import render_template_standard
 
 import flask
 from flask_login import login_required, current_user
@@ -22,19 +23,19 @@ import urllib
 @app.route("/untether", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def untether():
-	return render_template("/untether/list.html", sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+	return render_template_standard("/untether/list.html")
 
 @app.route("/note/e/<note>", methods=['GET', 'POST'])
 @app.route("/untether/e/<note>", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def untether_edit(note):
-	return render_template("/untether/edit.html", name=note, type='edit', sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+	return render_template_standard("/untether/edit.html", name=note, type='edit')
 	
 @app.route("/note/n/<note>", methods=['GET', 'POST'])
 @app.route("/untether/n/<note>", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def untether_new(note):
-	return render_template("/untether/edit.html", name=note, type='new', sp_local=app.config['STATIC_URL_LOCAL'], sp_content=app.config['STATIC_URL_CONTENT'])
+	return render_template_standard("/untether/edit.html", name=note, type='new')
 	
 @csrf.exempt # This is added to allow post commands to access this method.
 @app.route("/untether/query/<query>", methods=['GET', 'POST'])

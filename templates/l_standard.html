@@ -7,8 +7,8 @@ This program is free software: you can redistribute it and/or modify it under th
 	<head>
 	{% block head %}
 		<link href="https://fonts.googleapis.com/css?family=Playfair+Display|Raleway" rel="stylesheet">
-		<link href="{{sp_local}}/css/general.css" rel="stylesheet">
-		<link rel='icon' href='{{sp_local}}/icons/favicon.png'>
+		<link href="{{sp_local}}/css/general.css?web_vsn={{ web_vsn }}" rel="stylesheet">
+		<link rel='icon' href='{{sp_local}}/icons/favicon.png?web_vsn={{ web_vsn }}'>
 		<title>{% block title %} The Root {% endblock %}</title>
 	{% endblock %}
 	</head>
@@ -17,7 +17,7 @@ This program is free software: you can redistribute it and/or modify it under th
 		<div class='over-tdc org-row-flung' style='pointer-events: none;'>
 			<!-- Home Button-->
 			<div class='home-square' style='margin-top: 15px; width: 50px; height: 50px; pointer-events: auto;' onclick="location.href = {% block home_link_path %}'/'{% endblock %};">
-				<img src='{% block home_icon_path %}{{sp_local}}/icons/main_icon_simple_dark.svg{% endblock %}' width='100%' height='100%'>
+				<img src='{% block home_icon_path %}{{sp_local}}/icons/main_icon_simple_dark.svg?web_vsn={{ web_vsn }}{% endblock %}' width='100%' height='100%'>
 			</div>
 			
 			<!-- Login Status-->
