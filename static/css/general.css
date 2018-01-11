@@ -104,6 +104,15 @@
 	align-items: center;
 }
 
+/* Displays children in a horizontally centered, vertical column with space-between */
+.org-col-flung
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
 /* Designed to center a single object */
 .org-center
 {
@@ -216,10 +225,15 @@
 	
 }
 
-.button-std-grey
+.button-std-greyd
 {
 	border: 1px solid #999999;
 	color: #999999;
+}.button-std:hover
+{
+	background-color: #48636C;
+	color: #FFFFFF;
+	cursor: pointer;
 }
 
 .button-light
@@ -231,17 +245,24 @@
 	padding-right: 4px;
 	margin-left: 1px;
 	margin-right: 1px;
-}
-.button-light:hover
+}.button-light:hover
 {
 	background-color: #eee;
 }
 
-.button-std:hover
+/* This is a button which looks like simple text until you hover over it. */
+.button-pretender
 {
-	background-color: #48636C;
-	color: #FFFFFF;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	cursor: pointer;
+	border-radius: 12px;
+	padding-left: 30px; padding-right: 30px;
+}.button-pretender:hover
+{
+	border: 2px solid black;
 }
 
 /*An actual full version of a button that does not require other classes. Font, width, and/or height are still required.*/

@@ -1,22 +1,43 @@
-<link rel="stylesheet" href="{{sp_local}}/css/login.css">
-<body>
-	<center>
-		<br><br><br><br>
-		<h2> Account Created </h2>
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+	body
+	{
+		margin: 0;
+	}
+	.loginbutton
+	{
+		margin-top: 3vh;
+		border-radius: 12px;
+		height:60px;
+		font-size: 200%;
+		border: 2px solid black;
+		background-color: #FFFFFF;
+		cursor: pointer;
+		padding-left: 1vw; padding-right: 1vw;
+	}
+	.loginbutton:hover
+	{
+		background-color: #DDDDDD;
+	}
+	</style>
+{% endblock %}
 
-		<a href='/login'><button type='button' class='btnSubmit'> Back To Login </button></a>
-	</center>
-</body>
-
-<script type="text/javascript" src="http://52.207.105.99/js/jquery-3.2.1.min.js">
-//All other scripts will be loaded asynchronously, but jquery will be loaded manually because it
-//is used to actually accomplish this.
-</script>
-<script>
-$(".btnSubmit").mouseover( function() {
-	$(this).attr("style", "background: #232F3E; color: #f1f1f1");
-	})
-	.mouseout( function() {
-		$(this).attr("style", "background: transparent; color: #232F3E");
-	});
-</script>
+{% block body %}
+	<div class='org-col'style='width: 100vw; height: 100vh; padding-top: 25vh;'>
+		<div class='f-playfair-head2'> 
+			Account Created
+			<div class='proj-header-title-line'>
+				<div class='proj-header-title-circle'> </div>
+			</div>
+		</div>
+		<div class='f-raleway-para' style='margin-top: 1vw'> Welcome to The Root </div>
+		<div class='org-center loginbutton f-raleway-para' onclick='location.href = "/login";'> Back To Login </div>
+	</div>
+{% endblock %}
+{% block script_jquery %} {% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block script_login %}
+{% endblock %}

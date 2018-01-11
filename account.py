@@ -43,8 +43,11 @@ def logout():
 #NOTE!!: If both GET and POST are not allowed, wtforms will trip a 405 error.
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+	if current_user.is_authenticated:
+		return flask.redirect("/launcher")
 	sp_local = app.config['STATIC_URL_LOCAL']
 	loginform = LoginForm()
+	message=""
 	if loginform.validate_on_submit():
 		email = loginform.email.data
 		password = loginform.password.data
@@ -61,14 +64,49 @@ def login():
 				tgt = get_redirect_target()
 				return flask.redirect(tgt if tgt else "/")
 			else:
-				return "Bad password"
+				message = "This combination of email and password is invalid."
 		
 		#No user of that name.
-		return "Not a valid account"
-	#As one would expect, if there are form errors this will not be true.
-	else:
-		return render_template('login.html', loginform=loginform, sp_local=sp_local)
+		message = "This combination of email and password is invalid."	
+	return render_template('login.html', loginform=loginform, sp_local=sp_local, message=message)
 
+@app.route("/created", methods=['GET', 'POST'])
+def created():
+	return render_template('created.html')
+	
+@app.route("/create", methods=['GET', 'POST'])
+def create():
+	sp_local = app.config['STATIC_URL_LOCAL']
+	form = CreateForm()
+	message=""
+	if form.validate_on_submit():
+		email = form.email_create.data
+		if(User.query.filter_by(email=email).first()):
+			message="That email is already in use."
+		else:
+			
+			password = form.password.data
+			user = User(password, email)
+			db.session.add(note)
+			db.session.commit()
+			#Encryption and stuff goes here
+			
+			#Get an instance
+			user = User.query.filter_by(email=email).first()
+			if user:
+				if user.validate_password(password):
+					#Check password, eventually
+					login_user(user)
+					
+					tgt = get_redirect_target()
+					return flask.redirect(tgt if tgt else "/")
+				else:
+					message = "This combination of email and password is invalid."
+			
+			#No user of that name.
+			message = "This combination of email and password is invalid."
+			
+	return render_template('create.html', form=form, sp_local=sp_local, message=message)
 
 @app.route("/login/q/<query>", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
