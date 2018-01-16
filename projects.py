@@ -9,6 +9,7 @@ from the_root.decorators import render_template_standard
 
 import flask, os
 from flask import render_template, send_file, jsonify, current_app
+from flask_login import current_user
 
 from bs4 import BeautifulSoup
 
@@ -38,15 +39,17 @@ def proj_query(query):
 				proj_id = soup.find("meta",  property="proj_id")
 				proj_name = soup.find("meta",  property="proj_name")
 				cat_id = soup.find("meta",  property="cat_id")
-				#All properties must exist for valid project file.
-				if(proj_id and proj_name and cat_id):
-					dict = {
-						"proj_id": proj_id['content'], 
-						"proj_name": proj_name['content'], 
-						"cat_id": cat_id['content'],
-						"url": "/projects/" + filename
-					}
-					proj_list.append(dict)
+				hidden = soup.find("meta",  property="hidden")
+				if(not hidden or (current_user.is_authenticated and current_user.id == 1)):
+					#All properties must exist for valid project file.
+					if(proj_id and proj_name and cat_id):
+						dict = {
+							"proj_id": proj_id['content'], 
+							"proj_name": proj_name['content'], 
+							"cat_id": cat_id['content'],
+							"url": "/projects/" + filename
+						}
+						proj_list.append(dict)
 			except IOError: #Probably a folder, should be ignored.
 				pass
 		return jsonify(proj_list), 200
