@@ -8,13 +8,13 @@ from the_root import app
 from the_root.decorators import render_template_standard
 
 import flask, os
-from flask import render_template, send_file, jsonify
+from flask import render_template, send_file, jsonify, current_app
 
 from bs4 import BeautifulSoup
 
 @app.route("/projects")
 def projects():
-	return render_template_standard("/projects/projects.html")
+	return render_template_standard("/projects.html")
 
 #Mostly public methods
 @app.route("/projects/query/<query>")
@@ -26,7 +26,7 @@ def proj_query(query):
 	if(query == 'project_meta_all'):
 		
 		script_path = os.path.dirname(os.path.realpath(__file__)) # no trailing slash
-		proj_dir = script_path + "/static/projects"
+		proj_dir = current_app.config['STATIC_CONTENT_ROOT'] + "/projects"
 		proj_list = []
 		for filename in os.listdir(proj_dir):
 			file_text = ""
