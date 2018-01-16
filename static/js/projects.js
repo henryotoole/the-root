@@ -4,14 +4,14 @@
 //can slide up and down. These divs will be loaded ad-hoc and contain project information.
 
 //sp_content and sp_local are both path specifiers from the server.
-function init(sp_content, sp_local)
+function init(sp_content, sp_local, web_vsn)
 {
 	console.log("Global init.");
 	//initalize page. This is the global reference which we will call upon throughout the code.
-	console.log("Using content root: " + sp_content);
-	console.log("Using local root: " + sp_local);
+	console.log("Web version: " + web_vsn);
 	SP_CONTENT = sp_content; //Refrence to the root (leading slash) of the content director: .../.../content
 	SP_LOCAL = sp_local; // .../static/luxedo
+	WEB_VSN = web_vsn;
 	PAGE = new Page();
 	PAGE.initialize();
 	//If any ajax request returns an error, this is triggered.
