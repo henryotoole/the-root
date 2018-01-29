@@ -83,6 +83,24 @@ def untether_query(query):
 		if not note:
 			return "No note of that name", 404
 		return jsonify(note.getDict()), 200
+	elif(query=='cat_create'):
+		name = request.values.get('name', type=str)
+		if(name == None or (name == '')):
+			return "No name provided", 404
+		cat = UntetherCat(name, current_user.id, None)
+		db.session.add(cat)
+		db.session.commit()
+		return jsonify(cat.getDict()), 200
+	elif(query=='cat_del'):
+		id = request.values.get('id', type=int)
+		if(id == None):
+			return "No valid ID provided", 404
+		cat = UntetherCat.query.filter_by(id=id).first()
+		if (not cat) or (not (cat.user == current_user.id)):
+			return "User does not have access to this category", 403
+		db.session.delete(cat)
+		db.session.commit()
+		return jsonify({}), 200
 		
 	#Queries after this point all rely on a note object which is validated to the user
 	id = request.values.get('id', type=int)
@@ -99,6 +117,12 @@ def untether_query(query):
 		if(text == None):
 			return "No valid text provided", 404
 		note.setText(text)
+		return jsonify({}), 200
+	elif(query=='note_move'):
+		new_cat_id = request.values.get('new_cat_id', type=int)
+		note.cat = new_cat_id
+		print "Set to " + str(new_cat_id)
+		db.session.commit()
 		return jsonify({}), 200
 	elif(query=='note_del'):
 		db.session.delete(note)
