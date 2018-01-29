@@ -24,6 +24,33 @@
 		margin-bottom: 2vw;
 		border-bottom: 1px solid black;
 	}
+	.button-full-non
+	{
+		width: max-content;
+		border-radius: 4px;
+		display: flex;
+		border: 1px solid black;
+		align-items: center;
+		justify-content: center;
+		padding-right: 5%;
+		padding-left: 5%;
+	}
+
+	.button-full-non:hover
+	{
+		background-color: #48636C;
+		color: #FFFFFF;
+		cursor: pointer;
+	}
+	.unt-catbtn
+	{
+		width: 20px;
+		height: 20px;
+		border: 1px black solid;
+		border-radius: 3px;
+		margin-left: 3px;
+		margin-right: 3px;
+	}
 	</style>
 {% endblock %}
 
@@ -31,6 +58,21 @@
 
 {% block body %}
 	{{ super() }}
+	<div id='greyout' class='overlay-greyout' style='z-index: 10; display: none'> </div>
+	<div id='new_sel_overlay' class='org-center' style='position: absolute; top: 0; left: 0; width: 100vw; height:100vh; display: none; z-index: 50;'>
+		<div class='org-col f-raleway-medium'
+			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 0vw 2.5vw 2.5vw; background-color: #FFFFFF'>
+			<div id='new_item_name' style='padding-top: 0.5vw; padding-bottom: 0.5vw'> New Item </div>
+			<div class='org-row-flung f-raleway-head'>
+				<div id='new_note' class='button-full-non' style='width: 25vw; height: 25vw;'> Note </div>
+				<div id='new_cat' class='button-full-non' style='width: 25vw; height: 25vw; margin-left: 2.5vw;'> Category </div>
+			</div>
+			<div id='new_item_cat' class='org-row-flung f-raleway-medium'>
+				<input id='new_item_catname' style='width: 50vw' class='input-light f-raleway-medium' placeholder='Category Name'></input>
+				<div id='new_cat_submit' class='button-full-non' style='margin-left: 2.5vw; height: 60px;'> Submit </div>
+			</div>
+		</div>
+	</div>
 	<div class='org-row-left'>
 		<div class='f-raleway-para' style='vertical-align: top; margin-left: 50px;'>
 				<div style='display: inline-block'>
@@ -42,7 +84,11 @@
 	</div>
 	<div style="height: 80vh; width: 23vw; margin-top: 3vh">
 		<div style='height: 80vh; overflow-y: scroll; direction: rtl;'>
-			<div id='nav_list_region' style='margin-left: 0.5vw; direction: ltr'>
+			<div style='margin-left: 0.5vw; direction: ltr'>
+				<div id='nav_list_region'>
+				</div>
+				<div id='nav_list_region_cat'>
+				</div>
 				<div id='add_container' class='org-left' style='cursor: pointer'>
 					<div id='add_box' class='org-center note-entry-name' style='height: 40px; width: 40px; border: 1px solid black; border-radius: 22px'>
 						<div id='add_words' style='display: none'> New Note </div>
@@ -101,7 +147,7 @@
 
 	<script>
 	console.log("init");
-	init("{{sp_local}}", "{{sp_content}}");
+	init("{{sp_local}}", "{{sp_content}}", "{{web_vsn}}");
 	</script>
 {% endblock %}
 {% block script_login %}

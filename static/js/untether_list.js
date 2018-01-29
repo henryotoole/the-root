@@ -7,7 +7,7 @@
 */
 
 //sp_content and sp_local are both path specifiers from the server.
-function init(sp_content, sp_local)
+function init(sp_local, sp_content, sp_webvsn)
 {
 	console.log("Global init (untether_list.js).");
 	//initalize page. This is the global reference which we will call upon throughout the code.
@@ -15,6 +15,7 @@ function init(sp_content, sp_local)
 	console.log("Using local root: " + sp_local);
 	SP_CONTENT = sp_content; //Refrence to the root (leading slash) of the content director: .../.../content
 	SP_LOCAL = sp_local; // .../static/luxedo
+	SP_WEBVSN = sp_webvsn;
 	PAGE = new Page();
 	PAGE.initialize();
 	//If any ajax request returns an error, this is triggered.
@@ -121,11 +122,20 @@ class Navigation
 		var _this = this;
 		
 		
-		this.$root = $("#nav_list_region");
+		this.$root = $("#nav_list_region"); //List DOM for non-categorized notes.
+		this.$root_cat = $('#nav_list_region_cat'); //List DOM for categories
 		this.$add_cont = $('#add_container');
 		this.$add_box = $('#add_box');
 		this.$add_words = $('#add_words');
 		this.$add_cross = $('#add_cross');
+		this.$new_sel_overlay = $('#new_sel_overlay');
+		this.$new_sel_title = $('#new_item_name');
+		this.$new_note = $('#new_note');
+		this.$new_cat = $('#new_cat');
+		this.$greyout = $('#greyout');
+		this.$new_cat_name = $('#new_item_catname');
+		this.$new_cat_submit = $('#new_cat_submit');
+		this.$new_item_cat = $('#new_item_cat');
 		this.categories = {}; //[id] -> id, name, $dom, $reg
 		this.notes = {}; //[id] -> id, name, $dom
 		
@@ -146,31 +156,60 @@ class Navigation
 		});
 		this.$add_cont.click(function()
 		{
+			_this.$new_sel_overlay.finish().show();
+			_this.$greyout.finish().show();
+			_this.$new_sel_title.html('New Item');
+			_this.$new_cat.finish().show();
+			_this.$new_note.finish().show();
+			_this.$new_item_cat.finish().hide();
+		});
+		this.$new_cat.click(function()
+		{
+			_this.$new_cat.finish().hide();
+			_this.$new_note.finish().hide();
+			_this.$new_item_cat.finish().show();
+			_this.$new_sel_title.html('New Category');
+		});
+		this.$new_cat_submit.click(function()
+		{
+			_this.create_category(_this.$new_cat_name.val());
+			_this.$new_sel_overlay.finish().hide();
+			_this.$greyout.finish().hide();
+		});
+		this.$new_note.click(function()
+		{
 			location.href = '/note/n/unnamed'
 		});
-		
-		this.make_categories();
+		this.$root.bind('drop', function(e)
+		{
+			e.preventDefault(); e.stopPropagation();
+			$(this).removeClass('sel-highlight-bg');
+			_this.move_note(e.originalEvent.dataTransfer.getData("id"), null);
+		}).bind('dragenter', function(e) {
+			e.preventDefault(); e.stopPropagation();
+			_this.dtgtroot = e.target;
+			$(this).addClass('sel-highlight-bg');
+		}).bind('dragover', function(e) {e.preventDefault(); e.stopPropagation(); console.log("REG dragover");}) //Needed so drop will work
+		.bind('dragleave', function(e) {
+			e.preventDefault(); e.stopPropagation();
+			if(_this.dtgtroot === e.target) //Ensure a child isn't calling dragleave
+			{
+				$(this).removeClass('sel-highlight-bg');
+				_this.dtgtroot = null;
+			}
+		});
+		//Escape key pressed.
+		$(document).keyup(function(e) {
+			if (e.keyCode == 27) {
+				_this.$new_sel_overlay.finish().hide();
+				_this.$greyout.finish().hide();
+			}
+		});
 		this.load();
 	}
 	
 	//Populates the navigation sidebar with all of the users notes.
 	load()
-	{
-		var _this = this;
-		$.getJSON(Page.query_url + "/user_notes")
-			.done(function(list)
-			{
-				for(var i = 0; i < list.length; i++)
-				{
-					var note = list[i];
-					var $parent = _this.categories[note.cat] ? _this.categories[note.cat].$reg : _this.$root;
-					_this.add_note(note.id, $parent, note.name);
-				}
-			});
-	}
-	
-	//Populates categories with all categories in the table.
-	make_categories()
 	{
 		var _this = this;
 		$.getJSON(Page.query_url + "/user_cats").done(function(list)
@@ -179,9 +218,32 @@ class Navigation
 			{
 				var cat = list[i];
 				//For now, only top-level categories are allowed. Nested categories are built into the db, however, and will be added later
-				_this.add_category(cat.id, _this.$root, cat.name);
+				_this.add_category(cat.id, _this.$root_cat, cat.name);
 			}
+			$.getJSON(Page.query_url + "/user_notes")
+			//Add notes once all categories have been added.
+			.done(function(list)
+			{
+				for(var i = 0; i < list.length; i++)
+				{
+					var note = list[i];
+					_this.add_note(note.id, note.cat, note.name);
+				}
+			});
 		});
+	}
+	
+	//Creates a new category via AJAX to server and then adds it via add_category
+	create_category(name)
+	{
+		var _this = this;
+		if(name == "") {return;} //Dont' create unnamed categories.
+		$.getJSON(Page.query_url + "/cat_create", {'name': name})
+			.done(function(json)
+			{
+				console.log(json);
+				_this.add_category(json.id, _this.$root, json.name);
+			});
 	}
 	
 	//Adds a category to the project navigation. As long as each one has a unique ID, they can be nested.
@@ -191,39 +253,143 @@ class Navigation
 	add_category(id, $parent, name)
 	{
 		//Check for ID match.
+		var _this = this;
 		if(this.categories[id])
 		{
 			return; //The ID already exists.
 		}
-		var $circle = $("<div></div>").addClass("circle-small");
+		var $circle = $("<div></div>").addClass("circle-medium");
 		var $name = $("<div>" + name + "</div>").addClass("cat-entry-name").addClass("f-playfair-subhead");
-		var $reg = $("<div></div>").addClass("cat-entry-subregion");
-		var $top = $("<div></div>").addClass("cat-entry-topgroup").append($circle).append($name).click(function()
-		{
-			$reg.finish().toggle(200);
-		});
+		var $reg = $("<div></div>").addClass("cat-entry-subregion").bind('drop', function(e)
+			{
+				e.preventDefault(); e.stopPropagation();
+				$(this).removeClass('sel-highlight-bg');
+				_this.move_note(e.originalEvent.dataTransfer.getData("id"), id);
+			}).bind('dragenter', function(e) {
+				e.preventDefault(); e.stopPropagation();
+				_this.categories[id].dtgtreg = e.target;
+				$(this).addClass('sel-highlight-bg');
+			}).bind('dragover', function(e) {e.preventDefault(); e.stopPropagation(); console.log("REG dragover");}) //Needed so drop will work
+			.bind('dragleave', function(e) {
+				e.preventDefault(); e.stopPropagation();
+				if(_this.categories[id].dtgtreg === e.target) //Ensure a child isn't calling dragleave
+				{
+					$(this).removeClass('sel-highlight-bg');
+					_this.categories[id].dtgtreg = null;
+				}
+			});
+		var $lgroup = $("<div></div>").addClass("org-row-left").append($circle).append($name);
+		var $rename = $("<div></div>").addClass("unt-catbtn").addClass("hover-grey")
+			.append($("<img src='" + SP_LOCAL + "/icons/feather.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>")).click(function(e)
+			{
+				e.stopPropagation();
+			});
+		var $delete = $("<div></div>").addClass("unt-catbtn").addClass("hover-red")
+			.append($("<img src='" + SP_LOCAL + "/icons/fire.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>")).click(function(e)
+			{
+				e.stopPropagation();
+				if(confirm("Are you sure you want to delete the '" + name + "' category? All contained notes will be deleted as well."))
+				{
+					//Delete all notes in this category.
+					for(var x = 0; x < _this.notes.length; x++)
+					{
+						if(_this.notes[x].cat_id && _this.notes[x].cat_id == id)
+						{
+							_this.del_note(x);
+						}
+					}
+					_this.del_cat(id);
+				}
+			});
+		var $rgroup = $("<div></div>").addClass("org-row-spaced").css({'float': 'right', 'display': 'none'}).append($rename).append($delete);
+		var $top = $("<div></div>").addClass("cat-entry-topgroup").append($lgroup).append($rgroup).click(function()	{
+				$reg.finish().toggle(200);
+				$circle.toggleClass("region-crosshatched");
+			}).hover(function()	{
+				$rgroup.finish().show();
+			}, function() {
+				$rgroup.finish().hide();
+			}).bind('drop', function(e)
+			{
+				e.preventDefault(); e.stopPropagation();
+				$(this).removeClass('sel-highlight-bg');
+				console.log(e.originalEvent.dataTransfer.getData("id"));
+				_this.move_note(e.originalEvent.dataTransfer.getData("id"), id);
+			}).bind('dragenter', function(e) {
+				e.preventDefault(); e.stopPropagation();
+				_this.categories[id].dtgttop = e.target;
+				$(this).addClass('sel-highlight-bg');
+			}).bind('dragover', function(e) {e.preventDefault(); e.stopPropagation();}) //Needed so drop will work
+			.bind('dragleave', function(e) {
+				e.preventDefault(); e.stopPropagation();
+				if(_this.categories[id].dtgttop === e.target) //Ensure a child isn't calling dragleave
+				{
+					$(this).removeClass('sel-highlight-bg');
+					_this.categories[id].dtgtreg = null;
+				}
+			});
 		var $entry = $("<div></div>").addClass("cat-entry").append($top).append($reg);
-		$parent.append($entry);
+		$parent.prepend($entry);
 		this.categories[id] = {id: id, $dom: $entry, $reg: $reg, name: name}
 	}
 	
+	//Deletes the category of that ID from the server, client data, and dom
+	del_cat(id)
+	{
+		var _this = this;
+		if(this.categories[id])
+		{
+			$.getJSON(Page.query_url + "/cat_del", {'id': id})
+				.done(function(json)
+				{
+					console.log("Deleted category on server. Removing from client data and visual...");
+					_this.categories[id].$dom.remove();
+					delete _this.categories[id];
+				});
+		}
+	}
+	
 	//Adds a single project entry in a category.
-	add_note(id, $category, name)
+	add_note(id, cat_id, name)
 	{
 		//Check for ID match.
 		if(this.notes[id])
 		{
 			return; //The ID already exists.
 		}
-		
+		var $category = this.categories[cat_id] ? this.categories[cat_id].$reg : this.$root;
+		console.log("Adding note " + id + " to category " + cat_id);
 		var $circle = $("<div></div>").addClass("circle-small");
 		var $name = $("<div>" + name + "</div>").addClass("note-entry-name").addClass("f-playfair-para");
-		var $entry = $("<div></div>").addClass("note-entry").addClass("org-row-left").append($circle).append($name).click(function()
-		{
-			PAGE.load_note(id);
-		});
+		var $entry = $("<div></div>").addClass("note-entry").addClass("org-row-left").append($circle).append($name)
+			.attr('draggable', 'true').click(function()
+			{
+				PAGE.load_note(id);
+			}).on('dragstart', function(e)
+			{
+				e.originalEvent.dataTransfer.setData("id", id);
+			});
 		$category.prepend($entry);
-		this.notes[id] = {id: id, $dom: $entry, name: name}
+		this.notes[id] = {id: id, cat_id: cat_id, $dom: $entry, name: name}
+	}
+	
+	//Moves a note from one cat to the next. Effects server, client data, and visual
+	move_note(id, new_cat_id)
+	{
+		var _this = this;
+		console.log("Moving from " + this.notes[id].cat + " to " + new_cat_id);
+		$.getJSON(Page.query_url + "/note_move", {'id': id, 'new_cat_id': new_cat_id})
+			.done(function()
+			{
+				console.log("Move effected on server...");
+				var $category = new_cat_id ? _this.categories[new_cat_id].$reg : _this.$root;
+				console.log($category);
+				var new_note = _this.notes[id].$dom.clone(true);
+				$category.prepend(new_note) // Copy the DOM
+				_this.notes[id].$dom.remove(); //Remove the old DOM
+				_this.notes[id].cat_id = new_cat_id; //Rebuild reference to cat ID
+				_this.notes[id].$dom = new_note; //Rebuild reference to new DOM
+			});
 	}
 	
 	//Removes the note of the desired id from the server, client data, and visual.
@@ -233,7 +399,7 @@ class Navigation
 		var _this = this;
 		$.post(Page.query_url + "/note_del", {'id': id}).done(function(data)
 		{
-			console.log("Deleted on server. Removing from client data and visual...");
+			console.log("Deleted note on server. Removing from client data and visual...");
 			var keys = Object.keys(_this.notes);
 			var next_id = -1;
 			for (var x = 0; x < keys.length; x++)
