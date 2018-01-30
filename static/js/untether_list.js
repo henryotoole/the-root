@@ -189,7 +189,7 @@ class Navigation
 			e.preventDefault(); e.stopPropagation();
 			_this.dtgtroot = e.target;
 			$(this).addClass('sel-highlight-bg');
-		}).bind('dragover', function(e) {e.preventDefault(); e.stopPropagation(); console.log("REG dragover");}) //Needed so drop will work
+		}).bind('dragover', function(e) {e.preventDefault(); e.stopPropagation();}) //Needed so drop will work
 		.bind('dragleave', function(e) {
 			e.preventDefault(); e.stopPropagation();
 			if(_this.dtgtroot === e.target) //Ensure a child isn't calling dragleave
@@ -259,7 +259,16 @@ class Navigation
 			return; //The ID already exists.
 		}
 		var $circle = $("<div></div>").addClass("circle-medium");
-		var $name = $("<div>" + name + "</div>").addClass("cat-entry-name").addClass("f-playfair-subhead");
+		var $name = $("<input></input>").addClass("cat-entry-nameinput").addClass("f-playfair-subhead").addClass("input-div")
+			.attr('value', name).attr('readonly', 'true').focusout(function(e)
+			{
+				$(this).attr('readonly', 'true').removeClass('sel-highlight-bg-lblue'); //The 'save' of a name change is called when the user deselects the name.
+				_this.categories[id].name = $(this).val(); //Memory effect
+				$.getJSON(Page.query_url + "/cat_rename", {id: id, name: $(this).val()}).done(function(json) //Server effect
+				{
+					console.log("Rename success on server");
+				});
+			});
 		var $reg = $("<div></div>").addClass("cat-entry-subregion").bind('drop', function(e)
 			{
 				e.preventDefault(); e.stopPropagation();
@@ -283,6 +292,7 @@ class Navigation
 			.append($("<img src='" + SP_LOCAL + "/icons/feather.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>")).click(function(e)
 			{
 				e.stopPropagation();
+				_this.categories[id].$name.removeAttr('readonly').addClass('sel-highlight-bg-lblue').focus();
 			});
 		var $delete = $("<div></div>").addClass("unt-catbtn").addClass("hover-red")
 			.append($("<img src='" + SP_LOCAL + "/icons/fire.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>")).click(function(e)
@@ -303,8 +313,11 @@ class Navigation
 			});
 		var $rgroup = $("<div></div>").addClass("org-row-spaced").css({'float': 'right', 'display': 'none'}).append($rename).append($delete);
 		var $top = $("<div></div>").addClass("cat-entry-topgroup").append($lgroup).append($rgroup).click(function()	{
-				$reg.finish().toggle(200);
-				$circle.toggleClass("region-crosshatched");
+				if(_this.categories[id].$name.attr('readonly')) // If we aren't editing the name.
+				{
+					$reg.finish().toggle(200);
+					$circle.toggleClass("region-crosshatched");
+				}
 			}).hover(function()	{
 				$rgroup.finish().show();
 			}, function() {
@@ -330,7 +343,7 @@ class Navigation
 			});
 		var $entry = $("<div></div>").addClass("cat-entry").append($top).append($reg);
 		$parent.prepend($entry);
-		this.categories[id] = {id: id, $dom: $entry, $reg: $reg, name: name}
+		this.categories[id] = {id: id, $dom: $entry, $reg: $reg, $name: $name, name: name}
 	}
 	
 	//Deletes the category of that ID from the server, client data, and dom
@@ -352,6 +365,7 @@ class Navigation
 	//Adds a single project entry in a category.
 	add_note(id, cat_id, name)
 	{
+		var _this = this;
 		//Check for ID match.
 		if(this.notes[id])
 		{
@@ -368,6 +382,9 @@ class Navigation
 			}).on('dragstart', function(e)
 			{
 				e.originalEvent.dataTransfer.setData("id", id);
+			}).dblclick(function()
+			{
+				location.href = "/note/e/" + _this.notes[id].name;
 			});
 		$category.prepend($entry);
 		this.notes[id] = {id: id, cat_id: cat_id, $dom: $entry, name: name}

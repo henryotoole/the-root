@@ -190,6 +190,8 @@
 }
 
 /* An input, stripped of all borders, margins, etc to look like a div */
+/* box-sizing: border-box;
+	width: 100%; <-- add this stuff to make it size dynamically like a div.*/ 
 .input-div
 {
 	margin: 0;
@@ -249,6 +251,12 @@
 {
 	background-color: #48636C;
 	color: #FFFFFF;
+	border-radius: 4px;
+}
+
+.sel-highlight-bg-lblue
+{
+	background-color: #d2dbdd;
 	border-radius: 4px;
 }
 
@@ -438,6 +446,14 @@ a tilebox-tile or the jquery autocentering feature will have issues*/
 {
 	
 }
+/*untether*/
+.cat-entry-nameinput
+{
+	cursor: pointer;
+	box-sizing: border-box;
+	width: 100%;
+}
+
 /*The name part of a category entry*/
 .cat-entry-topgroup
 {

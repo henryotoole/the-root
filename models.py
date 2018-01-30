@@ -234,6 +234,7 @@ class UntetherNote(db.Model):
 	name = db.Column(db.String(256), nullable=False)								# Name of this note (unique to user)
 	user = db.Column(db.Integer, nullable=False)									# The user who this note belongs to
 	cat = db.Column(db.Integer, nullable=True)										# The category this note belongs in (if null, no cat)
+	pos = db.Column(db.Integer, nullable=True)	# The 'position' this note occupies in whatever category it belongs in. Null for unsorted
 	
 	
 	def __init__(self, name, user, cat=None):
@@ -276,7 +277,7 @@ class UntetherCat(db.Model):
 	name = db.Column(db.String(256), nullable=False)								# Name of this category, unique to user
 	user = db.Column(db.Integer, nullable=False)									# The user who this category belongs to
 	cat = db.Column(db.Integer, nullable=True)										# The ID of another cat, if this cat is nested.
-	
+	pos = db.Column(db.Integer, nullable=True)	# The 'position' this cat occupies in whatever category it belongs in. Null for unsorted
 	
 	def __init__(self, name, user, cat):
 		self.name = name

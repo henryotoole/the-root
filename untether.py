@@ -101,7 +101,17 @@ def untether_query(query):
 		db.session.delete(cat)
 		db.session.commit()
 		return jsonify({}), 200
-		
+	elif(query=='cat_rename'):
+		id = request.values.get('id', type=int)
+		name = request.values.get('name', type=str)
+		if(id == None or not name):
+			return "No valid ID provided and/or no name provided.", 404
+		cat = UntetherCat.query.filter_by(id=id).first()
+		if (not cat) or (not (cat.user == current_user.id)):
+			return "User does not have access to this category", 403
+		cat.name = name
+		db.session.commit()
+		return jsonify({}), 200
 	#Queries after this point all rely on a note object which is validated to the user
 	id = request.values.get('id', type=int)
 	if(id == None):
