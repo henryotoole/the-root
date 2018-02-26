@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 
 @app.route("/projects")
 def projects():
-	return render_template_standard("/projects.html")
+	return render_template_standard("/projects_disabled.html")
 
 #Mostly public methods
 @app.route("/projects/query/<query>")
