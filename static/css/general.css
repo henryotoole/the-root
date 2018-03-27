@@ -37,6 +37,13 @@
 	border-top: 1px solid #222222;
 	width: 100%;
 }
+/* A automatically vertically centered (with padding) horizontal line */
+.hline-center-auto
+{
+	height: 50%;
+	border-top: 1px solid #222222;
+	width: 100%;
+}
 /* A horizontal line, vert centered and horiz. centered. Width MUST be specified in style! */
 .hline-center-cust
 {
@@ -60,6 +67,7 @@
 .f-playfair-head2 {font-family: 'Playfair Display', serif;font-weight: 500;font-size: 200%;}
 .f-playfair-para {font-family: 'Playfair Display', serif;font-weight: normal;}
 .f-playfair-subhead {font-family: 'Playfair Display', serif;font-weight: normal;font-size: 150%;}
+
 
 .topbar
 {
@@ -188,6 +196,16 @@
 	width:100%;
 	border: 1px solid black;
 }
+
+/* A light input box class, less tall than others */
+.input-light-thin
+{
+	border-radius: 4px;
+	height:40px;
+	width:100%;
+	border: 1px solid black;
+}
+
 
 /* An input, stripped of all borders, margins, etc to look like a div */
 /* box-sizing: border-box;
