@@ -19,9 +19,9 @@ class Page
 		//2 - Add a tile in the HTML (with a reference to the image). Make sure the id's match.
 		this.applist = [
 			{$dom: $('#reginald'), desc: "Reginald is an app that helps keep track of your finances. Many apps like this exist, but Reginald specializes in being extremely lightweight and mobile. Simple interfaces allow for the entry of expenses or income, while a sleek graphing tool (the greensheet) allows for an easy overview of recent finances."},
-			{$dom: $('#untether'), desc: "Untether is a very lightweight app which simply takes notes. However, notes can be taken from anywhere extremely painlessly and are kept in a centralized, easily-retreiveable way."},
-			{$dom: $('#other'), desc: "Some description"},
-			{$dom: $('#other2'), desc: "Some description"},
+			{$dom: $('#untether'), desc: "Untether is a very lightweight app which simply takes notes. However, notes can be taken from anywhere extremely painlessly and are kept in a centralized, easily-retrievable way."},
+			{$dom: $('#voyager'), desc: "Do you ever learn about a place or thing that you'd like to see/do/view/experience one day? Voyager is an app which helps you keep track of these places. Later, when planning a trip or traveling in a region you can use Voyager's map feature to recover nearby interesting places and things you recorded long ago."},
+			{$dom: $('#morpheus'), desc: "Morpheus's Colusseum of Intellectual Ridicule is a happy place."}
 		];
 		var _this = this;
 		
@@ -77,7 +77,8 @@ class Page
 	{
 		var $desc = $('<div></div>').addClass('tilebox-tile-app-desc').html(desc).css('display', 'none');
 		this.descs.push($desc);
-		var insert_index = index + (1 + index) % this.current_n
+		var insert_index = index + ((1 + index) % this.current_n)
+		insert_index = insert_index > this.applist.length - 1 ? this.applist.length - 1: insert_index
 		this.applist[insert_index].$dom.after($desc);
 		$desc.finish().slideDown();
 	}

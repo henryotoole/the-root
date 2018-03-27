@@ -1,0 +1,79 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+<style>
+body
+{
+	margin: 0;
+}
+h1
+{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.ov-std-mg
+{
+	margin-bottom: 2vh;
+}
+.button-vyrecord:hover
+{
+	background-color: #48636C;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class='org-row-flung' style='height: 100vh; overflow: hidden;'>
+	<div style='height: 100%; width: 30vw; border-right: 1px solid grey; padding-left: 1vw; padding-right: 1vw;'>
+		<!-- Copy-pasted header code, but modified to fit in the controls area -->
+		<div class='org-row-flung ov-std-mg' style='width: 100%; pointer-events: none;'>
+			<!-- Home Button-->
+			<div class='home-square' style='margin-top: 15px; width: 50px; height: 50px; pointer-events: auto;' onclick="location.href = {% block home_link_path %}'/'{% endblock %};">
+				<img src='{% block home_icon_path %}{{sp_local}}/icons/main_icon_simple_dark.svg?web_vsn={{ web_vsn }}{% endblock %}' width='100%' height='100%'>
+			</div>
+			
+			<!-- Login Status-->
+			<div id='loginstat-block' class='org-row-flung f-raleway-para' style='display: none; cursor: pointer; pointer-events: auto;'>	
+				<div id='loginstat-stat' style='margin-right: 10px'>User</div>
+				<div id='loginstat-id' class='acct-circle org-center'></div>
+			</div>
+		</div>
+		<div class='org-row-flung f-playfair-head2 ov-std-mg' style=''>
+			<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Voyager</div><div class='hline-center-auto'></div>
+		</div>
+		<div class='f-raleway-medium ov-std-mg' style='text-align: center'>
+			Where will the four winds take you today?
+		</div>
+		<div class='org-row-spaced ov-std-mg'>
+			<select class='input-light-thin f-raleway-para' id='loc_country' style='max-width: 25vw;'>
+				<option value='SELECT'>Select Country</option>
+			</select>
+			<select class='input-light-thin f-raleway-para' id='loc_region' style='margin-left: 1vw; display: none'>
+				<option value='VY_ALL'>All Regions</option>
+			</select>
+		</div>
+		<div id='records' class=''>
+			
+		</div>
+	</div>
+	<div style='height: 100%; width: 68vw; border-left: 1px solid grey'>
+		
+	</div>
+</div>
+<div class='f-raleway-head org-center button-std' onclick="location.href = '/voyager/add';" style='position: absolute; bottom: 3vw; right: 3vw; padding: 1vw; border: 1px solid black; border-radius: 1vw;'>
+	Add Location
+</div>
+{% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+	<script type="text/javascript" src="{{sp_local}}/js/voyager.js?web_vsn={{ web_vsn }}">
+
+	</script>
+
+	<script>
+	console.log("init");
+	init("{{sp_local}}", "{{sp_content}}");
+	</script>
+{% endblock %}

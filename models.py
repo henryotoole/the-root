@@ -294,6 +294,38 @@ class UntetherCat(db.Model):
 	def getDict(self, columns=None):
 		return getDict(self, columns)
 		
+class VoyagerRecord(db.Model):
+	
+	__tablename__ = "voyager_record"
+	
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	name = db.Column(db.String(256))										# Name of place/location/adventure
+	user = db.Column(db.Integer, nullable=False)							# ID of user who 'owns' this
+	type = db.Column(db.Integer, nullable=False)							# Type of place/location/adventure (ID, see voyager_type)
+	country = db.Column(db.String(128), nullable=False)						# Name of country. Must be provided
+	region = db.Column(db.String(128))										# Name of region. Optional
+	latitude = db.Column(db.Numeric(precision=7, scale=4), nullable=True)				# Latitude, optional. XXX.XXXX
+	longitude = db.Column(db.Numeric(precision=7, scale=4), nullable=True)				# Longitude, optional. XXX.XXXX
+	#Note, notes and images for a record stored in static directory. Country and region are saved mostly just
+	#to make it easier to sort locations by ... hmm need to think about this later.
+	
+	def __init__(self, name, user, type, country, region=None, latitude=None, longitude=None):
+		self.name = name
+		self.user = user
+		self.type = type
+		self.country = country
+		self.region = region
+		self.latitude = latitude
+		self.longitude = longitude
+
+class VoyagerType(db.Model):
+	
+	__tablename__ = "voyager_type"
+	
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	user = db.Column(db.Integer, nullable=False)							# ID of user who 'owns' this
+	name = db.Column(db.String(256))										# Name of type
+
 #========================== FUNCTIONS FOR MANIPULATING MODELS ==========================
 #You can't do proper inheritance with models under SQL Alchemy, so I've resorted to self
 

@@ -31,3 +31,8 @@ def about():
 @app.route("/launcher", methods=['GET', 'POST'])
 def launcher():
 	return render_template_standard("/launcher.html")
+
+#This is mostly a joke for my darling Rachel
+@app.route("/morpheus", methods=['GET', 'POST'])
+def morpheus():
+	return render_template_standard("/morpheus.html")

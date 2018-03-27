@@ -1,0 +1,66 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+<style>
+body
+{
+	margin: 0;
+}
+h1
+{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.exp-inline
+{
+	display: inline-block;
+	width: 32%;
+}
+.input-long
+{
+	width: 97%;
+	margin-left: auto;
+	margin-right: auto;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class='f-raleway-head org-col' style='width: 100vw; height: 100vh;'>
+	<div class='org-row-flung f-playfair-head2 ov-std-mg' style=''>
+			<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Voyager</div><div class='hline-center-auto'></div>
+		</div>
+	<div class='f-playfair-head2'>
+		
+	</div>
+	<div style='max-width: 1000px; width: 100%;'>
+		<div class='org-row-flung'>
+			<div style='width: 66%'>
+				Name
+				<input class='input-light'> </input>
+			</div>
+			<div style='width: 30%'>
+				Type
+				<select class='input-light f-raleway-para' id='loc_country'>
+					<option value='SELECT'>Select Country</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+
+<script type="text/javascript" src="{{sp_local}}/js/voyager_record.js?web_vsn={{ web_vsn }}">
+
+</script>
+
+<script>
+console.log("init");
+init("{{sp_local}}", "{{sp_content}}");
+</script>
+{% endblock %}
+{% block script_login %}
+{% endblock %}
