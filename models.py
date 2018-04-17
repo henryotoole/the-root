@@ -325,6 +325,20 @@ class VoyagerType(db.Model):
 	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
 	user = db.Column(db.Integer, nullable=False)							# ID of user who 'owns' this
 	name = db.Column(db.String(256))										# Name of type
+	
+	def __init__(self, name, user):
+		self.name = name
+		self.user = user
+		
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
 
 #========================== FUNCTIONS FOR MANIPULATING MODELS ==========================
 #You can't do proper inheritance with models under SQL Alchemy, so I've resorted to self

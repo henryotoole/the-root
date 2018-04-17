@@ -36,6 +36,55 @@ class Page
 		this.colorflip = 0; // Flipped between 0 and 1 as days are added, allowing rows the be alternately colored
 		this.chart_expenses = null;
 		this.chart_income = null;
+		this.mod = {
+			'$main': $('#mod_main'),
+			'$date': $('#mod_date'),
+			'$time': $('#mod_time'),
+			'$type': $('#mod_type'),
+			'$amount': $('#mod_amount'),
+			'$desc': $('#mod_desc'),
+			'$save': $('#mod_save'),
+			'$delete': $('#mod_delete'),
+			'$cancel': $('#mod_cancel'),
+			'$error': $('#mod_error'),
+			'ref_trans': null
+		};
+		this.mod.$delete.click(function()
+		{
+			if(confirm("Are you sure you want to delete this transaction record?"))
+			{
+				$.getJSON("/reginald/greensheet/delete", {id: _this.mod.ref_trans.id})
+					.done(function() 
+					{
+						_this.mod.ref_trans.info_deactivate();
+						_this.refresh_last();
+					});
+			}
+		});
+		this.mod.$save.click(function()
+		{
+			var data = {
+				id: _this.mod.ref_trans.id,
+				type: PAGE.mod.$type.val(),
+				amt: PAGE.mod.$amount.val(),
+				desc: PAGE.mod.$desc.val(),
+				date: PAGE.mod.$date.val() + " " + PAGE.mod.$time.val()
+				};
+			console.log(data.date);
+			try {parseFloat(data.amt);} catch (error) {_this.mod.$error.html("Improperly formatted amount."); return;}
+			try {parseInt(data.type);} catch (error) {_this.mod.$error.html("You must select a type!"); return;}
+			$.getJSON("/reginald/greensheet/update_record", data)
+				.done(function() 
+				{
+					_this.mod.ref_trans.info_deactivate();
+					_this.refresh_last();
+				})
+				.fail(function()
+				{
+					_this.mod.$error.html("Some part of this interface is invalidly formatted. It's probably either the date or time.");
+				});
+		});
+		this.mod.$cancel.click(function(){_this.mod.ref_trans.info_deactivate();});
 		
 		this.days = [];
 		//Dict of types of transaction {id1: {id: id, name: name, etc: etc}}
@@ -133,6 +182,9 @@ class Page
 						_this.$expenses_sub.append($entry);
 						ec++;
 					}
+					//Add type to mod_trans list.
+					_this.mod.$type.append($("<option value='" + t.id + "'>" + t.name + "</option>"));
+					console.log(t.name + " : " + t.id);
 				}
 				//Adds some gag rows to one side or the other to take up space.
 				var op = null;
@@ -302,11 +354,19 @@ class Page
 		//TODO reset numerical
 	}
 	
+	//Refreshes the last loaded days.
+	refresh_last()
+	{
+		this.get_dates(this.last_date_start, this.last_date_end);
+	}
+	
 	//Dates should be Date objects. Don't provide date_end for a single day.
 	//Gets all dates at once from the server and returns them in an ordered list. This ordered list is then added
 	//to the page's stack of entries.
 	get_dates(date_start, date_end)
 	{
+		this.last_date_start = date_start;
+		this.last_date_end = date_end;
 		this.clear();
 		var _this = this;
 		
@@ -355,7 +415,7 @@ class Page
 			for(var i = 0; i < list.length; i++)
 			{
 				var t = list[i];
-				day.add(new Transaction(t.id, t.amt, t.income == 'True', t.time, t.type, t.method, t.srcdest, t.dest));
+				day.add(new Transaction(t.id, t.amt, t.income == 'True', t.time, t.type, t.method, t.srcdest, t.desc));
 			}
 			this.days.push(day);
 			this.$day_list.append(day.$entry);
@@ -503,31 +563,45 @@ class Transaction
 		this.id = id;
 		this.amt = amt;
 		this.income = income;
-		this.date = date;
+		this.date_obj = getDateYYYYMMDDhhmmss(date); // Date obj
 		this.type = type;
 		this.method = method;
 		this.srcdest = srcdest;
 		this.description = description;
+		var _this = this;
 		
-		var time_date = getDateYYYYMMDDhhmmss(date);
-		//Make sure minutes has a leading zero.
-		var mstr = time_date.getMinutes().toString();
-		if(mstr.length < 2)
-		{
-			mstr = "0" + mstr
-		}
-		var hstr = time_date.getHours().toString();
-		if(mstr.length < 2)
-		{
-			hstr = "0" + hstr
-		}
-		var time_str = hstr + ":" + mstr;
-		
-		this.$time = $('<div></div>').addClass('value-left').css('width', '9%').html(time_str);
+		this.$time = $('<div></div>').addClass('value-left').css('width', '9%').html(getZeroPaddedTimehhmm(this.date_obj));
 		this.$amt = $('<div></div>').addClass('value').css('width', '13%').html('$' + this.amt);
 		this.$type = $('<div></div>').addClass('value').css('width', '25%').html(PAGE.types[this.type].name);
 		this.$srcdest = $('<div></div>').addClass('value').css('width', '49%').html(this.srcdest);
 		this.$entry = $('<div></div>').addClass('entry').append(this.$time).append(this.$amt).append(this.$type).append(this.$srcdest);
+		this.$entry.click(function()
+		{
+			_this.info_activate();
+		})
+	}
+	
+	update()
+	{
+		
+	}
+	
+	info_activate()
+	{
+		var _this = this;
+		PAGE.mod.$time.val(getZeroPaddedTimehhmm(this.date_obj));
+		PAGE.mod.$date.val(getStrYYYYMMDD(this.date_obj));
+		PAGE.mod.$type.val(this.type);
+		PAGE.mod.$amount.val(this.amt);
+		PAGE.mod.$desc.val(this.description);
+		PAGE.mod.ref_trans = this;
+		PAGE.mod.$main.show();
+	}
+	
+	info_deactivate()
+	{
+		PAGE.mod.ref_trans = null;
+		PAGE.mod.$main.hide();
 	}
 }
 
@@ -541,7 +615,20 @@ class Transaction
 	<div class='value' style='width: 25%'> Type </div>
 	<div class='value' style='width: 49%'> Recipient </div>
 </div>*/
-
+function getZeroPaddedTimehhmm(dateobj)
+{
+	var mstr = dateobj.getMinutes().toString();
+	if(mstr.length < 2)
+	{
+		mstr = "0" + mstr
+	}
+	var hstr = dateobj.getHours().toString();
+	if(mstr.length < 2)
+	{
+		hstr = "0" + hstr
+	}
+	return hstr + ":" + mstr;
+}
 
 //Simply parses a YYYY-MM-DD datestring and returns the Date object
 function getDateYYYYMMDD(str)
@@ -559,8 +646,18 @@ function getDateYYYYMMDDhhmmss(str)
 	return new Date(lefts[0], lefts[1]-1, lefts[2], rights[0], rights[1], rights[2]); // earliest date
 }
 
+function getStrYYYYMMDD(dateobj)
+{
+	var d = dateobj,
+		month = '' + (d.getMonth() + 1),
+		day = '' + d.getDate(),
+		year = d.getFullYear();
 
+	if (month.length < 2) month = '0' + month;
+	if (day.length < 2) day = '0' + day;
 
+	return [year, month, day].join('-');
+}
 
 
 

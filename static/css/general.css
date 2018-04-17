@@ -63,6 +63,7 @@
 .f-raleway-medium {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 150%;}
 .f-raleway-para {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 120%;}
 .f-raleway-low {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 90%;}
+.f-raleway-small {font-family: 'Raleway', sans-serif;font-weight: normal;font-size: 75%;}
 .f-playfair-head {font-family: 'Playfair Display', serif;}
 .f-playfair-head2 {font-family: 'Playfair Display', serif;font-weight: 500;font-size: 200%;}
 .f-playfair-para {font-family: 'Playfair Display', serif;font-weight: normal;}
@@ -105,6 +106,14 @@
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+}
+
+/* Displays a group of things in a single row, aligned to the top and stacked left.*/
+.org-row-top-left
+{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
 }
 
 /* Used to display two objects at opposite ends of a box.*/
@@ -196,6 +205,16 @@
 	width:100%;
 	border: 1px solid black;
 }
+/* A checkbox style div which matches the input-light style */
+.input-light-cbox
+{
+	height: 50px;
+	width: 50px;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+.input-light-cbox.checked{background-color: #999999;}
+.input-light-cbox:hover{cursor: pointer;}
 
 /* A light input box class, less tall than others */
 .input-light-thin
@@ -276,6 +295,15 @@
 {
 	background-color: #d2dbdd;
 	border-radius: 4px;
+}
+
+/*Makes something non-selectable*/
+.unselectable
+{
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
 }
 
 /*Special css for buttons, all this does is add the highlight behavior*/

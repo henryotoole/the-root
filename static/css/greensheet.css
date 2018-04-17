@@ -67,6 +67,12 @@
 	border-top: 1px dashed black;
 }
 
+.entry:hover
+{
+	cursor: pointer;
+	background: #CCCCCC;
+}
+
 /* Light grey shading for entry rows */
 .shading-grey{
 	background: #CCCCCC;

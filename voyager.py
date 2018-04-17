@@ -6,6 +6,7 @@
 
 from the_root.extensions import db, csrf
 from the_root import app
+from the_root.models import VoyagerType, VoyagerRecord
 from the_root.decorators import render_template_standard
 
 import flask
@@ -34,5 +35,43 @@ def voyager_query(query):
 		region = request.values.get('region', type=str)
 		if(country == None or (region == '')):
 			return "No name provided", 404
-	
+	elif(query == 'types'):
+		types = VoyagerType.query.filter_by(user=current_user.id)
+		t_list = []
+		for type in types:
+			t_list.append(type.getDict())
+		return jsonify(t_list), 200
+	elif(query == 'new_record'):
+		name = request.values.get('name', type=str)
+		location_type = request.values.get('location_type', type=str)
+		new_type = request.values.get('new_type', type=int)
+		country = None
+		state = None
+		lat = None
+		lon = None
+		if(location_type == 'reg'):
+			country = request.values.get('country', type=str)
+			state = request.values.get('state', type=str)
+		elif(location_type == 'map'):
+			pass
+		else:
+			lat = request.values.get('lat', type=float)
+			lon = request.values.get('lon', type=float)
+		if(new_type):
+			type = request.values.get('type', type=str) # Name of new type
+		else:
+			type = request.values.get('type', type=int) # ID of existing type
+		if(name == None or location_type == None or new_type == None or (country == None and lat == None and lon == None) or type == None):
+			return "Some parameter was not provided", 404
+		if(new_type):
+			# Make the new type
+			ntype = VoyagerType(type, current_user.id)
+			db.session.add(ntype)
+			db.session.commit()
+			type = ntype.id # Now that we have an id, set the type so that the latter section of this code can make a record w/ type id.
+		nrecord = VoyagerRecord(name, current_user.id, type, country, region=state, latitude=lat, longitude=lon)
+		db.session.add(nrecord)
+		db.session.commit()
+		return jsonify({}), 200
+		
 	return '', 404

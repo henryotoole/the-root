@@ -5,6 +5,7 @@
 body
 {
 	margin: 0;
+	overflow-x: hidden;
 }
 h1
 {
@@ -22,32 +23,124 @@ h1
 	margin-left: auto;
 	margin-right: auto;
 }
+.vymargin1
+{
+	margin-left: 1vw; margin-right: 1vw;
+}
+.vycont
+{
+	width: 60px; height: 60px; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 </style>
 {% endblock %}
 
 {% block body %}
 <div class='f-raleway-head org-col' style='width: 100vw; height: 100vh;'>
-	<div class='org-row-flung f-playfair-head2 ov-std-mg' style=''>
+	<div style='max-width: 1000px; width: 90%;'>
+		<div class='org-row-flung f-playfair-head2 ov-std-mg' style='width: 100%; margin-top: 5vh;'>
 			<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Voyager</div><div class='hline-center-auto'></div>
 		</div>
-	<div class='f-playfair-head2'>
-		
-	</div>
-	<div style='max-width: 1000px; width: 100%;'>
-		<div class='org-row-flung'>
+		<div id='error' style='color: red; margin: 1vw; text-align: center;'></div>
+		<div class='org-row-flung' style='margin-bottom: 3vh;'>
 			<div style='width: 66%'>
 				Name
-				<input class='input-light'> </input>
+				<input id='name' class='input-light f-raleway-para'> </input>
 			</div>
 			<div style='width: 30%'>
 				Type
-				<select class='input-light f-raleway-para' id='loc_country'>
-					<option value='SELECT'>Select Country</option>
+				<select id='types' class='input-light f-raleway-para' id='loc_country'>
+					<option value='SELECT'>Select</option>
+					<option id='types_sel_opt' value='NEW'>New Type</option>
 				</select>
 			</div>
 		</div>
+		<div id='new_type_container' class='org-row-flung' style='margin-bottom: 3vh; display: none'>
+			<div style='width: 100%'>
+				New Type
+				<input id='new_type' class='input-light f-raleway-para'> </input>
+			</div>
+		</div>
+		<div class='org-row-flung' style='margin-bottom: 3vh;'>
+			<div> Locate by: </div>
+			<div class='org-row-flung'>
+				<div id='loc_sel_reg' class='input-light-cbox checked'></div><div class='vymargin1'> Region </div>
+				<div id='loc_sel_map' class='input-light-cbox'></div><div class='vymargin1'> Map </div>
+				<div id='loc_sel_cor' class='input-light-cbox'></div><div class='vymargin1'> Coordinates </div>
+			</div>
+		</div>
+		<div class='' style='margin-bottom: 3vh; border: 1px solid black; border-radius: 4px; padding: 3vh;'>
+			<div id='loc_reg'>
+				<div class='org-col'>
+					<div class='org-row-flung ov-std-mg' style='width: 50%; margin-bottom: 3vh;'>
+						<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Region</div><div class='hline-center-auto'></div>
+					</div>
+				</div>
+				<div class='org-row-top-left'>
+					<div class='org-col'>
+						<div class='vycont' style='margin-bottom: 3vh;'><div class='input-light-cbox' style='border: 1px solid white;'></div></div>
+						<div class='vycont'><div id='loc_reg_enable_state' class='input-light-cbox'></div></div>
+					</div>
+					<div>
+						<div id='country' class='vymargin1 org-row-left' style='height: 60px; margin-bottom: 3vh;'> Country </div>
+						<div id='state' class='vymargin1 org-row-left' style='height: 60px;'> State/Province </div>
+					</div>
+					<div class='org-col' style='width: 100%'>
+						<select class='input-light f-raleway-para' id='loc_reg_sel_country' style='max-width: 50vw; margin-bottom: 3vh;'>
+							<option value='SELECT'>Select Country</option>
+						</select>
+						<select id='loc_reg_sel_state' class='input-light f-raleway-para' id='loc_reg_state' style='max-width: 50vw; display: none'>
+							<option value='SELECT'>Select Province</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div id='loc_map' style='display: none'>
+				<div class='org-col'>
+					<div class='org-row-flung ov-std-mg' style='width: 50%; margin-bottom: 3vh;'>
+						<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Map</div><div class='hline-center-auto'></div>
+					</div>
+				</div>
+			</div>
+			<div id='loc_cor' style='display: none'>
+				<div class='org-col'>
+					<div class='org-row-flung ov-std-mg' style='width: 50%; margin-bottom: 3vh;'>
+						<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Coordinates</div><div class='hline-center-auto'></div>
+					</div>
+					<div class='org-row-flung' style='width:100%'>
+						<div style='width: 45%'>
+							Latitude
+							<input id='lat' class='input-light'> </input>
+						</div>
+						<div style='width: 45%'>
+							Longitude
+							<input id='lon' class='input-light'> </input>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class='org-row-left' style='margin-bottom: 3vh;'>
+			<div id='enable_notes' class='input-light-cbox'></div><div class='vymargin1'> Notes </div>
+		</div>
+		<div id='notes' style='display: none; margin-bottom: 3vh'>
+			<textarea id='e_text' style='border: 1px solid black' placeholder='Take a few notes here...' class='textarea-full f-raleway-para'></textarea>
+		</div>
+		<div class='org-row-left' style='margin-bottom: 3vh;'>
+			<div id='enable_images' class='input-light-cbox'></div><div class='vymargin1'> Images </div>
+		</div>
+		<div id='images' class='org-col' style='display: none; margin-bottom: 3vh; border: 1px solid black; border-radius: 4px; padding: 3vh;'>
+			<div class='unselectable' style='color: #777777'> Paste or double-click to upload </div>
+		</div>
+		<div style='width: 100%; display: flex; justify-content: flex-end'>
+			<div id='save' class='button-full' style='height: 60px;'> Save </div>
+		</div>
 	</div>
 </div>
+<input id='image_input' type='file' style='position: absolute; left: -1000px'>
 {% endblock %}
 
 {% block script_jquery %} {{ super() }} {% endblock %}
