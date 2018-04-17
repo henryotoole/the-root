@@ -77,6 +77,42 @@ h1
 		<div id='day_list' class='f-raleway-low'>
 		</div>
 	</div>
+	<div id='mod_main' class='org-center' style='position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; display: none'>
+		<div class='org-col f-raleway-head' style='background: white; border: 2px solid #777777; border-radius: 5px; padding: 2vw;'>
+			<div class='f-playfair-para' style='color: #c00000; margin-bottom: 2vw;'> - Edit Transaction - </div>
+			<div style='margin-bottom: 2vw;'> 
+				Date 
+				<input style='font-size: 60%' type="date" class="datepicker input-light-thin f-raleway-small" name="mod_date" id="mod_date">
+			</div>
+			<div id='mod_error' style='color: #FF0000; max-width: 60vw;'> </div>
+			<div class='org-row-flung' style='width: 100%'>
+				<div style='margin-right: 2vw; width: 30%'> 
+					Time 
+					<input size='5' style='padding: 0' type="text" class='input-light-thin f-raleway-small' id="mod_time">
+				</div>
+				<div style='margin-right: 2vw;'> Type 
+					<select class='input-light-thin f-raleway-small' id='mod_type' style='height: 42px'>
+						<option value='SELECT'>Select</option>
+					</select>
+				</div>
+				<div> 
+					Amount 
+					<input style='padding: 0' type="text" class='input-light-thin f-raleway-small' id="mod_amount">
+				</div>
+			</div>
+			<div style='width: 100%; margin-top: 2vw;'>
+				Description:
+				<input type="text" class='input-light-thin f-raleway-small' style='width: 100%' id="mod_desc">
+			</div>
+			<div class='org-row-flung' style='margin-top: 2vw; width: 100%'>
+				<div id='mod_delete' class='button-full' style='height: 5vw; margin: 0'> Delete Trans. </div>
+				<div class='org-row-flung'>
+					<div id='mod_cancel' class='button-full' style='width: 10vw; height: 5vw; margin: 0 1vw 0 0'> Cancel </div>
+					<div id='mod_save' class='button-full' style='width: 10vw; height: 5vw; margin: 0'> Save </div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}

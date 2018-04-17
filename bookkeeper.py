@@ -102,6 +102,41 @@ def greensheet_query(query):
 		list = [type.getDict() for type in types]
 		
 		return jsonify(list), 200
+	elif(query=='update_record'):
+		date = request.values.get('date', type=str) # Full date string expected, format YYYY-MM-DD hh:mm
+		type = request.values.get('type', type=int) # ID of transaction type
+		desc = request.values.get('desc', type=str) # Text of description
+		amt = request.values.get('amt', type=float) # Dollar amount of purchase
+		id = request.values.get('id', type=int) # The ID of the transaction, only thing that is required.
+		if(id is None):
+			return "Transaction ID not provided", 404
+		trans = Transaction.query.filter_by(user=current_user.id).filter_by(id=id).first()
+		if(trans is None):
+			return "Access denied!", 403
+		if(date):
+			try:
+				date_obj = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
+				trans.time = date_obj
+			except ValueError:
+				return "Time format wrong", 415
+		if(type):
+			trans.type = type
+		if(desc):
+			trans.desc = desc
+		if(amt):
+			trans.amt = amt
+		db.session.commit()
+		return jsonify({}), 200
+	elif(query=='delete'):
+		id = request.values.get('id', type=int) # The ID of the transaction, only thing that is required.
+		if(id is None):
+			return "Transaction ID not provided", 404
+		trans = Transaction.query.filter_by(user=current_user.id).filter_by(id=id).first()
+		if(trans is None):
+			return "Access denied!", 403
+		db.session.delete(trans)
+		db.session.commit()
+		return jsonify({}), 200
 	#Note: It's best to get multiple in one request for A) performance reasons and B) to make it easier to order them server-side.
 	#This will return a list of lists of records for EVERY DAY IN THE RANGE, meaning empty arrays are returned for days with no records.
 	elif(query=='records_for_range'):
@@ -123,7 +158,7 @@ def greensheet_query(query):
 				date_start = date2
 				date_end = date1
 		except ValueError:
-			return "Time format wrong", 415\
+			return "Time format wrong", 415
 		#Empty list of days to populate (in order)
 		days = []
 		

@@ -1,6 +1,7 @@
 {% extends "l_standard.html" %}
 {% block head %}
 	{{ super() }}
+<link href="{{sp_content}}/lib/leaflet1.3.1.css" rel="stylesheet">
 <style>
 body
 {
@@ -58,7 +59,7 @@ h1
 			
 		</div>
 	</div>
-	<div style='height: 100%; width: 68vw; border-left: 1px solid grey'>
+	<div id='the_map' style='height: 100%; width: 68vw; border-left: 1px solid grey'>
 		
 	</div>
 </div>
@@ -68,12 +69,13 @@ h1
 {% endblock %}
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
-	<script type="text/javascript" src="{{sp_local}}/js/voyager.js?web_vsn={{ web_vsn }}">
+<script type="text/javascript" src="{{sp_content}}/lib/leaflet1.3.1.min.js"></script>
+<script type="text/javascript" src="{{sp_local}}/js/voyager.js?web_vsn={{ web_vsn }}">
 
-	</script>
+</script>
 
-	<script>
-	console.log("init");
-	init("{{sp_local}}", "{{sp_content}}");
-	</script>
+<script>
+console.log("init");
+init("{{sp_local}}", "{{sp_content}}");
+</script>
 {% endblock %}

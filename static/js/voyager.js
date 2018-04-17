@@ -45,6 +45,14 @@ class Page
 		});
 		this.onResize();
 		
+		var the_map = L.map('the_map').setView([51.505, -0.09], 13);
+		L.tileLayer('http://tiles.theroot.tech/{id}/{z}/{x}/{y}.png', 
+		{
+			attribution: 'Map data &copy; <a href="www.theroot.tech">the_root</a> contributors, Imagery © <a href="www.theroot.tech">I AM GOD</a>',
+			maxZoom: 18,
+			id: 'roads',
+		}).addTo(the_map);
+		
 		var _this = this;
 		this.countries = []; //A list of all countries: [{country: name, states: [name, name, name]}]
 		this.$loc_country = $('#loc_country');
