@@ -19,7 +19,7 @@ from flask_login import login_required, current_user
 
 from flask import render_template, redirect, request, jsonify
 
-import datetime
+import datetime, time
 
 @app.route("/reginald", methods=['GET', 'POST'])
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
@@ -61,8 +61,12 @@ def reginald_transaction(t_type):
 		if(dest == '__OTHER__'):
 			dest = form.dest_optional.data
 		desc = form.desc.data
+		postdate = form.postdate.data
 		
 		trans = Transaction(amt, income, type, method, srcdest = dest, desc = desc)
+		if form.postdate_enable.data:
+			trans.time = postdate
+			print "Postdating"
 		db.session.add(trans)
 		db.session.commit()
 		#No user of that name.

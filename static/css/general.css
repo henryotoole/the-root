@@ -213,8 +213,21 @@
 	border: 1px solid black;
 	border-radius: 4px;
 }
+
+/* A checkbox style div which matches the input-med style */
+.input-med-cbox
+{
+	height: 60px;
+	width: 60px;
+	border: 2px solid black;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+}
+
 .input-light-cbox.checked{background-color: #999999;}
+.input-med-cbox.checked{background-color: #999999;}
 .input-light-cbox:hover{cursor: pointer;}
+.input-med-cbox:hover{cursor: pointer;}
 
 /* A light input box class, less tall than others */
 .input-light-thin

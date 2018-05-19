@@ -22,6 +22,17 @@ h1
 	margin-left: auto;
 	margin-right: auto;
 }
+.vymargin1
+{
+	margin-left: 1vw; margin-right: 1vw;
+}
+.input-std-nowid
+{
+	border-radius: 4px;
+	height:60px;
+	font-size: 250%;
+	border: 2px solid black;
+}
 </style>
 {% endblock %}
 
@@ -53,9 +64,14 @@ h1
 				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.dest_optional.label}} </h1>
 				{{ form.dest_optional(class='input-std f-raleway-para', placeholder='Optional') }}
 			</div>
-			<div class='input-long'>
+			<div class='input-long' style='margin-bottom: 50px'>
 				<h1 class='f-playfair-para' style='font-size: 300%;'> {{form.desc.label}} </h1>
 				{{ form.desc(class='input-std f-raleway-para', placeholder='Optional') }}
+			</div>
+			<div class='org-row-left f-playfair-para input-long' style='margin-bottom: 3vh; font-size: 300%'>
+				<div id='enable_postdate' class='input-med-cbox'>{{ form.postdate_enable(id='wtf_pde') }}</div>
+				<div class='vymargin1'> Postdate </div>
+				{{ form.postdate(id='postdate', class='input-std-nowid f-raleway-small', style='font-size: 80%; display: none', placeholder='2012-01-01') }}
 			</div>
 			<div class='input-long'>
 				<div style='margin-right: 0; margin-left: auto; width: 30%; margin-top: 25px'>
@@ -100,6 +116,43 @@ $dest.change(function()
 		$dest_opt.hide();
 	}
 });
+
+$postdate_enable = $('#enable_postdate');
+$postdate = $('#postdate');
+$postdate_wtf = $('#wtf_pde'); // Exists so we can use the wtf form to tell the server whether or not to use postdate.
+$postdate_enable.click(function()
+{
+	if($(this).hasClass('checked'))
+	{
+		$(this).removeClass('checked');
+		$postdate_wtf.prop("checked", false);
+		$postdate.hide();
+	}
+	else
+	{
+		$(this).addClass('checked');
+		$postdate_wtf.prop("checked", true);
+		$postdate.show()
+	}
+	console.log($postdate_wtf.val());
+});
+$postdate.val(getStrYYYYMMDD(new Date()));
+
+
+function getStrYYYYMMDD(dateobj)
+{
+	var d = dateobj,
+		month = '' + (d.getMonth() + 1),
+		day = '' + d.getDate(),
+		year = d.getFullYear();
+
+	if (month.length < 2) month = '0' + month;
+	if (day.length < 2) day = '0' + day;
+
+	return [year, month, day].join('-');
+}
+
+
 
 </script>
 {% endblock %}
