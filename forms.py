@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm, RecaptchaField
 import wtforms
-from wtforms import StringField, IntegerField, PasswordField, SubmitField, DecimalField, SelectField
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, DecimalField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, NumberRange
+from wtforms.fields.html5 import DateField
 
 class CSRFForm(FlaskForm):
 	pass
@@ -35,4 +36,7 @@ class TransactionForm(FlaskForm):
 	
 	dest_optional = email = StringField('Recipient', validators=[Length(max=127, message='Destination name limited to 127 characters.')])
 	desc = email = StringField('Description', validators=[Length(max=255, message='Destination name limited to 255 characters.')])
+	postdate = DateField('DatePicker', format='%Y-%m-%d')
+	postdate_enable = BooleanField('Postdate')
+	
 	submit = SubmitField('Submit')
