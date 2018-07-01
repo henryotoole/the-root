@@ -1,0 +1,97 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+<style>
+body
+{
+	margin: 0;
+}
+h1
+{
+	margin-bottom: 0;
+	margin-top: 0;
+}
+.exp-inline
+{
+	width: 25%;
+}
+
+.exp-inline:hover
+{
+	background-color: #BBBBBB;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+	{{ super() }}
+	<div class='f-raleway-head org-col' style='width: 100vw; height: 100vh;'>
+		<div style='max-width: 1000px; width: 90%;'>
+			<div class='org-row-flung f-playfair-head2 ov-std-mg' style='width: 100%; margin-top: 1vh;'>
+				<div class='hline-center-auto'></div><div style='margin-right: 1vw; margin-left: 1vw'>Autotrans</div><div class='hline-center-auto'></div>
+			</div>
+			<div id='emain_div' style='margin-bottom: 3vh'>
+				<textarea id='bulk' style='border: 1px solid black' placeholder='Input bulk statement text' class='textarea-full f-raleway-para'></textarea>
+			</div>
+			Entry Lines
+			<input id='eline1' style='margin-bottom: 1vh' class='input-light f-raleway-para'> </input>
+			<input id='eline2' style='margin-bottom: 1vh' class='input-light f-raleway-para'> </input>
+			<input id='eline3' style='margin-bottom: 1vh' class='input-light f-raleway-para'> </input>
+			<input id='eline4' class='input-light f-raleway-para'> </input>
+			<div class='org-row-flung'>
+				<div style='width: 30%'>
+					Amount
+					<input id='amt' class='input-light f-raleway-para'> </input>
+				</div>
+				<div style='width: 30%'>
+					Date YYYY-MM-DD
+					<input id='date' class='input-light f-raleway-para'> </input>
+				</div>
+				<div style='width: 30%'>
+					Type
+					<select id='type' class='input-light f-raleway-para' id='loc_country'>
+						<option value='SELECT'>Select</option>
+					</select>
+				</div>
+			</div>
+			<div class='org-row-flung' style='margin-bottom: 1vh;'>
+				<div style='width: 30%'>
+					Recipient
+					<input id='rec' style='margin-bottom: 1vh' class='input-light f-raleway-para'> </input>
+				</div>
+				<div style='width: 65%'>
+					Description
+					<input id='desc' style='margin-bottom: 1vh' placeholder='Optional' class='input-light f-raleway-para'> </input>
+				</div>
+			</div>
+			<div id='error' style='color: red'>	</div>
+			<div id='msg' style='color: blue'>	</div>
+			<div style='width: 100%; display: flex; justify-content: space-between'>
+				<div id='prev' class='button-full' style='height: 60px;'> Prev </div>
+				<div id='commit' class='button-full' style='height: 60px;'> Commit </div>
+				<div id='next' class='button-full' style='height: 60px;'> Next </div>
+			</div>
+			Close Matching Records (by day or amount)
+			<div class='' style='border: 1px solid #555555; border-radius: 7px; padding: 1vw;'>
+				<div id='othersnone' class='org-col' style='color: #888888; width: 100%'> None </div>
+				<div id='others'>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+
+<script type="text/javascript" src="{{sp_local}}/js/reginald_autotrans.js?web_vsn={{ web_vsn }}">
+
+</script>
+
+<script>
+console.log("init");
+init("{{sp_local}}", "{{sp_content}}");
+</script>
+{% endblock %}
+{% block script_login %}
+{% endblock %}

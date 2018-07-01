@@ -77,6 +77,44 @@ def reginald_transaction(t_type):
 		
 #
 
+@app.route("/reginald/autotrans", methods=['GET', 'POST'])
+@login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
+def autotrans_main():
+	return render_template_standard("/reginald/autotrans.html")
+
+@app.route("/reginald/autotrans/<query>", methods=['GET', 'POST'])
+@login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
+def autotrans_query(query):
+	if(query=='add_transaction'):
+		date = request.values.get('date', type=str) # Full date string expected, format YYYY-MM-DD hh:mm
+		type = request.values.get('type', type=int) # ID of transaction type
+		desc = request.values.get('desc', type=str) # Text of description
+		amt = request.values.get('amt', type=float) # Dollar amount of purchase
+		dst = request.values.get('dst', type=str) # Source or destination of funds
+		income = request.values.get('income', type=int) # 1 for income, 0 for expense
+		method = request.values.get('method', type=int) # 1: Cash, 2: Dedit, 3: Credit, 13: Direct Deposit
+		if(date is None or type is None or desc is None or amt is None or dst is None or income is None or method is None):
+			return "Bad params", 404
+		trans = Transaction(amt, income, type, method, srcdest = dst, desc = desc)
+		if(trans is None):
+			return "Access denied!", 403
+		try:
+			trans.time = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
+		except ValueError:
+			return "Time format wrong", 415
+		db.session.add(trans)
+		db.session.commit()
+		return jsonify({}), 200
+	elif(query=='records_of_amt'):
+		#Get a list of records with the supplied amount.
+		amt = request.values.get('amt', type=float) # Dollar amount of purchase
+		if(amt is None):
+			return "No amt supplied.", 404
+		records = Transaction.query.filter_by(user=current_user.id).filter_by(amt=amt).all()
+		list = [record.getDict() for record in records]
+		return jsonify(list), 200
+	return "Bad params", 404
+
 #Render a greensheet for the current user across a date range
 #Dates in format DDMMYYYY
 @app.route("/reginald/greensheet", methods=['GET', 'POST'])
@@ -104,7 +142,7 @@ def greensheet_query(query):
 	elif(query=='types'):
 		types = Type.query.all()
 		list = [type.getDict() for type in types]
-		
+		print list
 		return jsonify(list), 200
 	elif(query=='update_record'):
 		date = request.values.get('date', type=str) # Full date string expected, format YYYY-MM-DD hh:mm
@@ -152,8 +190,8 @@ def greensheet_query(query):
 		if(date1 is None or date2 is None):
 			return "Bad params", 404
 		try:
-			date1 = datetime.datetime.strptime(date1 + ' 23:59', "%Y-%m-%d %H:%M")
-			date2 = datetime.datetime.strptime(date2 + ' 23:59', "%Y-%m-%d %H:%M")
+			date1 = datetime.datetime.strptime(date1 + ' 23:59:59', "%Y-%m-%d %H:%M:%S")
+			date2 = datetime.datetime.strptime(date2 + ' 23:59:59', "%Y-%m-%d %H:%M:%S")
 			#Ensure date_start is chronologically before date_end
 			if(date1 < date2):
 				date_start = date1
