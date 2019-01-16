@@ -82,6 +82,7 @@ def untether_query(query):
 		note = UntetherNote.query.filter_by(user=current_user.id).filter_by(name=name).first()
 		if not note:
 			return "No note of that name", 404
+		print note.getDict()
 		return jsonify(note.getDict()), 200
 	elif(query=='cat_create'):
 		name = request.values.get('name', type=str)
@@ -138,6 +139,10 @@ def untether_query(query):
 		db.session.delete(note)
 		db.session.commit()
 		return jsonify({}), 200
+	elif(query=='note_set_enc'):
+		enc = request.values.get('enc', type=int) # Expected to be 1 or 0
+		note.enc = enc
+		db.session.commit()
 		
 
 	return '', 404

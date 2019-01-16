@@ -23,6 +23,18 @@
 	background-color: #777777;
 }
 
+/* A class which creats an overlay box, abs positioned, taking up full screen, proper z-index, and hidden. */
+.overlay-base
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height:100vh;
+	display: none;
+	z-index: 50;
+}
+
 /* Width must be set explicitly in the style for this to work.*/
 .center-hz-fixed-w
 {
@@ -310,6 +322,12 @@
 	border-radius: 4px;
 }
 
+.sel-highlight-border-lblue
+{
+	border: 2px solid #d2dbdd;
+	border-radius: 4px;
+}
+
 /*Makes something non-selectable*/
 .unselectable
 {
@@ -381,6 +399,25 @@
 }
 
 .button-full:hover
+{
+	background-color: #48636C;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+.button-full-non
+{
+	width: max-content;
+	border-radius: 4px;
+	display: flex;
+	border: 1px solid black;
+	align-items: center;
+	justify-content: center;
+	padding-right: 5%;
+	padding-left: 5%;
+}
+
+.button-full-non:hover
 {
 	background-color: #48636C;
 	color: #FFFFFF;

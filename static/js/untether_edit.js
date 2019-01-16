@@ -74,6 +74,35 @@ class Page
 		this.title_change();
 		this.load_text(NAME);
 		
+		//Settings
+		this.$greyout = $('#greyout');
+		this.$settings_ovl = $('#settings_overlay').hide();
+		this.$settings = $('#settings').click(function()
+		{
+			_this.$greyout.finish().show();
+			_this.$settings_ovl.finish().show();
+		});
+		this.$encrypt_enable = $('#enable_encrypt').click(function()
+		{
+			$(this).toggleClass('checked');
+			_this.toggle_encrypt();
+		});
+		this.encrypt_enable = 0; // Whether this document is encrypted.
+		//Encryption Password
+		this.$encpw_overlay = $('#encpw_overlay').hide();
+		this.$encrypt_password = $('#encrypt_password');
+		this.$encrypt_password_check = $('#encrypt_password_check');
+		this.$encrypt_msg = $('#encrypt_message');
+		this.$encpw_title = $('#encpw_title');
+		this.$encpw_submit = $('#encpw_submit').click(function(){_this.password_encrypt();});
+		this.enc_pass = "" // Set by password_encrypt()
+		//Escape key pressed.
+		$(document).keyup(function(e) {
+			if (e.keyCode == 27) {
+				this.hide_overlays();
+			}
+		});
+		
 		//Autosave feature
 		setInterval(function() {_this.autosave();}, 3000);
 	}
@@ -82,6 +111,96 @@ class Page
 	onResize()
 	{
 		
+	}
+	
+	//Called when the checkbox for 'encryption' is called.
+	toggle_encrypt()
+	{
+		if(this.encrypt_enable) //Disable encryption
+		{
+			
+		}
+		else //Enable encryption
+		{
+			this.$settings_ovl.finish().hide();
+			this.$encpw_overlay.finish().show();
+			this.$encrypt_password_check.finish().show();
+		}
+	}
+	
+	//Called when the user hits the 'submit' button in the encryption password overlay
+	password_encrypt()
+	{
+		var pass = this.$encrypt_password.val();
+		var passcheck = this.$encrypt_password_check.val();
+		
+		//Input checks.
+		if(!pass)
+		{
+			this.$encrypt_msg.val("You must supply a password! Otherwise this whole 'encryption' deal get's alot less interesting...");
+			return;
+		}
+		
+		//Actual encryption/decryption
+		if(this.encrypt_enable) // If encrypt is already enabled, then we are 'decoding'
+		{
+			this.decrypt_text();
+			this.hide_overlays();
+		}
+		else // If it's not enabled, then we are 'encoding' (sort of)
+		{
+			if(pass != passcheck) // Ensure both passwords match.
+			{
+				this.$encrypt_msg.val("Passwords do not match.");
+				return;
+			}
+			this.password_encrypt = pass;
+		}
+	}
+	
+	//Hides all overlays
+	hide_overlays()
+	{
+		this.$settings_ovl.finish().hide();
+		this.$greyout.finish().hide();
+		this.$encpw_overlay.finish().hide();
+	}
+	
+	//Called when the note loads. 'encrypted' is 0 for not, 1 for encrypted
+	setup_encrypt(encrypted)
+	{
+		this.encrypt_enable = encrypted;
+		if(encrypted)
+		{
+			this.$encrypt_enable.addClass('checked');
+			//Ask for password
+			this.$encrypt_password_check.finish().hide();
+			this.$encpw_overlay.finish().show();
+		}
+		else
+		{
+			this.$encrypt_enable.removeClass('checked');
+		}
+	}
+	
+	encrypt_text(pass)
+	{
+		//Get escaped text, encrypt it, and then unescape and set it.
+		this.set_text(sjcl.encrypt(pass, this.get_text()));
+		$.post("/untether/query/note_set_enc", {'id': this.id, 'enc': 1}).done(function()
+		{
+			console.log("Marked file as encoded on server.");
+		});
+	}
+	
+	decrypt_text(pass)
+	{
+		//Get escaped text, encrypt it, and then unescape and set it.
+		this.set_text(sjcl.decrypt(pass, this.get_text()));
+		$.post("/untether/query/note_set_enc", {'id': this.id, 'enc': 0}).done(function()
+		{
+			console.log("Marked file as unencoded on server.");
+		});
 	}
 	
 	load_text(name)
@@ -96,6 +215,7 @@ class Page
 			console.log(data);
 			_this.save_title(data.name);
 			_this.id = data.id;
+			_this.setup_encrypt(data.enc == 'True');
 			$.post("/untether/query/note_get", {'id': data.id}).done(function(data)
 			{
 				_this.set_text(data.text);
@@ -119,6 +239,11 @@ class Page
 		
 		console.log("Saving");
 		var _this = this;
+		var txt = this.get_text();
+		if(this.encrypt_enable)
+		{
+			txt = sjcl.encrypt(this.password_encrypt, this.get_text())
+		}
 		if(this.id)
 		{
 			$.post("/untether/query/note_set", {'id': this.id, 'text': this.get_text()}).done(function()
@@ -204,12 +329,27 @@ class Page
 		this.update_savestar(0);
 	}
 	
+	//Transfer text from the display to memory. Use the state of the text file to
+	// A) escape the text
+	// B) encrypt if neccessary
+	text_to_memory_from_display()
+	{
+		
+	}
+	
+	text_to_display_from_memory()
+	{
+		
+	}
+	
+	//@deceprecated
 	//Gets the TEXT as an escaped string.
 	get_text()
 	{
 		return escape(this.$text.val());
 	}
 	
+	//@deceprecated
 	//Sets the text. The input is assumed to be an escaped string from the server.
 	set_text(text)
 	{

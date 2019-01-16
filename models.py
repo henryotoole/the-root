@@ -4,6 +4,7 @@ from shutil import copyfile
 import PIL.Image
 from flask import current_app
 from flask_login import login_required, current_user
+from datetime import date
 
 import os
 import statistics
@@ -235,12 +236,14 @@ class UntetherNote(db.Model):
 	user = db.Column(db.Integer, nullable=False)									# The user who this note belongs to
 	cat = db.Column(db.Integer, nullable=True)										# The category this note belongs in (if null, no cat)
 	pos = db.Column(db.Integer, nullable=True)	# The 'position' this note occupies in whatever category it belongs in. Null for unsorted
+	enc = db.Column(db.Boolean) # Whether the file is encrypted.
 	
 	
 	def __init__(self, name, user, cat=None):
 		self.name = name
 		self.user = user
 		self.cat = cat
+		self.enc = 0
 		
 	def getNoteSysFilepath(self):
 		return current_app.config['USER_FILE_ROOT'] + '/untether/notes/note' + str(self.id) + '.txt'
@@ -340,6 +343,97 @@ class VoyagerType(db.Model):
 	def getDict(self, columns=None):
 		return getDict(self, columns)
 
+class StackEntry(db.Model):
+
+	__tablename__ = "stack_entry"
+	
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	user = db.Column(db.Integer, nullable=False)							# ID of user who 'owns' this
+	cat_id = db.Column(db.Integer, nullable=False)							# ID of category this belongs to
+	name = db.Column(db.String(256), nullable=False)						# Name of type
+	deadline = db.Column(db.Integer, nullable=False)						# Days since 1 January 1970 (including 1 January)
+	deadline_soft = db.Column(db.Boolean, nullable=False, default=True) 	# Whether the deadline is soft (true) or hard (false)
+	day_completed = db.Column(db.Integer, nullable=False)					# Days since 1 Jan 1970 that the entry was completed on.
+	has_notes = db.Column(db.Boolean, nullable=False, default=False) 		# Whether notes exist on file
+	completed = db.Column(db.Boolean, nullable=False, default=False) 		# Whether note has been completed.
+	priority = db.Column(db.Integer, nullable=False)						# Determines position in a day's column. -1 means not set
+	
+	def __init__(self, name, deadline, cat_id, soft):
+		self.name = name
+		self.user = current_user.id
+		self.deadline = deadline
+		self.cat_id = cat_id
+		self.deadline_soft = soft
+		self.priority = -1
+		self.day_completed = -1 # Signifies that there is not a day completed set.
+	
+	# Gets all entries for a specific day. This includes entries from other days which have not been completed. Or, more specifically:
+	# 	- get all SOFT COMPLETED entries which have been completed on that day AND
+	#	- get all HARD entries which have deadlines on that day AND
+	#	- get all SOFT INCOMPLETED entries which have deadlines before or on today.
+	# Note that behavior is even a little more specialized due to the distinction between 'today' and 'target day'. See comments
+	# below for more details.
+	@staticmethod
+	def get_all_for_day(day, today):
+		# Hard and completed entries ALWAYS and ONLY show up on their relevant day.
+		hard_entries = StackEntry.query.filter(StackEntry.deadline==day).filter(StackEntry.deadline_soft==False).all()
+		#If day_comp != -1 its complete.
+		soft_completed = StackEntry.query.filter(StackEntry.day_completed==day).filter(StackEntry.deadline_soft==True).all()
+		if day == today: # If we are looking at the CURRENT day
+			# Load all not-yet-complete entries
+			soft_incomplete = StackEntry.query.filter(StackEntry.completed==False).filter(StackEntry.deadline <= day).filter(StackEntry.deadline_soft==True).all()
+		elif day > today: # we are looking into the future
+			# Load only not-yet-completes which are set to be done this day.
+			soft_incomplete = StackEntry.query.filter(StackEntry.completed==False).filter(StackEntry.deadline == day).filter(StackEntry.deadline_soft==True).all()
+		else: # We are looking into the past
+			# There are no soft incomplete entries in the past
+			soft_incomplete = []
+		all_entries = hard_entries + soft_completed + soft_incomplete
+		entry_list = []
+		for entry in all_entries:
+			entry_list.append(entry.getDict())
+		for entry in entry_list:
+			print "id: " + str(entry['id'])
+		return entry_list
+		
+	# Hey, this can't be done here because we've  not got timezone info. I'm leaving this function
+	# as a reminder, but it does nothing
+	def days_since_1jan1970(self):
+		pass
+		
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
+		
+class StackCat(db.Model):
+	
+	__tablename__ = "stack_cat"
+	
+	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
+	user = db.Column(db.Integer, nullable=False)									# ID of user who 'owns' this
+	name = db.Column(db.String(64))													# Name of category
+	
+	def __init__(self, name):
+		self.name = name
+		self.user = current_user.id
+		
+	#Get a string representation of this entry.
+	def __repr__(self):
+		return getStr(self)
+		
+	#Gets the row as a dictionary {colName1: colVal1, colName2: colVal2, ... ETC}
+	#May have to add compatibility for DateTime and other expressions later.
+	#Columns, if provided, should be a list of column names to include. Otherwise will return all.
+	def getDict(self, columns=None):
+		return getDict(self, columns)
+
+
 #========================== FUNCTIONS FOR MANIPULATING MODELS ==========================
 #You can't do proper inheritance with models under SQL Alchemy, so I've resorted to self
 
@@ -366,8 +460,6 @@ def getDict(dbinstance, keep=None):
 	return d
 
 #EOF
-
-
 
 
 

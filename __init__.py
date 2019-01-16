@@ -19,6 +19,7 @@ def setup():
 	import the_root.bookkeeper # An app for handling finances.
 	import the_root.untether # An app for taking notes.
 	import the_root.voyager # An app for keeping track of future adventure ideas.
+	import the_root.thestack # A simple web app to handle task managment and capture/release productive potential.
 	import the_root.projects # The project viewer app
 	import the_root.archive # The archive portion of the site.
 	import the_root.serverop # A set of functions for running servers via flask as an interface and controller

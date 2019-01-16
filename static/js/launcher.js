@@ -20,7 +20,8 @@ class Page
 		this.applist = [
 			{$dom: $('#reginald'), desc: "Reginald is an app that helps keep track of your finances. Many apps like this exist, but Reginald specializes in being extremely lightweight and mobile. Simple interfaces allow for the entry of expenses or income, while a sleek graphing tool (the greensheet) allows for an easy overview of recent finances."},
 			{$dom: $('#untether'), desc: "Untether is a very lightweight app which simply takes notes. However, notes can be taken from anywhere extremely painlessly and are kept in a centralized, easily-retrievable way."},
-			{$dom: $('#voyager'), desc: "Do you ever learn about a place or thing that you'd like to see/do/view/experience one day? Voyager is an app which helps you keep track of these places. Later, when planning a trip or traveling in a region you can use Voyager's map feature to recover nearby interesting places and things you recorded long ago."}
+			{$dom: $('#voyager'), desc: "Do you ever learn about a place or thing that you'd like to see/do/view/experience one day? Voyager is an app which helps you keep track of these places. Later, when planning a trip or traveling in a region you can use Voyager's map feature to recover nearby interesting places and things you recorded long ago."},
+			{$dom: $('#thestack'), desc: "The Stack is a task management app which utilizes a unique organizational structure to be as simple, flexible, and dynamic as possible."}
 			//{$dom: $('#morpheus'), desc: "Morpheus's Colusseum of Intellectual Ridicule is a happy place."}
 		];
 		var _this = this;
