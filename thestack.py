@@ -53,6 +53,35 @@ def stack_query(query):
 		cat.name = name
 		db.session.commit()
 		return jsonify(cat.getDict()), 200
+	elif(query=='cat_vis'):
+		id = request.values.get('id', type=int)
+		hidden = request.values.get('hidden', type=int)
+		if(id == None or hidden == None):
+			return "No vis or id provided", 404
+		cat = StackCat.query.filter_by(id=id).first()
+		if not cat:
+			return 'Invalid ID', 404
+		if not (cat.user == current_user.id):
+			return 'User does not own', 404
+		cat.hidden = hidden
+		db.session.commit()
+		return jsonify(cat.getDict()), 200
+	elif(query=='update_cat_visibilities'):
+		cat_list_jsonstr = request.values.get('cat_list_jsonstr', type=str)
+		if(cat_list_jsonstr == None):
+			return "No data provided", 404
+		cat_list = []
+		try:
+			cat_list= json.loads(cat_list_jsonstr)
+		except ValueError:
+			return "Incorrect JSON string", 404
+		for cat in cat_list:
+			entry_db = StackCat.query.filter_by(id=cat['id']).first()
+			if not (entry_db.user == current_user.id):
+				return 'User does not own', 404
+			if not cat.get('hidden') is None: entry_db.hidden = cat['hidden']
+		db.session.commit()
+		return jsonify({}), 200
 	elif(query=='cat_del'):
 		id = request.values.get('id', type=int)
 		shift_id = request.values.get('shift_id', type=int)
