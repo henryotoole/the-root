@@ -120,6 +120,92 @@ class EntryOverlay
 	}
 }
 
+class HiddenCatOverlay
+{
+	constructor($greyout)
+	{
+		var _this = this;
+		this.$greyout = $greyout;
+		this.$hc_overlay = $('#hc_overlay');
+		this.$hc_list = $('#hc_list');
+		this.$hc_done = $('#hc_done').click(function(){_this.finish();});
+	}
+	
+	//Shows the entry overlay. A cat_id should be supplied if the intent is to create a new one.
+	//if entry is not provided assume intent is to create a new one.
+	engage()
+	{
+		this.$hc_overlay.show();
+		this.$greyout.show();
+		
+		this.$hc_list.empty();
+		
+		for (var id in PAGE.categories)
+		{
+			if (PAGE.categories.hasOwnProperty(id))
+			{           
+				/*<div class='org-row-flung f-raleway-para stack-cat-hidden-entry'>
+					<div> Some Category Name </div>
+					<div class='stack-cat-hidden-icon'>
+						<img src='{{sp_local}}/icons/check.svg?web_vsn={{ web_vsn }}' width='100%' height='100%'>
+					</div>
+				</div>*/
+				var cat = PAGE.categories[id];
+				var $name = $("<div>" + cat.name + "</div>");
+				var $img_div = $("<div></div>").addClass('stack-cat-hidden-icon');
+				var $img = $("<img src='" + SP_LOCAL + "/icons/check.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>");
+				if(cat.hidden)
+				{
+					$img.hide();
+				}
+				$img_div.append($img);
+				var $dom = $("<div class='org-row-flung f-raleway-para stack-cat-hidden-entry'></div>").append($name).append($img_div)
+				.attr('st_catid', cat.id)
+				.click(function(e)
+				{
+					e.stopPropagation();
+					var id_local = parseInt($(this).attr('st_catid'));
+					var icat = PAGE.categories[id_local];
+					var $img = $(this).find('img');
+					if(icat.hidden) /// If it WAS hidden it now will be VISIBLE
+					{
+						PAGE.categories[id_local].hidden = false;
+						$img.show();
+					}
+					else
+					{
+						PAGE.categories[id_local].hidden = true;
+						$img.hide();
+					}
+				});
+				this.$hc_list.append($dom);
+			}
+		}
+	}
+	
+	//Processes and closes the entry overlay with either an edit (1), creation (2), or no action (0).
+	finish()
+	{
+		this.$hc_overlay.hide();
+		this.$greyout.hide();
+		
+		//Update server concerning all entries which have been changed.
+		var data_out = [];
+		for (var id in PAGE.categories)
+		{
+			if (PAGE.categories.hasOwnProperty(id))
+			{
+				data_out.push({id: id, hidden: PAGE.categories[id].hidden});
+			}
+		}
+		$.getJSON("/stack/query/update_cat_visibilities", {cat_list_jsonstr: JSON.stringify(data_out)}, function()
+		{
+			console.log("Mass-category visibility update successful.");
+			PAGE.refresh_cats();
+		});
+	}
+}
+
 class Page
 {
 	//A general note about the function of this page.
@@ -135,10 +221,12 @@ class Page
 		this.onResize();
 		this.$greyout = $('#greyout');
 		this.entry_overlay = new EntryOverlay(this.$greyout);
+		this.hc_overlay = new HiddenCatOverlay(this.$greyout);
 		
 		this.$cat_header = $('#cat_header');
 		this.$cat_region = $('#cat_region');
 		this.$new_cat_btn = $('#cat_add_btn').click(function(){_this.create_cat('New Category');});
+		this.$hc_btn = $('#hc_btn').click(function(){_this.hc_overlay.engage();});
 		this.$date_day = $('#date_day'); // Mon, Tue, Etc.
 		this.$date_date = $('#date_date'); // 11 Nov. etc.
 		this.$date_year = $('#date_year'); // 2018 etc.
@@ -154,7 +242,6 @@ class Page
 		this.refresh_cats();
 		this.load_day(this.getDaysFromTime(new Date(Date.now()))); //Load today.
 	}
-	
 	//Load entries for a day (given in days since 1970 Jan 1)
 	//Get from json -> organize into category entry lists -> populate graphical from entry lists
 	load_day(days)
@@ -618,7 +705,13 @@ class Page
 				_this.create_cat('General');
 				return;
 			}
-			var wid = 100.0 / cat_list.length;
+			//First sum the number that should be shown.
+			var n_shown = 0;
+			for(var i = 0; i < cat_list.length; i++)
+			{
+				n_shown += cat_list[i].hidden == 'True' ? 1 : 0;
+			}
+			var wid = 100.0 / n_shown;
 			for(var i = 0; i < cat_list.length; i++)
 			{
 				var cat = cat_list[i];
@@ -640,6 +733,7 @@ class Page
 	
 	add_cat(cat_dict, widthpct, border)
 	{
+		var vhidden = cat_dict.hidden == 'True';
 		var _this = this;
 		var $rename = $("<div></div>").addClass("unt-catbtn").addClass("hover-grey")
 			.append($("<img src='" + SP_LOCAL + "/icons/feather.svg?web_vsn=" + SP_WEBVSN + "' width='100%' height='100%'>")).click(function(e)
@@ -695,9 +789,13 @@ class Page
 			console.log("ADDING BORDER TO " + cat_dict.name);
 			$col.css('border-left', '1px solid #AAAAAA');
 		}
-		_this.$cat_region.append($col);
-		_this.$cat_header.append($dom);
-		this.categories[cat_dict.id] = {id: cat_dict.id, $dom: $dom, $eri: $entry_reg, $erc: $entry_reg_complete, $name: $name, name: cat_dict.name}
+		if(!vhidden)
+		{
+			_this.$cat_region.append($col);
+			_this.$cat_header.append($dom);
+		}
+		this.categories[cat_dict.id] = {id: cat_dict.id, $dom: $dom, $eri: $entry_reg, $erc: $entry_reg_complete, 
+										$name: $name, name: cat_dict.name, hidden: vhidden}
 	}
 	
 	//Deletes the category of that ID from the server, client data, and dom

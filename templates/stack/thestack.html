@@ -98,6 +98,21 @@
 		{
 			background-color: #EFEFEF;
 		}
+		.stack-cat-hidden-icon
+		{
+			width: 1em;
+			height: 1em;
+		}
+		.stack-cat-hidden-entry
+		{
+			width: 100%;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		.stack-cat-hidden-entry:hover
+		{
+			background-color: #d2dbdd;
+		}
 
 	</style>
 {% endblock %}
@@ -125,6 +140,29 @@
 			<div class='org-row-flung' style='margin-top: 2vw;'>
 				<div id='eo_cancel' class='button-full-non' style='height: 60px'> Cancel </div>
 				<div id='eo_complete' class='button-full-non' style='height: 60px'> Submit </div>
+			</div>
+		</div>
+	</div>
+	<!-- Hidden categories overlay -->
+	<div id='hc_overlay' class='org-center' style='position: absolute; top: 0; left: 0; width: 100vw; height:100vh; display: none; z-index: 50;'>
+		<div class='f-raleway-medium'
+			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 2.5vw; background-color: #FFFFFF'>
+			<div class='org-center'>
+				<div class='org-row-flung f-raleway-medium proj-header-title'>
+					<div> All Categories </div>
+					<div class="proj-header-title-line">
+						<div class="proj-header-title-circle"> </div>
+					</div>
+				</div>
+			</div>
+			<div class='org-row-flung f-raleway-para' style='width: 100%'>
+				<div> Category Name </div> <div> Visible </div>
+			</div>
+			<div style='border-bottom: 1px solid black; width: 100%; height: 1px; margin-top: 0.5vw; margin-bottom: 0.5vw'></div>
+			<div id='hc_list' class='org-col' style='min-width: 50vw; color: #555555'>
+			</div>
+			<div class='org-center' style='margin-top: 2vw;'>
+				<div id='hc_done' class='button-full-non' style='height: 60px'> Done </div>
 			</div>
 		</div>
 	</div>
@@ -170,9 +208,10 @@
 		<div id='cat_region' class='org-row-flung' style='height: 100%; width: 69vw;'>
 		</div>
 		<!-- Metrics etc column -->
-		<div class='org-col' style='height: 100%; width: 15vw; border-left: 1px solid #555555'>
-			<div id='cat_add_btn' class='button-full f-raleway-para'> New Category </div>
-			<div id='entry_add_btn' class='button-full f-raleway-para'> New Entry </div>
+		<div class='org-col' style='height: 100%; width: 15.5vw; border-left: 1px solid #555555'>
+			<div id='cat_add_btn' class='button-full f-raleway-para' style='width: 12vw'> New Category </div>
+			<div id='entry_add_btn' class='button-full f-raleway-para' style='width: 12vw'> New Entry </div>
+			<div id='hc_btn' class='button-full f-raleway-para' style='width: 12vw'> Show Categories </div>
 		</div>
 	</div>
 </div>

@@ -120,6 +120,14 @@
 	align-items: center;
 }
 
+/* Displays a group of things in a single row, vertically centered and stacked left.*/
+.org-row-right
+{
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
 /* Displays a group of things in a single row, aligned to the top and stacked left.*/
 .org-row-top-left
 {

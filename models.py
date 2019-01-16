@@ -418,6 +418,7 @@ class StackCat(db.Model):
 	id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)	# Unique ID
 	user = db.Column(db.Integer, nullable=False)									# ID of user who 'owns' this
 	name = db.Column(db.String(64))													# Name of category
+	hidden = db.Column(db.Boolean, nullable=False, default=False) 					# If true, this is 'hidden' from the main screen.
 	
 	def __init__(self, name):
 		self.name = name
