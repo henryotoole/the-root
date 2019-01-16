@@ -590,6 +590,7 @@ class InterfaceProject extends Interface
 		this.$text = $dom.find('#text').first();
 		this.$edit = $dom.find('#edit').first();
 		this.$del = $dom.find('#delete').first();
+		this.$settings = $dom.find('#settings').first();
 		this.note_id = null;
 		this.active = false;
 	}
@@ -613,6 +614,10 @@ class InterfaceProject extends Interface
 		this.$edit.click(function()
 		{
 			location.href = "/note/e/" + PAGE.nav.notes[note_id].name;
+		});
+		this.$settings.click(function()
+		{
+			
 		});
 	}
 }

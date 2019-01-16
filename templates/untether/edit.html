@@ -7,6 +7,18 @@
 			margin: 0;
 			padding: 0;
 		}
+		.unt-icon
+		{
+			width: 3vw; height: 3vw;
+			cursor: pointer;
+			padding-bottom: .5vh;
+			margin-bottom: 2vw;
+			border-bottom: 1px solid black;
+		}
+		.vymargin1
+		{
+			margin-left: 1vw; margin-right: 1vw;
+		}
 	</style>
 {% endblock %}
 
@@ -16,8 +28,12 @@
 
 {% block body %}
 	{{ super() }}
-	<div class='f-raleway-para proj-body-container' style='height: 94vh;'>
-		<div class='org-row-spaced'>
+	<div id='greyout' class='overlay-greyout' style='z-index: 10; display: none'> </div>
+	<div class='f-raleway-para proj-body-container org-col' style='height: 94vh;'>
+		<div class='org-row-flung' style='width: 90vw'>
+			<div id='settings' class='unt-icon'>
+				<img src='{{sp_local}}/icons/settings_gear_thin.svg?web_vsn={{ web_vsn }}' width='100%' height='100%'>
+			</div>
 			<div class='org-col'>
 				<div class='f-playfair-subhead proj-header-title'>
 					{% if type=='new' %}
@@ -30,6 +46,9 @@
 					</div>
 				</div>
 			</div>
+			<div style='width: 3vw; height: 3vw;'>
+				
+			</div>
 		</div>
 		<div class='org-row-spaced'>
 			<div style='width: 90vw; height: 80vh; margin-left: 0; margin-right: 0;'>
@@ -39,10 +58,46 @@
 			</div>
 		</div>
 	</div>
+	<div id='settings_overlay' class='org-center overlay-base'>
+		<div class='org-col f-raleway-medium'
+			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 0vw 1vw 1vw; background-color: #FFFFFF'>
+			<div id='settings_block' class='org-col'>
+				<div id='new_item_name' style='padding-top: 0.5vw'> Settings </div>
+				<div class='proj-header-title-line' style='margin-bottom: 1vw'>
+					<div class='proj-header-title-circle'></div>
+				</div>
+				<div class='org-row-left'>
+					<div id='enable_encrypt' class='input-light-cbox'></div><div class='vymargin1'> Encrypt Note </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id='encpw_overlay' class='org-center overlay-base'>
+		<div class='org-col f-raleway-medium'
+			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 0vw 1vw 1vw; background-color: #FFFFFF'>
+			<div id='encpw_block' class='org-col' style='width:100%'>
+				<div id='encpw_title' style='padding-top: 0.5vw'> Encryption Password </div>
+				<div class='proj-header-title-line' style='margin-bottom: 1vw'>
+					<div class='proj-header-title-circle'></div>
+				</div>
+				<div class='org-row-left'>
+					<div style='width: 40vw'>
+						<input id='encrypt_password_check' type='password' placeholder='Password' class='input-light f-raleway-medium' size=32></input>
+						<input id='encrypt_password' type='password' placeholder='Repeat Password' class='input-light f-raleway-medium' style='margin-top: 1vw;'size=32></input>
+					</div>
+					<div id='encpw_submit' class='button-full' style='height: 60px; margin-left: 1vw;'> Submit </div>
+				</div>
+				<div id='encrypt_message' style='color: red'></div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 {% block script_jquery %} {{ super() }} {% endblock %}
 {% block scripts %}
 	<script type="text/javascript" src="{{sp_local}}/js/untether_edit.js?web_vsn={{ web_vsn }}">
+
+	</script>
+	<script type="text/javascript" src="{{sp_content}}/lib/sjcl1.0.4.js?web_vsn={{ web_vsn }}">
 
 	</script>
 
