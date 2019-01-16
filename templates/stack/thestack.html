@@ -1,0 +1,188 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		h1
+		{
+			margin: 10px;
+		}
+		.stack-col{
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-end;
+		}
+		.stack-col-entry-reg{
+			width: 88%;
+		}
+		.stack-col-name-dom{
+			margin-top: 1vh; margin-bottom: 1vh;
+			color: #777777;
+		}
+		.stack-col-content{
+			flex-grow: 1;
+			border-bottom: 1px solid #444444;
+			
+		}
+		.stack-col-spacer{
+			width: 100%;
+			height: 2vh;
+		}
+		.unt-catbtn
+		{
+			width: 20px;
+			height: 20px;
+			border: 1px black solid;
+			border-radius: 3px;
+			margin-left: 3px;
+			margin-right: 3px;
+		}
+		.stack-entry
+		{
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: center;
+			cursor: pointer;
+			padding: 1vh;
+			width: 90%;
+		}
+		.stack-entry-btndiv
+		{
+			position: relative;
+			top: 0;
+			right: 0;
+			height: 100%;
+			visibility: hidden;
+		}
+		.stack-entry-topdragborder
+		{
+			border-top: 2px solid black;
+		}
+		.stack-entry-botdragborder
+		{
+			border-bottom: 2px solid black;
+		}
+		.stack-checkbox
+		{
+			width: 2vw; height: 2vw;
+			border-radius: 1vw;
+			cursor: pointer;
+			background-color: #FFFFFF;
+			margin-right: 1vh;
+		}
+		.stack-checkbox:hover{background-color: #CCCCCC;}
+		.stack-entry-taname
+		{
+			width: 100%;
+			overflow: auto;
+			resize: none;
+			outline: none;
+			border: none;
+			border-radius: 5px;
+			max-height: 50vh;
+		}
+		.date-arrow
+		{
+			height: 30vh; width: 6vh;
+			cursor: pointer;
+			border-radius: 1vw;
+		}
+		.date-arrow:hover
+		{
+			background-color: #EFEFEF;
+		}
+
+	</style>
+{% endblock %}
+
+{% block title %} The Stack {% endblock %}
+
+{% block home_link_path %} '/launcher' {% endblock %}
+
+{% block body %}
+{{ super() }}
+<div class='f-raleway-para org-col' style='width: 100vw; height: 100vh'>
+	<!-- Entry overlay -->
+	<div id='greyout' class='overlay-greyout' style='z-index: 10; display: none'> </div>
+	<div id='entry_overlay' class='org-center' style='position: absolute; top: 0; left: 0; width: 100vw; height:100vh; display: none; z-index: 50;'>
+		<div class='f-raleway-medium'
+			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 2.5vw; background-color: #FFFFFF'>
+			<div class='org-row-flung f-raleway-medium'>
+				<div> Name </div>
+				<input id='eo_name' style='width: 50vw; margin-left: 2vw; font-size: 90%;' class='input-light f-raleway-medium' placeholder='Task Name'></input>
+			</div>
+			<div class='org-row-left' style='margin-top: 2vw;'>
+				<div id='eo_dltype' class='input-light-cbox'></div><div style='margin-left: 1vw;'> Hard Deadline </div>
+			</div>
+			<div id='eo_error' style='margin-top: 2vw; color: red; display: none'></div>
+			<div class='org-row-flung' style='margin-top: 2vw;'>
+				<div id='eo_cancel' class='button-full-non' style='height: 60px'> Cancel </div>
+				<div id='eo_complete' class='button-full-non' style='height: 60px'> Submit </div>
+			</div>
+		</div>
+	</div>
+	<!-- Top header bar -->
+	<div class='org-row-flung' style='width: 100%; height: 8vh;'>
+		<div class='f-raleway-para' style='vertical-align: top; margin-left: 50px; width: 25vw;'>
+				<div style='display: inline-block'>
+					<h1 class='f-playfair-para'>The Stack</h1>
+				</div>
+		</div>
+		<div class='f-raleway-medium' style='letter-spacing: 4px'> 
+			Production Schedule
+			<div class='proj-header-title-line'>
+			</div>
+		</div>
+		<div style='width: 25vw; margin-right: 50px;'>
+		</div>
+	</div>
+	<!-- header columns-->
+	<div class='org-row-left' style='height: 4vh;'>
+		<div id='cat_header' class='org-row-flung' style='height: 100%; width: 69vw;'>
+		</div>
+	</div>
+	<!-- Central columns-->
+	<div class='org-row-left' style='height: 88vh; width: 100vw; border-top: 1px solid #555555'>
+		<!-- Time column -->
+		<div class='org-col' style='height: 100%; width: 15vw; border-right: 1px solid #555555'>
+			<div class='org-center f-playfair-subhead' style='flex-grow: 1; text-align: center'>
+				<div class='org-col'>
+					<div class='date-arrow' id='date_forward' style='margin-bottom: 5vh;'>
+						<img src='{{sp_local}}/icons/long_arrow.svg?web_vsn={{ web_vsn }}' width='100%' height='100%'>
+					</div>
+					<div class='org-row-left'>-<div id='date_day'>Wed</div>-</div>
+					<div id='date_date'>Nov 21</div>
+					<div class='org-row-left'>-<div id='date_year'>2018</div>-</div>
+					<div class='date-arrow' id='date_backward' style='transform: rotate(180deg); margin-top: 5vh;'>
+						<img src='{{sp_local}}/icons/long_arrow.svg?web_vsn={{ web_vsn }}' width='100%' height='100%'>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Category columns -->
+		<div id='cat_region' class='org-row-flung' style='height: 100%; width: 69vw;'>
+		</div>
+		<!-- Metrics etc column -->
+		<div class='org-col' style='height: 100%; width: 15vw; border-left: 1px solid #555555'>
+			<div id='cat_add_btn' class='button-full f-raleway-para'> New Category </div>
+			<div id='entry_add_btn' class='button-full f-raleway-para'> New Entry </div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{sp_local}}/js/thestack.js?web_vsn={{ web_vsn }}"></script>
+
+<script>
+console.log("init");
+init("{{sp_local}}", "{{sp_content}}", "{{web_vsn}}");
+</script>
+{% endblock %}
