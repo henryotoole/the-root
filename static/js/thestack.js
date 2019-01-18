@@ -59,7 +59,6 @@ class EntryOverlay
 	{
 		var _this = this;
 		this.$dltype.removeClass('checked');
-		console.log(entry);
 		this.entry = null;
 		this.$complete.unbind(); // This is critical. Click events stack, and must be cleared.
 		if(entry) //We are editing
@@ -89,7 +88,6 @@ class EntryOverlay
 			var name = this.$name.val();
 			var deadline = PAGE.currently_showing;
 			var soft = this.$dltype.hasClass('checked') ? 0 : 1;
-			console.log(this.$dltype.hasClass('checked'));
 			if(!name)  {this.error("You must provide a name!"); return;}
 			if(op == 1) //edit
 			{
@@ -223,6 +221,17 @@ class Page
 		this.entry_overlay = new EntryOverlay(this.$greyout);
 		this.hc_overlay = new HiddenCatOverlay(this.$greyout);
 		
+		// Number means 'this color after it's less than X days old'
+		this.status_colors = {
+			0: {color: "#006400"},
+			1: {color: "#526f12"},
+			3: {color: "#fef190"},
+			5: {color: "#ffbb40"},
+			7: {color: "#ff880c"},
+			10: {color: "#cf3401"}
+		}
+		this.status_color_finished = "#777777";
+		
 		this.$cat_header = $('#cat_header');
 		this.$cat_region = $('#cat_region');
 		this.$new_cat_btn = $('#cat_add_btn').click(function(){_this.create_cat('New Category');});
@@ -235,6 +244,7 @@ class Page
 
 		this.categories = {}; //[id] -> id, $dom, $col, $name, name
 		this.currently_showing = null; // The day we are currently showing (in days since Jan 1 1970)
+		this.today = this.getDaysFromTime(new Date(Date.now())); // Set this here so we don't call it a bunch
 		this.entries = {} //[id] -> ??? Contains only loaded entries.
 		this.src_cross = SP_LOCAL + "/icons/plus.svg?web_vsn=" + SP_WEBVSN;
 		this.src_check = SP_LOCAL + "/icons/check.svg?web_vsn=" + SP_WEBVSN;
@@ -249,6 +259,7 @@ class Page
 		console.log("DAYS: " + days);
 		var _this = this;
 		this.currently_showing = days;
+		this.today = this.getDaysFromTime(new Date(Date.now())); // reset this.
 		this.set_time_indicators(days);
 		this.remove_all_loaded_entries();
 		$.getJSON("/stack/query/get_day", {for_day: days, today: this.getDaysFromTime(new Date(Date.now()))}, function(entries)
@@ -256,13 +267,13 @@ class Page
 			console.log("DATA FROM SERVER");
 			for(var i = 0; i < entries.length; i++)
 			{
-				console.log("id: " + entries[i].id + "  pr: " + entries[i].priority);
+				//console.log("id: " + entries[i].id + "  pr: " + entries[i].priority);
 			}
 			entries = _this.unscramble_priorities(entries);
 			console.log("POSTSORTED");
 			for(var i = 0; i < entries.length; i++)
 			{
-				console.log("id: " + entries[i].id + "  pr: " + entries[i].priority);
+				//console.log("id: " + entries[i].id + "  pr: " + entries[i].priority);
 			}
 			//Add entry data to category entry lists.
 			for(var i = 0; i < entries.length; i++)
@@ -286,6 +297,29 @@ class Page
 		this.$date_year.html(date.getFullYear());
 	}
 	
+	//Return hex code in a string '#555555' depending on how old an entry is.
+	get_entry_status_color(entry)
+	{
+		if(entry.completed)
+		{
+			return this.status_color_finished;
+		}
+		var days_old = this.today - parseInt(entry.deadline);
+		var last_color = null;
+		for (var key in this.status_colors) // will loop 1, 2, 5, etc.
+		{
+			if (this.status_colors.hasOwnProperty(key))
+			{          
+				var last_color = this.status_colors[key].color;
+				if(days_old < key)
+				{
+					return last_color;
+				}
+			}
+		}
+		return last_color;
+	}
+	
 	//Responsible for sorting this entry into the correct position in the list.
 	add_entry(entry)
 	{
@@ -296,6 +330,7 @@ class Page
 		var _this = this;
 		var cat = this.categories[entry.cat_id];
 		var $img = $("<img width='75%' height='75%'></img>");
+	
 		var $checkbox = $("<div class='stack-checkbox org-center'></div>").click(function(e)
 		{
 			e.stopPropagation();
@@ -327,6 +362,8 @@ class Page
 					_this.remove_entry(entry.id);
 				}
 			});
+		var $status = $("<div></div>").addClass("stack-entry-status-light")
+			.css('backgroundColor', this.get_entry_status_color(entry));
 		var $name = $("<textarea></textarea>").addClass("stack-entry-taname").addClass('f-raleway-para')
 			.val(entry.name).attr('readonly', 'true').attr('size', entry.name.length)
 			.focusout(function(e)
@@ -345,17 +382,19 @@ class Page
 			{
 				_this.resize_text_area($(this));
 			});
-		var $btndiv = $('<div></div>').append($edit).append($delete).addClass("org-row-spaced").addClass("stack-entry-btndiv");
-		var $sdiv = $('<div class="org-row-flung" style="flex-grow: 1"></div>').append($name).append($btndiv);
+		var $btndiv = $('<div></div>').append($edit).append($delete).addClass("org-row-spaced").addClass("stack-entry-btndiv").hide();
+		var $sdiv = $('<div class="org-row-flung" style="flex-grow: 1"></div>').append($name).append($btndiv).append($status);
 		var $dom = $("<div class='stack-entry'></div>").attr('st_id', entry.id)
 			.append($checkbox).append($sdiv)
 			.click(function(e)
 			{
 				e.stopPropagation();
 			}).hover(function()	{
-				$btndiv.css({'visibility': 'visible'})
+				$btndiv.show();
+				$status.hide();
 			}, function() {
-				$btndiv.css({'visibility': 'hidden'});
+				$btndiv.hide();
+				$status.show();
 			})
 			.attr('draggable', 'true')
 			.on('dragstart', function(e)
@@ -589,7 +628,7 @@ class Page
 					+ parseInt(computed.getPropertyValue('padding-bottom'), 10)
 					+ parseInt(computed.getPropertyValue('border-bottom-width'), 10);
 		$dom.css('height', height + 'px');
-		console.log("Resize to " + height);
+		//console.log("Resize to " + height);
 	}
 	
 	//Changes entry data on server and IF REDRAW: redraws/redata's it on client with IN MEMORY data.
@@ -603,8 +642,6 @@ class Page
 		if(name != null) {data.name = name;}
 		if(cat_id != null) {data.cat_id = cat_id;}
 		if(soft != null) {data.soft = soft ? 1 : 0;}
-		console.log("++Updating " + entry.name + " to be: ");
-		console.log(data);
 		$.getJSON("/stack/query/edit_entry", data, function(entry_new)
 		{
 			if(redraw)
@@ -709,14 +746,14 @@ class Page
 			var n_shown = 0;
 			for(var i = 0; i < cat_list.length; i++)
 			{
-				n_shown += cat_list[i].hidden == 'True' ? 1 : 0;
+				n_shown += cat_list[i].hidden == 'True' ? 0 : 1; //Remember if HIDDEN DONT SHOW
 			}
 			var wid = 100.0 / n_shown;
 			for(var i = 0; i < cat_list.length; i++)
 			{
 				var cat = cat_list[i];
 				_this.add_cat(cat, wid, i!=0);
-				console.log("Creating category " + cat.name + " of ID " + cat.id);
+				//console.log("Creating category " + cat.name + " of ID " + cat.id);
 			}
 		});
 		if(this.currently_showing) {this.load_day(this.currently_showing);} // Make sure to reload current tasks
@@ -786,7 +823,7 @@ class Page
 			});
 		if(border) // Ensure that the leftmost category has no border.
 		{
-			console.log("ADDING BORDER TO " + cat_dict.name);
+			//console.log("ADDING BORDER TO " + cat_dict.name);
 			$col.css('border-left', '1px solid #AAAAAA');
 		}
 		if(!vhidden)
