@@ -809,7 +809,7 @@ class Page
 			_this.entry_overlay.engage(null, cat_dict.id);
 		});
 		var $entry_reg = $('<div></div>').addClass('org-col').addClass('stack-col-entry-reg');
-		var $entry_reg_complete = $('<div></div>').addClass('org-col').addClass('stack-col-entry-reg').css('border-top', '1px solid #222222');
+		var $entry_reg_complete = $('<div></div>').addClass('org-col').addClass('stack-col-entry-reg-completed').css('border-top', '1px solid #222222');
 		// This spacer exists because adding padding to $col results on some weird overflow behavior.
 		var $spacer = $('<div></div>').addClass('stack-col-spacer');
 		$col.append($entry_reg).append($entry_reg_complete).append($spacer);

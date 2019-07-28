@@ -376,15 +376,15 @@ class StackEntry(db.Model):
 	@staticmethod
 	def get_all_for_day(day, today):
 		# Hard and completed entries ALWAYS and ONLY show up on their relevant day.
-		hard_entries = StackEntry.query.filter(StackEntry.deadline==day).filter(StackEntry.deadline_soft==False).all()
+		hard_entries = StackEntry.query.filter(StackEntry.user == current_user.id).filter(StackEntry.deadline==day).filter(StackEntry.deadline_soft==False).all()
 		#If day_comp != -1 its complete.
-		soft_completed = StackEntry.query.filter(StackEntry.day_completed==day).filter(StackEntry.deadline_soft==True).all()
+		soft_completed = StackEntry.query.filter(StackEntry.user == current_user.id).filter(StackEntry.day_completed==day).filter(StackEntry.deadline_soft==True).all()
 		if day == today: # If we are looking at the CURRENT day
 			# Load all not-yet-complete entries
-			soft_incomplete = StackEntry.query.filter(StackEntry.completed==False).filter(StackEntry.deadline <= day).filter(StackEntry.deadline_soft==True).all()
+			soft_incomplete = StackEntry.query.filter(StackEntry.user == current_user.id).filter(StackEntry.completed==False).filter(StackEntry.deadline <= day).filter(StackEntry.deadline_soft==True).all()
 		elif day > today: # we are looking into the future
 			# Load only not-yet-completes which are set to be done this day.
-			soft_incomplete = StackEntry.query.filter(StackEntry.completed==False).filter(StackEntry.deadline == day).filter(StackEntry.deadline_soft==True).all()
+			soft_incomplete = StackEntry.query.filter(StackEntry.user == current_user.id).filter(StackEntry.completed==False).filter(StackEntry.deadline == day).filter(StackEntry.deadline_soft==True).all()
 		else: # We are looking into the past
 			# There are no soft incomplete entries in the past
 			soft_incomplete = []
