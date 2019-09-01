@@ -1,0 +1,72 @@
+{% extends "l_standard.html" %}
+{% block head %}
+	{{ super() }}
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		.unt-icon
+		{
+			width: 3vw; height: 3vw;
+			cursor: pointer;
+			padding-bottom: .5vh;
+			margin-bottom: 2vw;
+			border-bottom: 1px solid black;
+		}
+		.vymargin1
+		{
+			margin-left: 1vw; margin-right: 1vw;
+		}
+	</style>
+{% endblock %}
+
+{% block title %} Untether {% endblock %}
+
+{% block home_link_path %} '/note' {% endblock %}
+
+{% block body %}
+	{{ super() }}
+	<div id='greyout' class='overlay-greyout' style='z-index: 10; display: none'> </div>
+	<div class='f-raleway-para proj-body-container org-col' style='height: 94vh;'>
+		<div class='org-row-flung' style='width: 90vw'>
+			<div id='settings' class='unt-icon'>
+				<img src='{{sp_local}}/icons/settings_gear_thin.svg?web_vsn={{ web_vsn }}' width='100%' height='100%'>
+			</div>
+			<div class='org-col'>
+				<div class='f-playfair-subhead proj-header-title'>
+
+                    <div class='f-playfair-subhead'> {{title}} </div>
+                    
+					<div class='proj-header-title-line'>
+						<div class='proj-header-title-circle'></div>
+					</div>
+				</div>
+			</div>
+			<div style='width: 3vw; height: 3vw;'>
+				
+			</div>
+		</div>
+		<div class='org-row-spaced'>
+			<div style='width: 90vw; height: 80vh; margin-left: 0; margin-right: 0;'>
+                <textarea id='e_text' class='textarea-full f-raleway-para' readonly>{{ text }}</textarea>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script_jquery %} {{ super() }} {% endblock %}
+{% block scripts %}
+	<script>
+    //If the user does not have access to this file, load the communist manifesto instead.
+    if("{{code}}" == "403")
+    {
+        alert("This file is not public, so here's The Communist Manifesto instead.");
+        $.get("/misc/marx/manifesto", function(text)
+        {
+            $('#e_text').val(text);
+        });
+    }
+	</script>
+{% endblock %}
+{% block script_login %} {{ super() }} {% endblock %}

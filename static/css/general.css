@@ -234,6 +234,12 @@
 	border-radius: 4px;
 }
 
+/* An empty div which takes up the same space as an input-light-checkbox */
+.input-light-cbox-placeholder
+{
+	height: 50px; width: 50px;
+}
+
 /* A checkbox style div which matches the input-med style */
 .input-med-cbox
 {
