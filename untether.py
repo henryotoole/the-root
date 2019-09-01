@@ -14,7 +14,7 @@ from the_root.decorators import render_template_standard
 import flask
 from flask_login import login_required, current_user
 
-from flask import render_template, redirect, request, jsonify
+from flask import render_template, redirect, request, jsonify, current_app
 
 import datetime
 import urllib
@@ -36,6 +36,32 @@ def untether_edit(note):
 @login_required # This must ALWAYS go below the route decorator! Otherwise anyn users can log in
 def untether_new(note):
 	return render_template_standard("/untether/edit.html", name=note, type='new')
+
+# The interface for accessing public notes.
+@app.route("/note/pub/<noteid>", methods=['GET', 'POST'])
+@app.route("/untether/pub/<noteid>", methods=['GET', 'POST'])
+def untether_public(noteid):
+	note = UntetherNote.query.filter_by(id=noteid).first()
+	if (not note) or (not (note.pub == 1)):
+		text = ""
+		name = "The Communist Manifesto"
+		code = 403
+	else:
+		text = urllib.unquote(note.getText())
+		code = 200
+		name = note.name
+	return render_template_standard("/untether/public.html", title=name, text=text, code=code)
+
+@app.route("/misc/marx/manifesto", methods=['GET', 'POST'])
+def marx_manifesto():
+	fname = current_app.config['STATIC_CONTENT_ROOT'] + '/misc/the_communist_manifesto.txt'
+	print fname
+	try:
+		with open(fname, 'r') as file:
+			return file.read()
+	except IOError:
+		return ''
+
 	
 @csrf.exempt # This is added to allow post commands to access this method.
 @app.route("/untether/query/<query>", methods=['GET', 'POST'])
@@ -82,8 +108,9 @@ def untether_query(query):
 		note = UntetherNote.query.filter_by(user=current_user.id).filter_by(name=name).first()
 		if not note:
 			return "No note of that name", 404
-		print note.getDict()
-		return jsonify(note.getDict()), 200
+		data = note.getDict()
+		data['public_url_base'] = UntetherNote.getPublicURLBase()
+		return jsonify(data), 200
 	elif(query=='cat_create'):
 		name = request.values.get('name', type=str)
 		if(name == None or (name == '')):
@@ -125,9 +152,12 @@ def untether_query(query):
 		return jsonify({'text': note.getText(), 'id': id}), 200
 	elif(query=='note_set'):
 		text = request.values.get('text', type=str) # The text, escaped before sending.
-		if(text == None):
-			return "No valid text provided", 404
+		enc = request.values.get('enc', type=int) # Should be 1 or 0 to indicate encrypted or not.
+		if((text == None) or (enc == None)):
+			return "Missing metadata", 404
+		note.enc = enc
 		note.setText(text)
+		db.session.commit()
 		return jsonify({}), 200
 	elif(query=='note_move'):
 		new_cat_id = request.values.get('new_cat_id', type=int)
@@ -139,10 +169,14 @@ def untether_query(query):
 		db.session.delete(note)
 		db.session.commit()
 		return jsonify({}), 200
-	elif(query=='note_set_enc'):
-		enc = request.values.get('enc', type=int) # Expected to be 1 or 0
-		note.enc = enc
+	elif(query=='note_set_public'):
+		status = request.values.get('status', type=int) # Should be 1 or 0 to indicate public or not.
+		if(status == None):
+			return "Missing metadata", 404
+		note.pub = status
+		print "Status is now " + str(status)
 		db.session.commit()
+		return jsonify({}), 200
 		
 
 	return '', 404

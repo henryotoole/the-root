@@ -58,10 +58,10 @@
 			</div>
 		</div>
 	</div>
-	<div id='settings_overlay' class='org-center overlay-base'>
+	<div id='settings_overlay' class='org-center overlay-base' style='display: none'>
 		<div class='org-col f-raleway-medium'
 			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 0vw 1vw 1vw; background-color: #FFFFFF'>
-			<div id='settings_block' class='org-col'>
+			<div id='settings_block' class='org-col-left'>
 				<div id='new_item_name' style='padding-top: 0.5vw'> Settings </div>
 				<div class='proj-header-title-line' style='margin-bottom: 1vw'>
 					<div class='proj-header-title-circle'></div>
@@ -69,10 +69,17 @@
 				<div class='org-row-left'>
 					<div id='enable_encrypt' class='input-light-cbox'></div><div class='vymargin1'> Encrypt Note </div>
 				</div>
+				<div class='org-row-left' style='margin-top: 1vw;'>
+					<div id='enable_public' class='input-light-cbox'></div><div class='vymargin1'> Make Public (read only) </div>
+				</div>
+				<div id='public_url_cont' class='org-row-left' style='margin-top: 1vw; display: none'>
+					<div class='input-light-cbox-placeholder'></div>
+					<div class='vymargin1'>Public URL: </div><div id='public_url' class='vymargin1'></div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div id='encpw_overlay' class='org-center overlay-base'>
+	<div id='encpw_overlay' class='org-center overlay-base' style='display: none'>
 		<div class='org-col f-raleway-medium'
 			 style='border: 1px solid black; pointer-events: auto; border-radius: 4px; padding: 0vw 1vw 1vw; background-color: #FFFFFF'>
 			<div id='encpw_block' class='org-col' style='width:100%'>
@@ -82,8 +89,8 @@
 				</div>
 				<div class='org-row-left'>
 					<div style='width: 40vw'>
-						<input id='encrypt_password_check' type='password' placeholder='Password' class='input-light f-raleway-medium' size=32></input>
-						<input id='encrypt_password' type='password' placeholder='Repeat Password' class='input-light f-raleway-medium' style='margin-top: 1vw;'size=32></input>
+						<input id='encrypt_password_check' type='password' placeholder='Repeat Password' class='input-light f-raleway-medium' size=32></input>
+						<input id='encrypt_password' type='password' placeholder='Password' class='input-light f-raleway-medium' style='margin-top: 1vw;'size=32></input>
 					</div>
 					<div id='encpw_submit' class='button-full' style='height: 60px; margin-left: 1vw;'> Submit </div>
 				</div>

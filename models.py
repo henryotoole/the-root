@@ -6,6 +6,7 @@ from flask import current_app
 from flask_login import login_required, current_user
 from datetime import date
 
+
 import os
 import statistics
 
@@ -237,6 +238,7 @@ class UntetherNote(db.Model):
 	cat = db.Column(db.Integer, nullable=True)										# The category this note belongs in (if null, no cat)
 	pos = db.Column(db.Integer, nullable=True)	# The 'position' this note occupies in whatever category it belongs in. Null for unsorted
 	enc = db.Column(db.Boolean) # Whether the file is encrypted.
+	pub = db.Column(db.Boolean) # Whether the file is public.
 	
 	
 	def __init__(self, name, user, cat=None):
@@ -244,6 +246,7 @@ class UntetherNote(db.Model):
 		self.user = user
 		self.cat = cat
 		self.enc = 0
+		self.pub = 0
 		
 	def getNoteSysFilepath(self):
 		return current_app.config['USER_FILE_ROOT'] + '/untether/notes/note' + str(self.id) + '.txt'
@@ -261,6 +264,10 @@ class UntetherNote(db.Model):
 	def setText(self, text):
 		with open(self.getNoteSysFilepath(), 'w') as file:
 			file.write(text)
+
+	@staticmethod
+	def getPublicURLBase():
+		return current_app.config['STATIC_URL_BASE'] + "/note/pub/"
 		
 	#Get a string representation of this entry.
 	def __repr__(self):
